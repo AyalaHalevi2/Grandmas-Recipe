@@ -6,6 +6,7 @@ import { connectDB } from './config/db';
 import authRoutes from './routes/authRoutes';
 import recipeRoutes from './routes/recipeRoutes';
 import userRoutes from './routes/userRoutes';
+import groupRoutes from './routes/groupRoutes';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use('/api/auth', authRoutes);
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/groups', groupRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

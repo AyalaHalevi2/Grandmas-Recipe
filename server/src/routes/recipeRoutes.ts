@@ -9,11 +9,12 @@ import {
   toggleFavorite,
   getCategories
 } from '../controllers/recipeController';
-import { isAdmin, isAuthenticated } from '../middleware/auth';
+import { isAuthenticated } from '../middleware/auth';
+import { canEditRecipe, canDeleteRecipe } from '../middleware/recipeAccess';
 
 const router = Router();
 
-// Public routes
+// Public routes (getAllRecipes checks access internally based on user)
 router.get('/', getAllRecipes);
 router.get('/categories', getCategories);
 router.get('/:id', getRecipeById);
@@ -22,9 +23,9 @@ router.get('/:id', getRecipeById);
 router.post('/:id/rate', isAuthenticated, rateRecipe);
 router.post('/:id/favorite', isAuthenticated, toggleFavorite);
 
-// Admin only routes
-router.post('/', isAdmin, createRecipe);
-router.put('/:id', isAdmin, updateRecipe);
-router.delete('/:id', isAdmin, deleteRecipe);
+// Recipe CRUD - Now any authenticated user can create recipes
+router.post('/', isAuthenticated, createRecipe);
+router.put('/:id', isAuthenticated, canEditRecipe, updateRecipe);
+router.delete('/:id', isAuthenticated, canDeleteRecipe, deleteRecipe);
 
 export default router;

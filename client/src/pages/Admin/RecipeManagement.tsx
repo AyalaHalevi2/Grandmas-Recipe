@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchRecipes, createRecipe, updateRecipe, deleteRecipe } from '../../store/recipeSlice';
-import type { Recipe, KosherType } from '../../types';
+import { fetchMyGroups } from '../../store/groupSlice';
+import type { Recipe, KosherType, RecipeVisibility } from '../../types';
 import { validate, CreateRecipeSchema } from '@grandmas-recipes/shared-schemas';
+import VisibilitySelector from '../../components/VisibilitySelector/VisibilitySelector';
 import styles from './RecipeManagement.module.scss';
 
 const CATEGORIES = [
@@ -15,6 +17,7 @@ const KOSHER_TYPES: KosherType[] = ['Parve', 'Dairy', 'Meat'];
 const RecipeManagement = () => {
   const dispatch = useAppDispatch();
   const { recipes, isLoading } = useAppSelector((state) => state.recipes);
+  const { groups } = useAppSelector((state) => state.groups);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState<Recipe | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -27,11 +30,14 @@ const RecipeManagement = () => {
     difficulty: '1',
     imageUrl: '',
     isYemeni: false,
-    kosherType: 'Parve' as KosherType
+    kosherType: 'Parve' as KosherType,
+    visibility: 'public' as RecipeVisibility,
+    groupIds: [] as string[]
   });
 
   useEffect(() => {
     dispatch(fetchRecipes({}));
+    dispatch(fetchMyGroups());
   }, [dispatch]);
 
   const resetForm = () => {
@@ -44,7 +50,9 @@ const RecipeManagement = () => {
       difficulty: '1',
       imageUrl: '',
       isYemeni: false,
-      kosherType: 'Parve'
+      kosherType: 'Parve',
+      visibility: 'public',
+      groupIds: []
     });
     setEditingRecipe(null);
     setIsFormOpen(false);
@@ -62,7 +70,9 @@ const RecipeManagement = () => {
       difficulty: recipe.difficulty.toString(),
       imageUrl: recipe.imageUrl || '',
       isYemeni: recipe.isYemeni || false,
-      kosherType: recipe.kosherType || 'Parve'
+      kosherType: recipe.kosherType || 'Parve',
+      visibility: recipe.visibility || 'public',
+      groupIds: recipe.groupIds || []
     });
     setIsFormOpen(true);
   };
@@ -76,6 +86,12 @@ const RecipeManagement = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validate group visibility
+    if (formData.visibility === 'group' && formData.groupIds.length === 0) {
+      setErrors({ groupIds: 'יש לבחור לפחות קבוצה אחת למתכון קבוצתי' });
+      return;
+    }
+
     const recipeData = {
       title: formData.title,
       category: formData.category,
@@ -85,7 +101,9 @@ const RecipeManagement = () => {
       difficulty: Number(formData.difficulty),
       imageUrl: formData.imageUrl || undefined,
       isYemeni: formData.isYemeni,
-      kosherType: formData.kosherType
+      kosherType: formData.kosherType,
+      visibility: formData.visibility,
+      groupIds: formData.groupIds
     };
 
     const result = validate(CreateRecipeSchema, recipeData);
@@ -208,6 +226,16 @@ const RecipeManagement = () => {
                 </div>
               </div>
             </div>
+
+            <VisibilitySelector
+              value={formData.visibility}
+              selectedGroups={formData.groupIds}
+              availableGroups={groups}
+              onChange={(visibility, groupIds) => {
+                setFormData({ ...formData, visibility, groupIds });
+                setErrors({ ...errors, groupIds: '' });
+              }}
+            />
 
             <div className="form-group">
               <label>Ingredients (one per line)</label>
