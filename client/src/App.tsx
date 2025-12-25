@@ -13,6 +13,9 @@ import Recipes from './pages/Recipes/Recipes';
 import RecipeDetail from './pages/RecipeDetail/RecipeDetail';
 import Favorites from './pages/Favorites/Favorites';
 import Admin from './pages/Admin/Admin';
+import Groups from './pages/Groups/Groups';
+import GroupDetail from './pages/GroupDetail/GroupDetail';
+import JoinGroup from './pages/JoinGroup/JoinGroup';
 import './styles/global.scss';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -50,6 +53,9 @@ const AppContent = () => {
             <Route path="/recipe/:id" element={<ProtectedRoute><RecipeDetail /></ProtectedRoute>} />
             <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+            <Route path="/groups" element={<ProtectedRoute><Groups /></ProtectedRoute>} />
+            <Route path="/groups/join/:inviteCode" element={<ProtectedRoute><JoinGroup /></ProtectedRoute>} />
+            <Route path="/groups/:id" element={<ProtectedRoute><GroupDetail /></ProtectedRoute>} />
           </Routes>
         </main>
         <Footer />

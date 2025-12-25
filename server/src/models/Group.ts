@@ -68,7 +68,7 @@ const groupSchema = new Schema<IGroup>({
 // Indexes for performance
 groupSchema.index({ name: 'text', description: 'text' }); // For search
 groupSchema.index({ 'members.userId': 1 }); // For member lookups
-groupSchema.index({ inviteCode: 1 }); // For invite link joins
+// inviteCode index created automatically by unique: true
 groupSchema.index({ privacy: 1 }); // For public group listings
 
 // Generate unique invite code before saving

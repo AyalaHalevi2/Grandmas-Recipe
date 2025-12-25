@@ -6,6 +6,7 @@ const initialState: GroupState = {
   groups: [],
   publicGroups: [],
   currentGroup: null,
+  members: [],
   isLoading: false,
   error: null
 };
@@ -26,7 +27,7 @@ export const fetchMyGroups = createAsyncThunk(
 // Search public groups
 export const fetchPublicGroups = createAsyncThunk(
   'groups/fetchPublic',
-  async (search?: string, { rejectWithValue }) => {
+  async (search: string | undefined, { rejectWithValue }) => {
     try {
       const url = search ? `/groups/public?search=${encodeURIComponent(search)}` : '/groups/public';
       const response = await api.get(url);
@@ -342,6 +343,12 @@ const groupSlice = createSlice({
         if (index !== -1) {
           state.groups[index] = action.payload;
         }
+      });
+
+    // Fetch Group Members
+    builder
+      .addCase(fetchGroupMembers.fulfilled, (state, action) => {
+        state.members = action.payload.members;
       });
   }
 });

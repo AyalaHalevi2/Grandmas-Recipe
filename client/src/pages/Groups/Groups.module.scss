@@ -1,0 +1,142 @@
+@use '../../styles/variables' as *;
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $spacing-lg;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+
+  h1 {
+    margin: 0;
+    color: $text-primary;
+    font-size: 2rem;
+  }
+}
+
+.createButton {
+  padding: $spacing-sm $spacing-lg;
+  background-color: $primary-color;
+  border: none;
+  border-radius: $radius-md;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: darken($primary-color, 8%);
+  }
+}
+
+.tabs {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+  border-bottom: 2px solid $border-color;
+}
+
+.tab {
+  padding: $spacing-sm $spacing-lg;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: $text-secondary;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: -2px;
+
+  &:hover {
+    color: $text-primary;
+  }
+
+  &.active {
+    color: $primary-color;
+    border-bottom-color: $primary-color;
+  }
+}
+
+.searchSection {
+  margin-bottom: $spacing-lg;
+}
+
+.searchBar {
+  display: flex;
+  gap: $spacing-sm;
+  max-width: 600px;
+
+  input {
+    flex: 1;
+    padding: $spacing-sm $spacing-md;
+    border: 1px solid $border-color;
+    border-radius: $radius-md;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+    }
+  }
+}
+
+.searchButton {
+  padding: $spacing-sm $spacing-lg;
+  background-color: $secondary-color;
+  border: none;
+  border-radius: $radius-md;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background-color: darken($secondary-color, 8%);
+  }
+}
+
+.error {
+  padding: $spacing-md;
+  background-color: lighten($error, 40%);
+  border: 1px solid $error;
+  border-radius: $radius-md;
+  color: $error;
+  margin-bottom: $spacing-lg;
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+  .container {
+    padding: $spacing-md;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-md;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .createButton {
+    width: 100%;
+  }
+
+  .searchBar {
+    max-width: 100%;
+
+    input {
+      font-size: 0.9rem;
+    }
+  }
+}

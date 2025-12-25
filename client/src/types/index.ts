@@ -1,5 +1,6 @@
 export interface User {
-  id: string;
+  _id: string;
+  id?: string; // Deprecated, use _id
   email: string;
   fullName: string;
   role: 'admin' | 'user';
@@ -87,6 +88,7 @@ export interface GroupState {
   groups: Group[]; // User's groups
   publicGroups: Group[]; // Search results from public groups
   currentGroup: Group | null;
+  members: GroupMember[]; // Members of the current group
   isLoading: boolean;
   error: string | null;
 }

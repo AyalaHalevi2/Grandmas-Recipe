@@ -114,6 +114,13 @@ const Header = () => {
             <img src={heartIcon} alt="Favorites" />
           </Link>
 
+          {/* Groups - only for authenticated users */}
+          {user && (
+            <Link to="/groups" className={styles.actionButton} aria-label="Groups" title="קבוצות">
+              <span className={styles.groupIcon}>👥</span>
+            </Link>
+          )}
+
           {/* Language Toggle */}
           <button
             className={styles.actionButton}

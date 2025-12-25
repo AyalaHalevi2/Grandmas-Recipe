@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { Group } from '../models/Group';
 import { User } from '../models/User';
+import { Recipe } from '../models/Recipe';
 import {
   validate,
   CreateGroupSchema,
@@ -155,7 +156,6 @@ export const updateGroup = async (req: Request, res: Response): Promise<void> =>
 export const deleteGroup = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const { Recipe } = await import('../models/Recipe');
 
     // Remove groupId from all recipes
     await Recipe.updateMany(

@@ -1,0 +1,123 @@
+@use '../../styles/variables' as *;
+
+.card {
+  display: block;
+  background: white;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: 0 2px 8px $shadow;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  animation: cardFadeIn 0.4s ease-out both;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px $shadow;
+  }
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-md;
+  gap: $spacing-sm;
+}
+
+.groupName {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: $text-primary;
+  margin: 0;
+  flex: 1;
+  line-height: 1.4;
+}
+
+.badges {
+  display: flex;
+  gap: $spacing-xs;
+  flex-shrink: 0;
+}
+
+.privateBadge {
+  background-color: $secondary-color;
+  color: white;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-md;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.creatorBadge {
+  background-color: $primary-color;
+  color: white;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-md;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.description {
+  color: $text-secondary;
+  margin: 0 0 $spacing-md 0;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: $spacing-md;
+  border-top: 1px solid $border-color;
+}
+
+.memberCount {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  color: $text-secondary;
+  font-size: 0.9rem;
+}
+
+.icon {
+  font-size: 1.1rem;
+}
+
+.joinButton {
+  background-color: $primary-color;
+  color: white;
+  border: none;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-md;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+
+  &:hover {
+    background-color: darken($primary-color, 8%);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
