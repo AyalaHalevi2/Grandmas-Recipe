@@ -1,4 +1,4 @@
-# Project Plan: Savta Rina's Recipes
+# Project Plan: Savta  Recipes
 
 ## Overview
 A full-stack Hebrew recipe website with email-based authentication, recipe management, and user features.
