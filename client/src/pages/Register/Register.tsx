@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { register, clearError } from '../../store/authSlice';
+import { validate, RegisterWithConfirmSchema } from '@grandmas-recipes/shared-schemas';
 import styles from './Register.module.scss';
 
 const Register = () => {
@@ -17,7 +18,7 @@ const Register = () => {
     confirmPassword: ''
   });
 
-  const [validationError, setValidationError] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -25,29 +26,26 @@ const Register = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (error) dispatch(clearError());
-    if (validationError) setValidationError('');
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      setValidationError('Passwords do not match');
+    const result = validate(RegisterWithConfirmSchema, formData);
+
+    if (!result.success) {
+      setErrors(result.errors);
       return;
     }
 
-    if (formData.password.length < 6) {
-      setValidationError('Password must be at least 6 characters');
-      return;
-    }
-
-    const result = await dispatch(register({
-      email: formData.email,
-      fullName: formData.fullName,
-      password: formData.password
+    const dispatchResult = await dispatch(register({
+      email: result.data.email,
+      fullName: result.data.fullName,
+      password: result.data.password
     }));
 
-    if (register.fulfilled.match(result)) {
+    if (register.fulfilled.match(dispatchResult)) {
       navigate('/');
     }
   };
@@ -70,6 +68,7 @@ const Register = () => {
               placeholder="Enter full name"
               required
             />
+            {errors.fullName && <p className="error-message">{errors.fullName}</p>}
           </div>
 
           <div className="form-group">
@@ -83,6 +82,7 @@ const Register = () => {
               placeholder="Enter email"
               required
             />
+            {errors.email && <p className="error-message">{errors.email}</p>}
           </div>
 
           <div className="form-group">
@@ -115,6 +115,7 @@ const Register = () => {
                 )}
               </button>
             </div>
+            {errors.password && <p className="error-message">{errors.password}</p>}
           </div>
 
           <div className="form-group">
@@ -147,11 +148,11 @@ const Register = () => {
                 )}
               </button>
             </div>
+            {errors.confirmPassword && <p className="error-message">{errors.confirmPassword}</p>}
           </div>
 
-          {(error || validationError) && (
-            <p className="error-message">{error || validationError}</p>
-          )}
+          {error && <p className="error-message">{error}</p>}
+          {errors._root && <p className="error-message">{errors._root}</p>}
 
           <button type="submit" className="btn btn-primary" disabled={isLoading}>
             {isLoading ? 'Registering...' : 'Register'}

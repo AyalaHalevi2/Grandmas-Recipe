@@ -14,8 +14,14 @@ export const register = createAsyncThunk(
     try {
       const response = await api.post('/auth/register', data);
       return response.data.user as User;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Registration error');
+    } catch (error: unknown) {
+      const axiosError = error as { response?: { data?: { message?: string; errors?: Record<string, string> } } };
+      const serverErrors = axiosError.response?.data?.errors;
+      if (serverErrors) {
+        const errorMessages = Object.values(serverErrors).join(', ');
+        return rejectWithValue(errorMessages);
+      }
+      return rejectWithValue(axiosError.response?.data?.message || 'Registration error');
     }
   }
 );
@@ -26,8 +32,14 @@ export const login = createAsyncThunk(
     try {
       const response = await api.post('/auth/login', data);
       return response.data.user as User;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Login error');
+    } catch (error: unknown) {
+      const axiosError = error as { response?: { data?: { message?: string; errors?: Record<string, string> } } };
+      const serverErrors = axiosError.response?.data?.errors;
+      if (serverErrors) {
+        const errorMessages = Object.values(serverErrors).join(', ');
+        return rejectWithValue(errorMessages);
+      }
+      return rejectWithValue(axiosError.response?.data?.message || 'Login error');
     }
   }
 );
@@ -37,8 +49,9 @@ export const logout = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await api.post('/auth/logout');
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Logout error');
+    } catch (error: unknown) {
+      const axiosError = error as { response?: { data?: { message?: string } } };
+      return rejectWithValue(axiosError.response?.data?.message || 'Logout error');
     }
   }
 );
@@ -49,8 +62,9 @@ export const getCurrentUser = createAsyncThunk(
     try {
       const response = await api.get('/auth/me');
       return response.data.user as User;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Not logged in');
+    } catch (error: unknown) {
+      const axiosError = error as { response?: { data?: { message?: string } } };
+      return rejectWithValue(axiosError.response?.data?.message || 'Not logged in');
     }
   }
 );

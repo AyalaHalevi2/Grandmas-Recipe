@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@grandmas-recipes/shared-schemas": "*",
     "@reduxjs/toolkit": "^2.11.2",
     "axios": "^1.13.2",
     "react": "^19.2.0",

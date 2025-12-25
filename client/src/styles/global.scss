@@ -1,5 +1,5 @@
-@import './variables';
-@import './buttons';
+@use './variables' as *;
+@use './buttons';
 
 * {
   margin: 0;

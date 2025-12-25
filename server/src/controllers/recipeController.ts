@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Recipe } from '../models/Recipe';
 import { User } from '../models/User';
+import { validate, CreateRecipeSchema, UpdateRecipeSchema, RateRecipeSchema, RecipeIdSchema } from '@grandmas-recipes/shared-schemas';
 
 export const getAllRecipes = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -82,7 +83,14 @@ export const getRecipeById = async (req: Request, res: Response): Promise<void> 
 
 export const createRecipe = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { title, category, ingredients, instructions, prepTime, difficulty, imageUrl, isYemeni, kosherType } = req.body;
+    const result = validate(CreateRecipeSchema, req.body);
+
+    if (!result.success) {
+      res.status(400).json({ message: 'Validation error', errors: result.errors });
+      return;
+    }
+
+    const { title, category, ingredients, instructions, prepTime, difficulty, imageUrl, isYemeni, kosherType } = result.data;
 
     const recipe = new Recipe({
       title,
@@ -92,8 +100,8 @@ export const createRecipe = async (req: Request, res: Response): Promise<void> =
       prepTime,
       difficulty,
       imageUrl,
-      isYemeni: isYemeni || false,
-      kosherType: kosherType || 'Parve'
+      isYemeni,
+      kosherType
     });
 
     await recipe.save();
@@ -106,7 +114,20 @@ export const createRecipe = async (req: Request, res: Response): Promise<void> =
 
 export const updateRecipe = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { title, category, ingredients, instructions, prepTime, difficulty, imageUrl, isYemeni, kosherType } = req.body;
+    const idResult = validate(RecipeIdSchema, req.params.id);
+    if (!idResult.success) {
+      res.status(400).json({ message: 'Invalid recipe ID' });
+      return;
+    }
+
+    const result = validate(UpdateRecipeSchema, req.body);
+
+    if (!result.success) {
+      res.status(400).json({ message: 'Validation error', errors: result.errors });
+      return;
+    }
+
+    const { title, category, ingredients, instructions, prepTime, difficulty, imageUrl, isYemeni, kosherType } = result.data;
 
     const recipe = await Recipe.findByIdAndUpdate(
       req.params.id,
@@ -148,11 +169,13 @@ export const rateRecipe = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    const { rating } = req.body;
-    if (rating < 0 || rating > 5) {
-      res.status(400).json({ message: 'Rating must be between 0 and 5' });
+    const result = validate(RateRecipeSchema, req.body);
+    if (!result.success) {
+      res.status(400).json({ message: 'Validation error', errors: result.errors });
       return;
     }
+
+    const { rating } = result.data;
 
     const recipe = await Recipe.findById(req.params.id);
     if (!recipe) {

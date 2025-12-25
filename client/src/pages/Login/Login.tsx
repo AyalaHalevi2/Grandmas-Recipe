@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { login, clearError } from '../../store/authSlice';
+import { validate, LoginSchema } from '@grandmas-recipes/shared-schemas';
 import styles from './Login.module.scss';
 
 const Login = () => {
@@ -15,18 +16,28 @@ const Login = () => {
     password: ''
   });
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (error) dispatch(clearError());
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const result = await dispatch(login(formData));
-    if (login.fulfilled.match(result)) {
+
+    const result = validate(LoginSchema, formData);
+
+    if (!result.success) {
+      setErrors(result.errors);
+      return;
+    }
+
+    const dispatchResult = await dispatch(login(result.data));
+    if (login.fulfilled.match(dispatchResult)) {
       navigate('/');
     }
   };
@@ -84,6 +95,8 @@ const Login = () => {
           </div>
 
           {error && <p className="error-message">{error}</p>}
+          {errors.email && <p className="error-message">{errors.email}</p>}
+          {errors.password && <p className="error-message">{errors.password}</p>}
 
           <button type="submit" className="btn btn-primary" disabled={isLoading}>
             {isLoading ? 'Logging in...' : 'Login'}

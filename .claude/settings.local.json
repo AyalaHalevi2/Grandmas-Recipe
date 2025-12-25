@@ -6,7 +6,12 @@
       "mcp__ide__getDiagnostics",
       "Bash(dir \"C:\\\\Users\\\\The user\\\\Documents\\\\github\\\\fullstack-apr25\\\\07-AI-Engeniring\\\\01-basics-22-12-2025\\\\classPuzzle\\\\Ayala\\\\client\\\\src\")",
       "Bash(dir \"C:\\\\Users\\\\The user\\\\Documents\\\\github\\\\fullstack-apr25\\\\07-AI-Engeniring\\\\01-basics-22-12-2025\\\\classPuzzle\\\\Ayala\\\\client\\\\src\\\\components\")",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:shared:*)",
+      "Bash(npm run build:server:*)",
+      "Bash(npm run build:client:*)",
+      "Bash(lsof:*)"
     ]
   }
 }

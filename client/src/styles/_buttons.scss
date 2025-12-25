@@ -1,5 +1,5 @@
 // Button styles - centralized button styling
-@import './variables';
+@use './variables' as *;
 
 // Base button styles
 .btn {

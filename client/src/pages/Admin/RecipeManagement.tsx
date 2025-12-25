@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchRecipes, createRecipe, updateRecipe, deleteRecipe } from '../../store/recipeSlice';
 import type { Recipe, KosherType } from '../../types';
+import { validate, CreateRecipeSchema } from '@grandmas-recipes/shared-schemas';
 import styles from './RecipeManagement.module.scss';
 
 const CATEGORIES = [
@@ -16,6 +17,7 @@ const RecipeManagement = () => {
   const { recipes, isLoading } = useAppSelector((state) => state.recipes);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState<Recipe | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
     title: '',
     category: '',
@@ -46,6 +48,7 @@ const RecipeManagement = () => {
     });
     setEditingRecipe(null);
     setIsFormOpen(false);
+    setErrors({});
   };
 
   const handleEdit = (recipe: Recipe) => {
@@ -80,15 +83,22 @@ const RecipeManagement = () => {
       instructions: formData.instructions.split('\n').filter(i => i.trim()),
       prepTime: Number(formData.prepTime),
       difficulty: Number(formData.difficulty),
-      imageUrl: formData.imageUrl,
+      imageUrl: formData.imageUrl || undefined,
       isYemeni: formData.isYemeni,
       kosherType: formData.kosherType
     };
 
+    const result = validate(CreateRecipeSchema, recipeData);
+
+    if (!result.success) {
+      setErrors(result.errors);
+      return;
+    }
+
     if (editingRecipe) {
-      await dispatch(updateRecipe({ id: editingRecipe._id, data: recipeData }));
+      await dispatch(updateRecipe({ id: editingRecipe._id, data: result.data }));
     } else {
-      await dispatch(createRecipe(recipeData));
+      await dispatch(createRecipe(result.data));
     }
 
     resetForm();
@@ -227,6 +237,17 @@ const RecipeManagement = () => {
                 onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
               />
             </div>
+
+            {Object.keys(errors).length > 0 && (
+              <div className={styles.validationErrors}>
+                {errors.title && <p className="error-message">{errors.title}</p>}
+                {errors.category && <p className="error-message">{errors.category}</p>}
+                {errors.ingredients && <p className="error-message">{errors.ingredients}</p>}
+                {errors.instructions && <p className="error-message">{errors.instructions}</p>}
+                {errors.prepTime && <p className="error-message">{errors.prepTime}</p>}
+                {errors.difficulty && <p className="error-message">{errors.difficulty}</p>}
+              </div>
+            )}
 
             <div className={styles.formActions}>
               <button type="submit" className="btn btn-primary">

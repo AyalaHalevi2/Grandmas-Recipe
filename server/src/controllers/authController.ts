@@ -1,9 +1,20 @@
 import { Request, Response } from 'express';
+import mongoose from 'mongoose';
 import { User } from '../models/User';
+import { validate, RegisterSchema, LoginSchema } from '@grandmas-recipes/shared-schemas';
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { email, fullName, password } = req.body;
+    console.log('Registration request body:', req.body);
+    const result = validate(RegisterSchema, req.body);
+    console.log('Validation result:', result);
+
+    if (!result.success) {
+      res.status(400).json({ message: 'Validation error', errors: result.errors });
+      return;
+    }
+
+    const { email, fullName, password } = result.data;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -43,7 +54,14 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
 export const login = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { email, password } = req.body;
+    const result = validate(LoginSchema, req.body);
+
+    if (!result.success) {
+      res.status(400).json({ message: 'Validation error', errors: result.errors });
+      return;
+    }
+
+    const { email, password } = result.data;
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -93,6 +111,12 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
     const userId = req.cookies.userId;
     if (!userId) {
       res.status(401).json({ message: 'Not logged in' });
+      return;
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      res.clearCookie('userId');
+      res.status(401).json({ message: 'Invalid session' });
       return;
     }
 
