@@ -22,16 +22,16 @@ const seedDatabase = async () => {
     }
 
     // Create admin user
-    const existingAdmin = await User.findOne({ email: 'admin@rina.com' });
+    const existingAdmin = await User.findOne({ email: 'admin@user.com' });
     if (!existingAdmin) {
       const admin = new User({
-        email: 'admin@rina.com',
+        email: 'admin@user.com',
         fullName: 'סבתא רינה',
         password: 'IAmAdmin19296157#',
         role: 'admin'
       });
       await admin.save();
-      console.log('Admin user created: admin@rina.com');
+      console.log('Admin user created: admin@user.com');
     } else {
       console.log('Admin user already exists');
     }

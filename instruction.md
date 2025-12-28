@@ -19,7 +19,7 @@ Build a full-stack recipe website for "Savta Rina". The interface must be in **H
 ## Data Models
 1. **User:**
    - Fields: `email` (String, Unique, Required), `fullName` (String), `password` (Hashed), `role` (Admin/User).
-   - **Default Admin Account:** - Email: `admin@rina.com`
+   - **Default Admin Account:** - Email: `admin@user.com`
      - Password: `IAmAdmin19296157#`
 2. **Recipe:**
    - Fields: Title, Category, Ingredients (list), Instructions (steps), Prep Time (minutes), Difficulty (1-5), Rating (Average of all users).

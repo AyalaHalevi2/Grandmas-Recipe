@@ -133,5 +133,5 @@ const { email, password } = result.data;
 
 ## Default Admin Credentials
 
-- Email: `admin@rina.com`
+- Email: `admin@user.com`
 - Password: `IAmAdmin19296157#`

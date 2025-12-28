@@ -83,7 +83,7 @@ The application should now be accessible at `http://localhost:3000`.
 
 To access the admin dashboard and manage recipes, use the following seeded account:
 
-- **Email**: `admin@rina.com`
+- **Email**: `admin@user.com`
 - **Password**: `IAmAdmin19296157#`
 
 ## Project Structure
