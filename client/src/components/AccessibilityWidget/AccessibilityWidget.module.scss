@@ -1,0 +1,592 @@
+// ============================================
+// Accessibility Widget Styles
+// RTL-First, WCAG 2.1 AA Compliant
+// ============================================
+
+@use '../../styles/variables' as *;
+
+// ============================================
+// VARIABLES
+// ============================================
+
+$widget-z-index: 9998;
+$panel-z-index: 9999;
+$trigger-size: 56px;
+$panel-width: 340px;
+$border-radius: $radius-lg;
+
+// High contrast colors
+$hc-bg: #000000;
+$hc-text: #ffffff;
+$hc-accent: #ffff00;
+$hc-link: #00ffff;
+
+// ============================================
+// BACKDROP
+// ============================================
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: $widget-z-index - 1;
+  animation: fadeIn 0.2s ease-out;
+}
+
+// ============================================
+// TRIGGER BUTTON
+// ============================================
+
+.trigger {
+  position: fixed;
+  bottom: $spacing-lg;
+  left: $spacing-lg; // Left side in RTL
+  width: $trigger-size;
+  height: $trigger-size;
+  border-radius: $radius-round;
+  background: $primary-color;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: $widget-z-index;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  transition: all $transition-normal;
+
+  // Touch target minimum
+  min-width: $touch-target-comfortable;
+  min-height: $touch-target-comfortable;
+
+  &:hover {
+    background: $primary-dark;
+    transform: scale(1.05);
+  }
+
+  &:focus-visible {
+    outline: 3px solid $golden-honey;
+    outline-offset: 3px;
+  }
+
+  &[aria-expanded="true"] {
+    background: $secondary-color;
+  }
+
+  svg {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+.triggerLabel {
+  // Visually hidden but accessible
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ============================================
+// PANEL
+// ============================================
+
+.panel {
+  position: fixed;
+  bottom: calc($spacing-lg + $trigger-size + $spacing-md);
+  left: $spacing-lg;
+  width: $panel-width;
+  max-width: calc(100vw - $spacing-lg * 2);
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+  background: white;
+  border-radius: $border-radius;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  z-index: $panel-z-index;
+  animation: slideUp 0.25s ease-out;
+
+  // Scrollbar styling
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $cream;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $border-color;
+    border-radius: 4px;
+
+    &:hover {
+      background: $text-light;
+    }
+  }
+}
+
+// ============================================
+// HEADER
+// ============================================
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-lg;
+  border-bottom: 1px solid $border-color;
+  background: $cream;
+  border-radius: $border-radius $border-radius 0 0;
+}
+
+.title {
+  font-family: $font-family-display-hebrew;
+  font-size: $font-lg;
+  font-weight: 600;
+  color: $text-primary;
+  margin: 0;
+}
+
+.closeButton {
+  width: $touch-target-min;
+  height: $touch-target-min;
+  border-radius: $radius-round;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $text-secondary;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $background-dark;
+    color: $text-primary;
+  }
+
+  &:focus-visible {
+    outline: 3px solid $primary-color;
+    outline-offset: 2px;
+  }
+}
+
+// ============================================
+// OPTIONS
+// ============================================
+
+.options {
+  padding: $spacing-md;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  background: transparent;
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-align: right;
+  transition: all $transition-fast;
+  min-height: $touch-target-comfortable;
+  width: 100%;
+
+  &:hover {
+    background: $cream;
+  }
+
+  &:focus-visible {
+    outline: 3px solid $primary-color;
+    outline-offset: 2px;
+  }
+
+  &.active {
+    background: rgba($primary-color, 0.1);
+    border-color: $primary-color;
+
+    .optionStatus {
+      color: $primary-color;
+      font-weight: 600;
+    }
+  }
+}
+
+.optionIcon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-md;
+  background: $cream-dark;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $text-secondary;
+  transition: all $transition-fast;
+
+  .active & {
+    background: $primary-color;
+    color: white;
+  }
+}
+
+.optionContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.optionLabel {
+  font-family: $font-family-hebrew;
+  font-size: $font-md;
+  font-weight: 500;
+  color: $text-primary;
+}
+
+.optionDesc {
+  font-size: $font-sm;
+  color: $text-secondary;
+}
+
+.optionStatus {
+  font-size: $font-sm;
+  color: $text-light;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-sm;
+  background: $cream;
+}
+
+// ============================================
+// FONT SIZE CONTROL
+// ============================================
+
+.fontSizeControl {
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  border: 2px solid transparent;
+
+  &:focus-within {
+    border-color: $primary-light;
+  }
+}
+
+.fontSizeHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.fontSizeButtons {
+  display: flex;
+  gap: $spacing-sm;
+  justify-content: center;
+}
+
+.fontSizeBtn {
+  flex: 1;
+  min-height: $touch-target-min;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-md;
+  background: $cream;
+  border: 2px solid $border-color;
+  cursor: pointer;
+  font-family: $font-family-hebrew;
+  font-size: $font-sm;
+  font-weight: 500;
+  color: $text-primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: $cream-dark;
+    border-color: $primary-light;
+  }
+
+  &:focus-visible {
+    outline: 3px solid $primary-color;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  svg {
+    color: $text-secondary;
+  }
+}
+
+// ============================================
+// FOOTER
+// ============================================
+
+.footer {
+  padding: $spacing-md $spacing-lg $spacing-lg;
+  border-top: 1px solid $border-color;
+}
+
+.resetButton {
+  width: 100%;
+  min-height: $touch-target-min;
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  background: transparent;
+  border: 2px solid $border-color;
+  cursor: pointer;
+  font-family: $font-family-hebrew;
+  font-size: $font-md;
+  color: $text-secondary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $cream;
+    border-color: $error;
+    color: $error;
+
+    svg {
+      color: $error;
+    }
+  }
+
+  &:focus-visible {
+    outline: 3px solid $primary-color;
+    outline-offset: 2px;
+  }
+}
+
+// ============================================
+// SCREEN READER ONLY
+// ============================================
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ============================================
+// ANIMATIONS
+// ============================================
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============================================
+// RESPONSIVE
+// ============================================
+
+@media (max-width: $breakpoint-mobile) {
+  .trigger {
+    bottom: $spacing-md;
+    left: $spacing-md;
+    width: 48px;
+    height: 48px;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .panel {
+    bottom: calc($spacing-md + 48px + $spacing-sm);
+    left: $spacing-md;
+    right: $spacing-md;
+    width: auto;
+    max-width: none;
+  }
+
+  .header {
+    padding: $spacing-md;
+  }
+
+  .title {
+    font-size: $font-md;
+  }
+
+  .options {
+    padding: $spacing-sm;
+  }
+
+  .option {
+    padding: $spacing-sm;
+  }
+
+  .optionLabel {
+    font-size: $font-sm;
+  }
+
+  .optionDesc {
+    font-size: $font-xs;
+  }
+}
+
+// ============================================
+// HIGH CONTRAST MODE OVERRIDES
+// ============================================
+
+:global(.a11y-high-contrast) {
+  .trigger {
+    background: $hc-accent;
+    color: $hc-bg;
+    border: 3px solid $hc-text;
+
+    &:hover {
+      background: $hc-text;
+      color: $hc-bg;
+    }
+  }
+
+  .panel {
+    background: $hc-bg;
+    border: 3px solid $hc-text;
+  }
+
+  .header {
+    background: $hc-bg;
+    border-bottom-color: $hc-text;
+  }
+
+  .title {
+    color: $hc-text;
+  }
+
+  .closeButton {
+    color: $hc-text;
+
+    &:hover {
+      background: $hc-text;
+      color: $hc-bg;
+    }
+  }
+
+  .option {
+    border-color: $hc-text;
+    color: $hc-text;
+
+    &:hover {
+      background: rgba($hc-text, 0.1);
+    }
+
+    &.active {
+      background: $hc-accent;
+      border-color: $hc-accent;
+
+      .optionLabel,
+      .optionDesc,
+      .optionStatus {
+        color: $hc-bg;
+      }
+
+      .optionIcon {
+        background: $hc-bg;
+        color: $hc-accent;
+      }
+    }
+  }
+
+  .optionIcon {
+    background: rgba($hc-text, 0.2);
+    color: $hc-text;
+  }
+
+  .optionLabel,
+  .optionDesc {
+    color: $hc-text;
+  }
+
+  .optionStatus {
+    background: rgba($hc-text, 0.2);
+    color: $hc-text;
+  }
+
+  .fontSizeBtn {
+    background: $hc-bg;
+    border-color: $hc-text;
+    color: $hc-text;
+
+    &:hover:not(:disabled) {
+      background: $hc-text;
+      color: $hc-bg;
+    }
+  }
+
+  .footer {
+    border-top-color: $hc-text;
+  }
+
+  .resetButton {
+    border-color: $hc-text;
+    color: $hc-text;
+
+    &:hover {
+      background: $hc-accent;
+      border-color: $hc-accent;
+      color: $hc-bg;
+    }
+  }
+}
+
+// ============================================
+// REDUCED MOTION
+// ============================================
+
+:global(.a11y-reduced-motion) {
+  .panel {
+    animation: none;
+  }
+
+  .backdrop {
+    animation: none;
+  }
+
+  .trigger,
+  .option,
+  .fontSizeBtn,
+  .resetButton,
+  .closeButton,
+  .optionIcon {
+    transition: none;
+  }
+}

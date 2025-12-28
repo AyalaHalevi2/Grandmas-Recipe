@@ -4,8 +4,10 @@ import { Provider } from 'react-redux';
 import { store } from './store';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { getCurrentUser } from './store/authSlice';
+import { AccessibilityProvider } from './context/AccessibilityContext';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
+import AccessibilityWidget from './components/AccessibilityWidget/AccessibilityWidget';
 import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
@@ -20,7 +22,12 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="loading" role="status" aria-live="polite">
+        <div className="loading-spinner" aria-hidden="true"></div>
+        <span className="loading-text">טוען...</span>
+      </div>
+    );
   }
 
   if (!user) {
@@ -40,19 +47,32 @@ const AppContent = () => {
   return (
     <BrowserRouter>
       <div className="app-wrapper">
+        {/* Skip to Content Link - First focusable element */}
+        <a href="#main-content" className="skip-link">
+          דלג לתוכן הראשי
+        </a>
+
+        {/* Header Navigation */}
         <Header />
-        <main className="main-content">
+
+        {/* Main Content Area */}
+        <main id="main-content" className="main-content" role="main" aria-label="תוכן ראשי">
           <Routes>
-            <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/recipes" element={<ProtectedRoute><Recipes /></ProtectedRoute>} />
-            <Route path="/recipe/:id" element={<ProtectedRoute><RecipeDetail /></ProtectedRoute>} />
+            <Route path="/recipes" element={<Recipes />} />
+            <Route path="/recipe/:id" element={<RecipeDetail />} />
             <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
           </Routes>
         </main>
+
+        {/* Footer */}
         <Footer />
+
+        {/* Accessibility Widget - Floating Button */}
+        <AccessibilityWidget />
       </div>
     </BrowserRouter>
   );
@@ -61,7 +81,9 @@ const AppContent = () => {
 function App() {
   return (
     <Provider store={store}>
-      <AppContent />
+      <AccessibilityProvider>
+        <AppContent />
+      </AccessibilityProvider>
     </Provider>
   );
 }

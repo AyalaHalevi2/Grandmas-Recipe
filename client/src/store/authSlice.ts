@@ -78,6 +78,10 @@ const authSlice = createSlice({
     },
     updateFavorites: (state, action: { payload: { recipeId: string; isFavorite: boolean } }) => {
       if (state.user) {
+        // Ensure favorites array exists
+        if (!state.user.favorites) {
+          state.user.favorites = [];
+        }
         if (action.payload.isFavorite) {
           if (!state.user.favorites.includes(action.payload.recipeId)) {
             state.user.favorites.push(action.payload.recipeId);

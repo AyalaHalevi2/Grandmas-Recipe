@@ -8,14 +8,18 @@ import type { KosherType } from '../../types';
 import styles from './Recipes.module.scss';
 
 const DIFFICULTY_LEVELS = [
-  { value: '1', label: 'Very Easy' },
-  { value: '2', label: 'Easy' },
-  { value: '3', label: 'Medium' },
-  { value: '4', label: 'Challenging' },
-  { value: '5', label: 'Hard' }
+  { value: '1', label: 'קל מאוד' },
+  { value: '2', label: 'קל' },
+  { value: '3', label: 'בינוני' },
+  { value: '4', label: 'מאתגר' },
+  { value: '5', label: 'קשה' }
 ];
 
-const KOSHER_TYPES: KosherType[] = ['Parve', 'Dairy', 'Meat'];
+const KOSHER_TYPES: { value: KosherType; label: string }[] = [
+  { value: 'Parve', label: 'פרווה' },
+  { value: 'Dairy', label: 'חלבי' },
+  { value: 'Meat', label: 'בשרי' }
+];
 
 // Dynamic background colors by category
 const CATEGORY_BACKGROUNDS: Record<string, string> = {
@@ -150,56 +154,56 @@ const Recipes = () => {
       className={styles.recipesPage}
       style={dynamicBackground ? { backgroundColor: dynamicBackground, transition: 'background-color 0.3s ease' } : undefined}
     >
-      <h1>All Recipes</h1>
+      <h1>כל המתכונים</h1>
 
       <div className={styles.pageLayout}>
         {/* Left Sidebar - Filters */}
         <aside className={styles.filtersSidebar}>
-          <h3 className={styles.filtersTitle}>Filters</h3>
+          <h3 className={styles.filtersTitle}>סינון</h3>
 
           <div className={styles.filterGroup}>
-            <label>Category</label>
+            <label>קטגוריה</label>
             <Dropdown
               name="category"
               value={filters.category}
               onChange={handleFilterChange}
-              placeholder="All"
+              placeholder="הכל"
               options={[
-                { value: '', label: 'All' },
+                { value: '', label: 'הכל' },
                 ...categories.map((cat) => ({ value: cat, label: cat }))
               ]}
             />
           </div>
 
           <div className={styles.filterGroup}>
-            <label>Sort By</label>
+            <label>מיון לפי</label>
             <Dropdown
               name="sortBy"
               value={filters.sortBy}
               onChange={handleFilterChange}
-              placeholder="Default"
+              placeholder="ברירת מחדל"
               options={[
-                { value: '', label: 'Default' },
-                { value: 'title', label: 'A-Z' },
-                { value: 'rating', label: 'Rating' },
-                { value: 'prepTime', label: 'Prep Time' }
+                { value: '', label: 'ברירת מחדל' },
+                { value: 'title', label: 'א-ת' },
+                { value: 'rating', label: 'דירוג' },
+                { value: 'prepTime', label: 'זמן הכנה' }
               ]}
             />
           </div>
 
           <div className={styles.filterGroup}>
-            <label>Max Time (minutes)</label>
+            <label>זמן מקסימלי (דקות)</label>
             <input
               type="number"
               name="maxTime"
-              placeholder="No limit"
+              placeholder="ללא הגבלה"
               value={filters.maxTime}
               onChange={handleFilterChange}
             />
           </div>
 
           <div className={styles.filterGroup}>
-            <label>Difficulty</label>
+            <label>רמת קושי</label>
             <div className={styles.chipGroup}>
               {DIFFICULTY_LEVELS.map((level) => (
                 <button
@@ -215,38 +219,38 @@ const Recipes = () => {
           </div>
 
           <div className={styles.filterGroup}>
-            <label>Kosher Type</label>
+            <label>סוג כשרות</label>
             <div className={styles.kosherChips}>
               {KOSHER_TYPES.map((type) => (
                 <button
-                  key={type}
+                  key={type.value}
                   type="button"
-                  className={`${styles.kosherChip} ${styles[type.toLowerCase()]} ${filters.kosherType.includes(type) ? styles.active : ''}`}
-                  onClick={() => toggleKosherType(type)}
+                  className={`${styles.kosherChip} ${styles[type.value.toLowerCase()]} ${filters.kosherType.includes(type.value) ? styles.active : ''}`}
+                  onClick={() => toggleKosherType(type.value)}
                 >
-                  {type}
+                  {type.label}
                 </button>
               ))}
             </div>
           </div>
 
           <div className={styles.filterGroup}>
-            <label>Special</label>
+            <label>מיוחד</label>
             <button
               type="button"
               className={`${styles.yemeniToggle} ${filters.isYemeni ? styles.active : ''}`}
               onClick={() => setFilters(prev => ({ ...prev, isYemeni: !prev.isYemeni }))}
             >
-              {filters.isYemeni ? '✓' : ''} Yemeni Food
+              {filters.isYemeni ? '✓' : ''} אוכל תימני
             </button>
           </div>
 
           <div className={styles.filterActions}>
             <button onClick={handleApplyFilters} className="btn btn-primary">
-              Apply Filters
+              החל סינון
             </button>
             <button onClick={handleClearFilters} className="btn btn-outline">
-              Clear Filters
+              נקה סינון
             </button>
           </div>
         </aside>
@@ -256,10 +260,10 @@ const Recipes = () => {
           {isLoading ? (
             <div className="loading"></div>
           ) : recipes.length === 0 ? (
-            <p className={styles.noRecipes}>No recipes found</p>
+            <p className={styles.noRecipes}>לא נמצאו מתכונים</p>
           ) : (
             <>
-              <p className={styles.resultsCount}>{recipes.length} recipes found</p>
+              <p className={styles.resultsCount}>נמצאו {recipes.length} מתכונים</p>
               <div className={styles.recipeGrid}>
                 {recipes.map((recipe) => (
                   <RecipeCard key={recipe._id} recipe={recipe} />

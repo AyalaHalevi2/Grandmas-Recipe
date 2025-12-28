@@ -486,6 +486,23 @@ input[type="tel"] {
 }
 
 // ===========================================
+// SCREEN READER ONLY / VISUALLY HIDDEN
+// ===========================================
+
+.visually-hidden,
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+// ===========================================
 // PRINT STYLES
 // ===========================================
 
@@ -503,4 +520,375 @@ input[type="tel"] {
     box-shadow: none;
     border: 1px solid #ccc;
   }
+}
+
+// ===========================================
+// ACCESSIBILITY MODES
+// Global classes applied by AccessibilityContext
+// ===========================================
+
+// CSS Custom Property for font scaling
+:root {
+  --a11y-font-scale: 1;
+}
+
+// -----------------------------------------
+// HIGH CONTRAST MODE
+// WCAG 2.1 AAA contrast ratios
+// -----------------------------------------
+
+$hc-bg: #000000;
+$hc-text: #ffffff;
+$hc-accent: #ffff00;
+$hc-link: #00ffff;
+$hc-error: #ff6b6b;
+$hc-success: #00ff00;
+$hc-border: #ffffff;
+
+body.a11y-high-contrast {
+  background-color: $hc-bg !important;
+  color: $hc-text !important;
+
+  // Links
+  a {
+    color: $hc-link !important;
+    text-decoration: underline !important;
+
+    &:hover,
+    &:focus {
+      color: $hc-accent !important;
+      outline: 2px solid $hc-accent !important;
+    }
+
+    &:visited {
+      color: #ee82ee !important; // Violet for visited
+    }
+  }
+
+  // Headings
+  h1, h2, h3, h4, h5, h6 {
+    color: $hc-text !important;
+  }
+
+  // Paragraphs and text
+  p, span, li, td, th, label, div {
+    color: $hc-text !important;
+  }
+
+  // Buttons
+  button,
+  .btn {
+    background-color: $hc-accent !important;
+    color: $hc-bg !important;
+    border: 2px solid $hc-text !important;
+
+    &:hover,
+    &:focus {
+      background-color: $hc-text !important;
+      color: $hc-bg !important;
+      outline: 3px solid $hc-accent !important;
+    }
+
+    &:disabled {
+      background-color: #666 !important;
+      color: #999 !important;
+      border-color: #999 !important;
+    }
+  }
+
+  // Form inputs
+  input,
+  textarea,
+  select {
+    background-color: $hc-bg !important;
+    color: $hc-text !important;
+    border: 2px solid $hc-text !important;
+
+    &::placeholder {
+      color: #aaa !important;
+    }
+
+    &:focus {
+      outline: 3px solid $hc-accent !important;
+      border-color: $hc-accent !important;
+    }
+  }
+
+  // Cards and containers
+  .card,
+  [class*="card"],
+  [class*="Card"] {
+    background-color: $hc-bg !important;
+    border: 2px solid $hc-text !important;
+    box-shadow: none !important;
+  }
+
+  // Header and Footer
+  header,
+  footer,
+  [class*="header"],
+  [class*="Header"],
+  [class*="footer"],
+  [class*="Footer"] {
+    background-color: $hc-bg !important;
+    border-color: $hc-text !important;
+  }
+
+  // Images - ensure visible borders
+  img {
+    border: 1px solid $hc-text !important;
+  }
+
+  // Error states
+  .error,
+  .error-message,
+  [class*="error"] {
+    color: $hc-error !important;
+    border-color: $hc-error !important;
+  }
+
+  // Success states
+  .success,
+  [class*="success"] {
+    color: $hc-success !important;
+    border-color: $hc-success !important;
+  }
+
+  // Focus states (enhanced)
+  *:focus-visible {
+    outline: 3px solid $hc-accent !important;
+    outline-offset: 3px !important;
+  }
+
+  // Remove background images and gradients
+  [style*="background-image"],
+  [style*="gradient"] {
+    background-image: none !important;
+  }
+
+  // Star ratings
+  .star,
+  [class*="star"] {
+    &.filled {
+      color: $hc-accent !important;
+    }
+  }
+
+  // Loading spinner
+  .loading-spinner {
+    border-color: $hc-text !important;
+    border-top-color: $hc-accent !important;
+  }
+}
+
+// -----------------------------------------
+// HIGHLIGHT LINKS MODE
+// Makes all interactive elements highly visible
+// -----------------------------------------
+
+body.a11y-highlight-links {
+  // Links
+  a {
+    background-color: rgba($primary-color, 0.15) !important;
+    border-bottom: 3px solid $primary-color !important;
+    padding: 2px 4px !important;
+    text-decoration: none !important;
+
+    &:hover,
+    &:focus {
+      background-color: $primary-color !important;
+      color: white !important;
+    }
+  }
+
+  // Buttons
+  button:not([disabled]),
+  .btn:not([disabled]),
+  [role="button"]:not([disabled]) {
+    outline: 3px dashed $warm-accent !important;
+    outline-offset: 2px !important;
+
+    &:hover,
+    &:focus {
+      outline-style: solid !important;
+      outline-color: $primary-color !important;
+    }
+  }
+
+  // Form controls
+  input,
+  textarea,
+  select {
+    outline: 3px dashed $secondary-color !important;
+    outline-offset: 2px !important;
+
+    &:focus {
+      outline-style: solid !important;
+      outline-color: $primary-color !important;
+    }
+  }
+
+  // Clickable elements
+  [onclick],
+  [tabindex="0"],
+  label[for] {
+    outline: 2px dashed $text-secondary !important;
+    outline-offset: 2px !important;
+  }
+}
+
+// -----------------------------------------
+// REDUCED MOTION MODE
+// Disables all animations and transitions
+// -----------------------------------------
+
+body.a11y-reduced-motion {
+  // Disable all animations
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  // Stop loading spinner animation
+  .loading-spinner {
+    animation: none !important;
+    border: 4px solid $primary-color !important;
+  }
+
+  // Stop skeleton loading
+  .skeleton {
+    animation: none !important;
+    background: $cream-dark !important;
+  }
+
+  // Disable hover transforms
+  .card:hover {
+    transform: none !important;
+  }
+}
+
+// -----------------------------------------
+// DYSLEXIC-FRIENDLY FONT MODE
+// Uses OpenDyslexic or similar readable font
+// -----------------------------------------
+
+// Import OpenDyslexic font (free dyslexia-friendly font)
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/woff/OpenDyslexic-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/woff/OpenDyslexic-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+// Hebrew-friendly alternative: Use increased letter/word spacing
+body.a11y-dyslexic-font {
+  // For Hebrew, we focus on spacing and readability rather than font change
+  // as OpenDyslexic doesn't support Hebrew characters
+
+  // Increase letter and word spacing
+  letter-spacing: 0.12em !important;
+  word-spacing: 0.25em !important;
+
+  // Increase line height for better readability
+  line-height: 2 !important;
+
+  // Apply to all text elements
+  p, span, li, td, th, label, a, h1, h2, h3, h4, h5, h6 {
+    letter-spacing: 0.12em !important;
+    word-spacing: 0.25em !important;
+    line-height: 2 !important;
+  }
+
+  // Paragraphs get extra spacing
+  p {
+    margin-bottom: $spacing-lg !important;
+  }
+
+  // Use OpenDyslexic for English content
+  [lang="en"],
+  .english,
+  input[type="email"],
+  input[type="url"] {
+    font-family: 'OpenDyslexic', 'Comic Sans MS', 'Arial', sans-serif !important;
+  }
+
+  // Remove justified text (harder to read for dyslexia)
+  * {
+    text-align: right !important;
+    hyphens: none !important;
+  }
+
+  // Center-aligned elements stay centered
+  .text-center,
+  [class*="center"] {
+    text-align: center !important;
+  }
+}
+
+// -----------------------------------------
+// SKIP LINK (Enhanced)
+// -----------------------------------------
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: $primary-color;
+  color: white;
+  padding: $spacing-md $spacing-lg;
+  border-radius: $radius-md;
+  z-index: 10000;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+  &:focus {
+    top: $spacing-md;
+    outline: 3px solid $golden-honey;
+    outline-offset: 2px;
+  }
+
+  // High contrast mode override
+  .a11y-high-contrast & {
+    background: $hc-accent !important;
+    color: $hc-bg !important;
+
+    &:focus {
+      outline-color: $hc-text !important;
+    }
+  }
+}
+
+// -----------------------------------------
+// FOCUS VISIBLE (Enhanced for all modes)
+// -----------------------------------------
+
+// Ensure focus is always visible
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 3px solid $primary-color;
+  outline-offset: 2px;
+}
+
+// Skip link specific focus
+a.skip-link:focus {
+  outline: 3px solid $golden-honey;
+  outline-offset: 2px;
 }
