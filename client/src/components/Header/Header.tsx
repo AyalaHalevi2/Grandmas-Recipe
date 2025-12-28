@@ -4,14 +4,11 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { logout } from '../../store/authSlice';
 import { setSearchQuery } from '../../store/recipeSlice';
 import styles from './Header.module.scss';
-//import logoSvg from '../../assets/logo.svg';
 import searchIcon from '../../assets/search.svg';
 import userIcon from '../../assets/user.svg';
 import heartIcon from '../../assets/heart.svg';
 import plusIcon from '../../assets/plus.svg';
-//import newLogoSVG from './../../assets/newlogo.svg'
-import logoSVG from './../../assets/pot_no_bg (4).svg'
-import languageIcon from '../../assets/language.svg';
+import logoSVG from './../../assets/pot_no_bg (4).svg';
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -19,8 +16,6 @@ const Header = () => {
   const { user } = useAppSelector((state) => state.auth);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchValue, setSearchValue] = useState('');
-  // Language state for future localization
-  const [lang, setLang] = useState<'he' | 'en'>('he');
 
   const handleLogout = async () => {
     await dispatch(logout());
@@ -42,92 +37,123 @@ const Header = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const closeUserMenu = () => {
+    setShowUserMenu(false);
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        {/* Left - Logo */}
+        {/* Logo - Right side in RTL */}
         <Link to="/" className={styles.logo} onClick={handleLogoClick}>
-          <img src={logoSVG} alt="Grandma's Recipes" />
-          <span className={styles.logoName}>  Grandma's<br/>Recipes</span>
-
+          <img src={logoSVG} alt="המתכונים של סבתא" />
+          <div className={styles.logoText}>
+            <span className={styles.logoTitle}>המתכונים של סבתא</span>
+            <span className={styles.logoSubtitle}>טעמים של בית</span>
+          </div>
         </Link>
 
-        {/* Center - Search Bar */}
+        {/* Search Bar - Center */}
         <form className={styles.searchBar} onSubmit={handleSearch}>
           <input
             type="text"
-            placeholder="Search recipes..."
+            placeholder="חיפוש מתכונים..."
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             className={styles.searchInput}
           />
-          <button type="submit" className={styles.searchButton}>
-            <img src={searchIcon} alt="Search" />
+          <button type="submit" className={styles.searchButton} aria-label="חיפוש">
+            <img src={searchIcon} alt="" />
           </button>
         </form>
 
-        {/* Right - Action Buttons */}
+        {/* Action Buttons - Left side in RTL */}
         <div className={styles.actions}>
+          {/* Admin - Plus (only for admin) */}
+          {user?.role === 'admin' && (
+            <Link
+              to="/admin"
+              className={styles.actionButton}
+              aria-label="הוספת מתכון"
+              title="הוספת מתכון"
+            >
+              <img src={plusIcon} alt="" />
+            </Link>
+          )}
+
+          {/* Favorites - Heart */}
+          <Link
+            to="/favorites"
+            className={styles.actionButton}
+            aria-label="מועדפים"
+            title="מועדפים"
+          >
+            <img src={heartIcon} alt="" />
+          </Link>
+
           {/* User Menu */}
           <div className={styles.userMenuWrapper}>
             <button
               className={styles.actionButton}
               onClick={toggleUserMenu}
-              aria-label="User menu"
+              aria-label="תפריט משתמש"
+              aria-expanded={showUserMenu}
+              title={user ? user.fullName : 'התחברות'}
             >
-              <img src={userIcon} alt="User" />
+              <img src={userIcon} alt="" />
             </button>
 
             {showUserMenu && (
-              <div className={styles.userMenu}>
-                {user ? (
-                  <>
-                    <div className={styles.userInfo}>Hello, {user.fullName}</div>
-                    <button onClick={handleLogout} className={styles.menuItem}>
-                      Logout
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link
-                      to="/login"
-                      className={styles.menuItem}
-                      onClick={() => setShowUserMenu(false)}
-                    >
-                      Login
-                    </Link>
-                    <Link
-                      to="/register"
-                      className={styles.menuItem}
-                      onClick={() => setShowUserMenu(false)}
-                    >
-                      Register
-                    </Link>
-                  </>
-                )}
-              </div>
+              <>
+                <div
+                  className={styles.menuBackdrop}
+                  onClick={closeUserMenu}
+                  aria-hidden="true"
+                />
+                <div className={styles.userMenu} role="menu">
+                  {user ? (
+                    <>
+                      <div className={styles.userInfo}>
+                        <span className={styles.greeting}>שלום,</span>
+                        <span className={styles.userName}>{user.fullName}</span>
+                      </div>
+                      <button
+                        onClick={handleLogout}
+                        className={styles.menuItem}
+                        role="menuitem"
+                      >
+                        התנתקות
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        to="/login"
+                        className={styles.menuItem}
+                        onClick={closeUserMenu}
+                        role="menuitem"
+                      >
+                        התחברות
+                      </Link>
+                      <Link
+                        to="/register"
+                        className={styles.menuItem}
+                        onClick={closeUserMenu}
+                        role="menuitem"
+                      >
+                        הרשמה
+                      </Link>
+                    </>
+                  )}
+                </div>
+              </>
             )}
           </div>
 
-          {/* Favorites - Heart */}
-          <Link to="/favorites" className={styles.actionButton} aria-label="Favorites">
-            <img src={heartIcon} alt="Favorites" />
-          </Link>
-
-          {/* Language Toggle */}
-          <button
-            className={styles.actionButton}
-            onClick={() => setLang(prev => prev === 'he' ? 'en' : 'he')}
-            aria-label="Toggle language"
-            title={lang === 'he' ? 'Switch to English' : 'Switch to Hebrew'}
-          >
-            <img src={languageIcon} alt="Language" />
-          </button>
-
-          {/* Admin - Plus (only for admin) */}
-          {user?.role === 'admin' && (
-            <Link to="/admin" className={styles.actionButton} aria-label="Add recipe">
-              <img src={plusIcon} alt="Add recipe" />
+          {/* Groups - only for authenticated users */}
+          {user && (
+            <Link to="/groups" className={styles.actionButton} aria-label="Groups" title="קבוצות">
+              <span className={styles.groupIcon}>👥</span>
             </Link>
           )}
         </div>

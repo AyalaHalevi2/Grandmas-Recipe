@@ -29,16 +29,27 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
       dispatch(updateFavorites({ recipeId: recipe._id, isFavorite: result.payload.isFavorite }));
     }
   };
-  const getDifficultyText = (difficulty: number) => {
-    const levels = ['', 'Very Easy', 'Easy', 'Medium', 'Challenging', 'Hard'];
+
+  const getDifficultyText = (difficulty: number): string => {
+    const levels = ['', 'קל מאוד', 'קל', 'בינוני', 'מאתגר', 'קשה'];
     return levels[difficulty] || '';
+  };
+
+  const getKosherText = (kosherType: string): string => {
+    const types: Record<string, string> = {
+      'Parve': 'פרווה',
+      'Dairy': 'חלבי',
+      'Meat': 'בשרי'
+    };
+    return types[kosherType] || kosherType;
   };
 
   const renderStars = (rating: number) => {
     const stars = [];
+    const roundedRating = Math.round(rating);
     for (let i = 1; i <= 5; i++) {
       stars.push(
-        <span key={i} className={i <= rating ? styles.starFilled : styles.star}>
+        <span key={i} className={i <= roundedRating ? styles.starFilled : styles.star}>
           ★
         </span>
       );
@@ -46,21 +57,35 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
     return stars;
   };
 
+  const cardClassName = `${styles.card} ${recipe.isYemeni ? styles.yemeni : ''}`;
+
   return (
-    <Link to={`/recipe/${recipe._id}`} className={styles.card}>
+    <Link
+      to={`/recipe/${recipe._id}`}
+      className={cardClassName}
+      aria-label={`${recipe.title}, ${getDifficultyText(recipe.difficulty)}, ${recipe.prepTime} דקות`}
+    >
       <div className={styles.imageContainer}>
         {recipe.imageUrl ? (
-          <img src={recipe.imageUrl} alt={recipe.title} />
+          <img src={recipe.imageUrl} alt={recipe.title} loading="lazy" />
         ) : (
           <div className={styles.placeholder}>
-            <span>🍽️</span>
+            <span>🍲</span>
           </div>
         )}
+
+        {/* Gradient overlay */}
+        <div className={styles.imageOverlay} />
+
+        {/* Category badge */}
         <span className={styles.category}>{recipe.category}</span>
+
+        {/* Favorite button */}
         <button
           className={`${styles.favoriteBtn} ${isFavorite ? styles.favorited : ''}`}
           onClick={handleToggleFavorite}
-          aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+          aria-label={isFavorite ? 'הסר מהמועדפים' : 'הוסף למועדפים'}
+          aria-pressed={isFavorite}
         >
           <svg viewBox="0 0 24 24" width="24" height="24">
             <path
@@ -71,20 +96,38 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
             />
           </svg>
         </button>
+
+        {/* Kosher badge */}
+        {recipe.kosherType && (
+          <span className={`${styles.kosherBadge} ${styles[recipe.kosherType.toLowerCase()]}`}>
+            {getKosherText(recipe.kosherType)}
+          </span>
+        )}
+
+        {/* Yemeni badge */}
+        {recipe.isYemeni && (
+          <span className={styles.yemeniBadge}>תימני</span>
+        )}
       </div>
 
       <div className={styles.content}>
         <h3 className={styles.title}>{recipe.title}</h3>
 
         <div className={styles.meta}>
-          <span className={styles.time}>⏱️ {recipe.prepTime} min</span>
+          <span className={styles.time}>
+            <span className={styles.icon}>⏱️</span>
+            {recipe.prepTime} דקות
+          </span>
           <span className={styles.difficulty}>
-            📊 {getDifficultyText(recipe.difficulty)}
+            <span className={styles.icon}>📊</span>
+            {getDifficultyText(recipe.difficulty)}
           </span>
         </div>
 
         <div className={styles.rating}>
-          {renderStars(Math.round(recipe.averageRating))}
+          <div className={styles.stars}>
+            {renderStars(recipe.averageRating)}
+          </div>
           <span className={styles.ratingValue}>
             ({recipe.averageRating.toFixed(1)})
           </span>

@@ -1,45 +1,156 @@
 @use '../../styles/variables' as *;
 
+// ===========================================
+// REGISTER PAGE - Warm, Welcoming Design
+// Uses same styling as Login for consistency
+// ===========================================
+
 .registerPage {
   min-height: calc(100vh - 80px);
   display: flex;
   justify-content: center;
   align-items: center;
   padding: $spacing-xl;
+
   background: linear-gradient(135deg, $background 0%, $cream 100%);
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(
+      circle at 70% 30%,
+      rgba($warm-accent, 0.05) 0%,
+      transparent 50%
+    );
+    pointer-events: none;
+  }
 }
 
 .card {
+  position: relative;
   background: white;
-  padding: $spacing-xl;
+  padding: $spacing-xl * 2;
   border-radius: $radius-lg;
-  box-shadow: 0 4px 20px $shadow;
+  box-shadow: 0 8px 40px $shadow-warm;
   width: 100%;
-  max-width: 400px;
+  max-width: 440px;
+  animation: cardSlideIn 0.4s ease-out;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 25px 25px 0 0;
+    border-color: $parchment transparent transparent transparent;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 25px;
+    height: 25px;
+    background: linear-gradient(
+      135deg,
+      $cream-dark 0%,
+      $cream-dark 50%,
+      transparent 50%,
+      transparent 100%
+    );
+  }
+}
+
+@keyframes cardSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.logoSection {
+  text-align: center;
+  margin-bottom: $spacing-lg;
+}
+
+.logo {
+  width: 80px;
+  height: auto;
+  filter: drop-shadow(0 2px 4px $shadow-warm);
 }
 
 .title {
-  color: $primary-color;
+  font-family: $font-family-display-hebrew;
+  color: $text-primary;
   font-size: $font-2xl;
   text-align: center;
-  margin-bottom: $spacing-sm;
+  margin-bottom: $spacing-xs;
 }
 
 .subtitle {
-  color: $text-light;
+  font-family: $font-family-hebrew;
+  color: $text-secondary;
   text-align: center;
   margin-bottom: $spacing-xl;
+  font-size: $font-md;
+  line-height: $line-height-hebrew;
 }
 
 .form {
   display: flex;
   flex-direction: column;
   gap: $spacing-md;
+}
 
-  button {
+.formGroup {
+  label {
+    display: block;
+    margin-bottom: $spacing-sm;
+    font-family: $font-family-hebrew;
+    font-weight: 600;
+    color: $text-primary;
+    font-size: $font-md;
+  }
 
-    padding: $spacing-md;
-    font-size: $font-lg;
+  input {
+    width: 100%;
+    padding: $spacing-md $spacing-lg;
+    border: 2px solid $border-color;
+    border-radius: $radius-md;
+    font-family: $font-family-hebrew;
+    font-size: $font-md;
+    color: $text-primary;
+    background: $cream;
+    transition: all $transition-normal;
+
+    &::placeholder {
+      color: $text-light;
+      text-align: right;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      background: white;
+      box-shadow: 0 0 0 4px rgba($primary-color, 0.1);
+    }
+
+    &:hover:not(:focus) {
+      border-color: $primary-light;
+    }
   }
 }
 
@@ -47,29 +158,151 @@
   position: relative;
 
   input {
-    width: 100%;
-    padding-right: 45px;
+    padding-left: 50px;
   }
 }
+
 .eyeButton {
   position: absolute;
-top:-10%;
-  right: 0;
-  width: fit-content;
+  left: $spacing-md;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: $spacing-sm;
+  cursor: pointer;
+  color: $text-light;
+  transition: color $transition-normal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    color: $primary-color;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
 }
 
+.errorMessage {
+  font-family: $font-family-hebrew;
+  color: $error;
+  font-size: $font-sm;
+  margin-top: $spacing-xs;
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+
+  &::before {
+    content: '⚠️';
+    font-size: 0.9em;
+  }
+}
+
+.submitBtn {
+  width: 100%;
+  padding: $spacing-md;
+  background: $primary-color;
+  color: white;
+  border: none;
+  border-radius: $radius-md;
+  font-family: $font-family-hebrew;
+  font-size: $font-lg;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $transition-normal;
+  margin-top: $spacing-sm;
+
+  &:hover:not(:disabled) {
+    background: $primary-dark;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px $shadow-warm;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 3px solid $primary-color;
+    outline-offset: 2px;
+  }
+}
+
+.loadingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin: $spacing-xl 0;
+  color: $text-light;
+  font-family: $font-family-hebrew;
+  font-size: $font-sm;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: $border-color;
+  }
+}
 
 .loginLink {
   text-align: center;
-  margin-top: $spacing-lg;
+  font-family: $font-family-hebrew;
   color: $text-secondary;
+  font-size: $font-md;
+  margin: 0;
 
   a {
     color: $primary-color;
-    font-weight: 500;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color $transition-normal;
 
     &:hover {
+      color: $primary-dark;
       text-decoration: underline;
     }
+  }
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .registerPage {
+    padding: $spacing-md;
+  }
+
+  .card {
+    padding: $spacing-xl;
+  }
+
+  .title {
+    font-size: $font-xl;
   }
 }

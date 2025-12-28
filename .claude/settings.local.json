@@ -11,7 +11,17 @@
       "Bash(npm run build:shared:*)",
       "Bash(npm run build:server:*)",
       "Bash(npm run build:client:*)",
-      "Bash(lsof:*)"
+      "Bash(lsof:*)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(powershell:*)",
+      "Bash(git add:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(npm run dev:server:*)",
+      "Bash(tasklist:*)",
+      "Bash(npm run seed -- --force)",
+      "Bash(git checkout:*)"
     ]
   }
 }

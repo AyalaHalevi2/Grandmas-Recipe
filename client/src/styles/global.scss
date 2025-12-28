@@ -1,5 +1,20 @@
+// ============================================
+// Savta Rina's Recipes - Global Styles
+// RTL-First, Hebrew-Optimized
+// ============================================
+
 @use './variables' as *;
 @use './buttons';
+
+// ===========================================
+// GOOGLE FONTS IMPORT
+// ===========================================
+
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&family=Frank+Ruhl+Libre:wght@400;500;700&family=Amatic+SC:wght@400;700&display=swap');
+
+// ===========================================
+// CSS RESET & BASE
+// ===========================================
 
 * {
   margin: 0;
@@ -8,19 +23,25 @@
 }
 
 html {
-  direction: ltr;
+  direction: rtl;
   font-size: 16px;
+  scroll-behavior: smooth;
 }
 
 body {
-  font-family: 'Montserrat Alternates', sans-serif;
+  font-family: $font-family-hebrew;
   background-color: $background;
   color: $text-primary;
-  line-height: 1.6;
+  line-height: $line-height-hebrew;
   min-height: 100vh;
+  text-align: right;
+  letter-spacing: $letter-spacing-hebrew;
 }
 
-// App layout for fixed header
+// ===========================================
+// APP LAYOUT
+// ===========================================
+
 .app-wrapper {
   display: flex;
   flex-direction: column;
@@ -29,45 +50,132 @@ body {
 
 .main-content {
   flex: 1;
-  padding-top: 82px; // Account for fixed header height
-  animation: fadeIn 0.3s ease-out;
+  padding-top: 82px;
+  animation: pageEnter 0.4s ease-out;
 }
+
+// ===========================================
+// TYPOGRAPHY
+// ===========================================
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-family-display-hebrew;
+  line-height: $line-height-heading;
+  letter-spacing: $letter-spacing-heading;
+  color: $text-primary;
+}
+
+h1 { font-size: $font-3xl; font-weight: 700; }
+h2 { font-size: $font-2xl; font-weight: 600; }
+h3 { font-size: $font-xl; font-weight: 600; }
+h4 { font-size: $font-lg; font-weight: 500; }
+
+p {
+  line-height: $line-height-body;
+  margin-bottom: $spacing-md;
+}
+
+// ===========================================
+// LINKS
+// ===========================================
 
 a {
   color: $primary-color;
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color $transition-normal;
 
   &:hover {
     color: $primary-dark;
   }
 }
 
+// ===========================================
+// BUTTONS & INTERACTIVE ELEMENTS
+// ===========================================
+
 button {
   cursor: pointer;
-  font-family: inherit;
+  font-family: $font-family-hebrew;
 }
 
+// ===========================================
+// FORM ELEMENTS - RTL Optimized
+// ===========================================
+
 input, textarea, select {
-  font-family: inherit;
+  font-family: $font-family-hebrew;
   font-size: $font-md;
+  text-align: right;
+  direction: rtl;
 }
+
+// Numbers should remain LTR
+input[type="number"],
+input[type="tel"] {
+  direction: ltr;
+  text-align: left;
+}
+
+// ===========================================
+// CONTAINER
+// ===========================================
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 $spacing-md;
+
+  @media (min-width: $breakpoint-tablet) {
+    padding: 0 $spacing-lg;
+  }
 }
 
-// Utility classes
+// ===========================================
+// RTL UTILITY CLASSES
+// ===========================================
+
+.text-start {
+  text-align: right; // RTL start
+}
+
+.text-end {
+  text-align: left; // RTL end
+}
+
 .text-center {
   text-align: center;
 }
 
-.text-left {
-  text-align: left;
+// Flexbox RTL helpers
+.flex-rtl {
+  display: flex;
+  flex-direction: row-reverse;
 }
 
+// Icons that need mirroring in RTL
+.icon-mirror {
+  transform: scaleX(-1);
+}
+
+// ===========================================
+// SPACING UTILITIES
+// ===========================================
+
+// Margin inline (RTL-aware)
+.ms-1 { margin-inline-start: $spacing-sm; }
+.ms-2 { margin-inline-start: $spacing-md; }
+.ms-3 { margin-inline-start: $spacing-lg; }
+.me-1 { margin-inline-end: $spacing-sm; }
+.me-2 { margin-inline-end: $spacing-md; }
+.me-3 { margin-inline-end: $spacing-lg; }
+
+// Padding inline (RTL-aware)
+.ps-1 { padding-inline-start: $spacing-sm; }
+.ps-2 { padding-inline-start: $spacing-md; }
+.pe-1 { padding-inline-end: $spacing-sm; }
+.pe-2 { padding-inline-end: $spacing-md; }
+
+// Traditional margin utilities
 .mt-1 { margin-top: $spacing-sm; }
 .mt-2 { margin-top: $spacing-md; }
 .mt-3 { margin-top: $spacing-lg; }
@@ -75,34 +183,47 @@ input, textarea, select {
 .mb-2 { margin-bottom: $spacing-md; }
 .mb-3 { margin-bottom: $spacing-lg; }
 
+// ===========================================
+// FORM GROUP STYLES
+// ===========================================
 
-// Form styles
 .form-group {
   margin-bottom: $spacing-md;
 
   label {
     display: block;
-    margin-bottom: $spacing-xs;
-    font-weight: 500;
-    color: $text-secondary;
+    margin-bottom: $spacing-sm;
+    font-weight: 600;
+    color: $text-primary;
+    font-size: $font-md;
   }
 
   input, textarea, select {
     width: 100%;
-    padding: $spacing-sm $spacing-md;
-    border: 1px solid $border-color;
+    padding: $spacing-md $spacing-lg;
+    border: 2px solid $border-color;
     border-radius: $radius-md;
-    background-color: white;
-    transition: border-color 0.3s ease;
+    background-color: $cream;
+    transition: all $transition-normal;
+
+    &::placeholder {
+      color: $text-light;
+    }
 
     &:focus {
       outline: none;
       border-color: $primary-color;
+      background-color: white;
+      box-shadow: 0 0 0 4px rgba($primary-color, 0.1);
+    }
+
+    &:hover:not(:focus) {
+      border-color: $primary-light;
     }
   }
 
   textarea {
-    min-height: 100px;
+    min-height: 120px;
     resize: vertical;
   }
 }
@@ -111,39 +232,131 @@ input, textarea, select {
   color: $error;
   font-size: $font-sm;
   margin-top: $spacing-xs;
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
 }
 
-// Card styles
+// ===========================================
+// CARD STYLES
+// ===========================================
+
 .card {
   background-color: white;
   border-radius: $radius-lg;
-  box-shadow: 0 2px 8px $shadow;
+  box-shadow: 0 4px 16px $shadow-warm;
   padding: $spacing-lg;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform $transition-bounce, box-shadow $transition-normal;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px $shadow;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px $shadow-warm;
   }
 }
 
-// Loading spinner
+// ===========================================
+// LOADING STATES
+// ===========================================
+
 .loading {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: $spacing-xl;
+  padding: $spacing-xl * 2;
+  gap: $spacing-lg;
+}
 
-  &::after {
-    content: '';
-    width: 40px;
-    height: 40px;
-    border: 4px solid $cream-dark;
-    border-top-color: $primary-color;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid $cream-dark;
+  border-top-color: $primary-color;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-text {
+  font-family: $font-family-hebrew;
+  color: $text-secondary;
+  font-size: $font-md;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+// Skeleton loading
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    $cream 0%,
+    $cream-dark 50%,
+    $cream 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: $radius-md;
+}
+
+// ===========================================
+// STAR RATING
+// ===========================================
+
+.stars {
+  display: inline-flex;
+  flex-direction: row-reverse; // RTL
+  gap: 2px;
+
+  .star {
+    color: $cream-dark;
+    font-size: $font-lg;
+    cursor: pointer;
+    transition: color $transition-fast, transform $transition-fast;
+
+    &.filled {
+      color: $golden-honey;
+    }
+
+    &:hover {
+      color: $golden-honey;
+      transform: scale(1.1);
+    }
   }
 }
+
+// ===========================================
+// ACCESSIBILITY
+// ===========================================
+
+// Skip link
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: $primary-color;
+  color: white;
+  padding: $spacing-md $spacing-lg;
+  border-radius: $radius-md;
+  z-index: 9999;
+  font-weight: 600;
+
+  &:focus {
+    top: $spacing-md;
+  }
+}
+
+// Focus states
+*:focus-visible {
+  outline: 3px solid $primary-color;
+  outline-offset: 2px;
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+// ===========================================
+// ANIMATIONS
+// ===========================================
 
 @keyframes spin {
   to {
@@ -151,14 +364,30 @@ input, textarea, select {
   }
 }
 
-// Transition animations
-@keyframes fadeIn {
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes pageEnter {
   from {
     opacity: 0;
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
+    transform: translateY(0);
   }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes fadeInUp {
@@ -194,10 +423,10 @@ input, textarea, select {
   }
 }
 
-@keyframes slideInLeft {
+@keyframes slideInRight {
   from {
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translateX(100%);
   }
   to {
     opacity: 1;
@@ -205,7 +434,17 @@ input, textarea, select {
   }
 }
 
-// Animation utility classes
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.3); }
+  50% { transform: scale(0.95); }
+  75% { transform: scale(1.15); }
+}
+
+// ===========================================
+// ANIMATION UTILITY CLASSES
+// ===========================================
+
 .animate-fadeIn {
   animation: fadeIn 0.4s ease-out;
 }
@@ -222,10 +461,6 @@ input, textarea, select {
   animation: scaleIn 0.3s ease-out;
 }
 
-.animate-slideInLeft {
-  animation: slideInLeft 0.4s ease-out;
-}
-
 // Stagger animation for lists/grids
 @for $i from 1 through 12 {
   .stagger-#{$i} {
@@ -234,23 +469,38 @@ input, textarea, select {
   }
 }
 
-// Star rating
-.stars {
-  display: inline-flex;
-  gap: 2px;
+// ===========================================
+// RESPONSIVE UTILITIES
+// ===========================================
 
-  .star {
-    color: $cream-dark;
-    font-size: $font-lg;
-    cursor: pointer;
-    transition: color 0.2s ease;
+.hide-mobile {
+  @media (max-width: $breakpoint-tablet) {
+    display: none !important;
+  }
+}
 
-    &.filled {
-      color: $warning;
-    }
+.hide-desktop {
+  @media (min-width: $breakpoint-tablet) {
+    display: none !important;
+  }
+}
 
-    &:hover {
-      color: $warning;
-    }
+// ===========================================
+// PRINT STYLES
+// ===========================================
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+
+  .card {
+    box-shadow: none;
+    border: 1px solid #ccc;
   }
 }

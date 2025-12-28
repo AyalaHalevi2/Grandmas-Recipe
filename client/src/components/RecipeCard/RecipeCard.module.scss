@@ -1,26 +1,68 @@
 @use '../../styles/variables' as *;
 
+// ===========================================
+// RECIPE CARD - Warm, Nostalgic Design
+// ===========================================
+
 .card {
   display: block;
   background: white;
   border-radius: $radius-lg;
   overflow: hidden;
-  box-shadow: 0 2px 8px $shadow;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 16px $shadow-warm;
+  transition: all $transition-bounce;
   text-decoration: none;
   color: inherit;
+  position: relative;
   animation: cardFadeIn 0.4s ease-out both;
 
+  // Decorative corner (like a recipe card)
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 35px 35px 0;
+    border-color: transparent $parchment transparent transparent;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity $transition-normal;
+  }
+
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px $shadow;
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 32px $shadow-warm;
+
+    &::before {
+      opacity: 1;
+    }
+
+    .imageContainer img {
+      transform: scale(1.08);
+    }
+
+    .title {
+      color: $primary-color;
+    }
+  }
+
+  // Special styling for Yemeni recipes
+  &.yemeni {
+    border: 2px solid $warm-accent;
+
+    .category {
+      background-color: $warm-accent;
+    }
   }
 }
 
 @keyframes cardFadeIn {
   from {
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -28,16 +70,36 @@
   }
 }
 
+// ===========================================
+// IMAGE SECTION
+// ===========================================
+
 .imageContainer {
   position: relative;
-  height: 180px;
+  height: 200px;
   background-color: $cream;
+  overflow: hidden;
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.6s $transition-bounce;
   }
+}
+
+.imageOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.4) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
 }
 
 .placeholder {
@@ -46,106 +108,263 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, $cream 0%, $cream-dark 100%);
+  background: linear-gradient(
+    135deg,
+    $parchment 0%,
+    $cream-dark 50%,
+    $warm-accent-light 100%
+  );
 
   span {
     font-size: 4rem;
+    opacity: 0.6;
   }
 }
 
+// ===========================================
+// BADGES
+// ===========================================
+
 .category {
   position: absolute;
-  top: $spacing-sm;
-  right: $spacing-sm;
+  top: $spacing-md;
+  right: $spacing-md;
   background-color: $primary-color;
   color: white;
-  padding: $spacing-xs $spacing-sm;
-  border-radius: $radius-sm;
+  padding: $spacing-xs $spacing-md;
+  border-radius: 20px;
   font-size: $font-sm;
+  font-weight: 500;
+  font-family: $font-family-hebrew;
+  z-index: 3;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
+
+.kosherBadge {
+  position: absolute;
+  bottom: $spacing-md;
+  right: $spacing-md;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: $font-xs;
+  font-weight: 600;
+  font-family: $font-family-hebrew;
+  z-index: 3;
+
+  &.parve {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+  }
+
+  &.dairy {
+    background-color: #E3F2FD;
+    color: #1565C0;
+  }
+
+  &.meat {
+    background-color: #FFEBEE;
+    color: #C62828;
+  }
+}
+
+.yemeniBadge {
+  position: absolute;
+  bottom: $spacing-md;
+  left: $spacing-md;
+  background-color: $terracotta;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: $font-xs;
+  font-weight: 600;
+  font-family: $font-family-hebrew;
+  z-index: 3;
+}
+
+// ===========================================
+// FAVORITE BUTTON
+// ===========================================
 
 .favoriteBtn {
   position: absolute;
-  top: $spacing-sm;
-  left: $spacing-sm;
-  background-color: rgba(255, 255, 255, 0.9);
+  top: $spacing-md;
+  left: $spacing-md;
+  background-color: rgba(255, 255, 255, 0.95);
   border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  border-radius: $radius-round;
+  width: $touch-target-min;
+  height: $touch-target-min;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  transition: all $transition-normal;
   color: $text-light;
+  z-index: 3;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 
   &:hover {
-    transform: scale(1.1);
+    transform: scale(1.15);
     background-color: white;
+    color: $error;
+  }
+
+  &:focus-visible {
+    outline: 3px solid $primary-color;
+    outline-offset: 2px;
   }
 
   &.favorited {
     color: $error;
-    animation: heartPop 0.3s ease-out;
+    background-color: #FFF0F0;
+
+    svg {
+      animation: heartBeat 0.6s ease-in-out;
+    }
+
+    // Particle burst effect
+    &::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(
+        circle,
+        rgba($error, 0.3) 0%,
+        transparent 70%
+      );
+      border-radius: $radius-round;
+      animation: particleBurst 0.5s ease-out forwards;
+    }
   }
 }
 
-@keyframes heartPop {
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.3); }
+  50% { transform: scale(0.95); }
+  75% { transform: scale(1.15); }
+}
+
+@keyframes particleBurst {
   0% {
     transform: scale(1);
-  }
-  50% {
-    transform: scale(1.3);
+    opacity: 1;
   }
   100% {
-    transform: scale(1);
+    transform: scale(2.5);
+    opacity: 0;
   }
 }
 
+// ===========================================
+// CONTENT SECTION
+// ===========================================
+
 .content {
-  padding: $spacing-md;
+  padding: $spacing-lg;
 }
 
 .title {
   font-size: $font-lg;
+  font-family: $font-family-display-hebrew;
   color: $text-primary;
   margin-bottom: $spacing-sm;
-  line-height: 1.3;
+  line-height: $line-height-hebrew;
+  font-weight: 600;
+  transition: color $transition-normal;
+
+  // Limit to 2 lines
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .meta {
   display: flex;
-  gap: $spacing-md;
+  gap: $spacing-lg;
   margin-bottom: $spacing-sm;
   font-size: $font-sm;
-  color: $text-light;
+  color: $text-secondary;
+  font-family: $font-family-hebrew;
 }
 
-.time, .difficulty {
+.time,
+.difficulty {
   display: flex;
   align-items: center;
   gap: $spacing-xs;
+
+  .icon {
+    font-size: 1.1em;
+  }
 }
+
+// ===========================================
+// RATING
+// ===========================================
 
 .rating {
   display: flex;
   align-items: center;
-  gap: $spacing-xs;
+  gap: $spacing-sm;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
 }
 
 .star {
   color: $cream-dark;
-  font-size: $font-md;
+  font-size: $font-lg;
+  transition: color $transition-fast;
 }
 
 .starFilled {
-  color: $warning;
-  font-size: $font-md;
+  color: $golden-honey;
+  font-size: $font-lg;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .ratingValue {
   color: $text-light;
   font-size: $font-sm;
-  margin-right: $spacing-xs;
+}
+
+// ===========================================
+// RESPONSIVE
+// ===========================================
+
+@media (max-width: $breakpoint-tablet) {
+  .imageContainer {
+    height: 160px;
+  }
+
+  .content {
+    padding: $spacing-md;
+  }
+
+  .title {
+    font-size: $font-md;
+  }
+
+  .meta {
+    gap: $spacing-md;
+    font-size: $font-xs;
+  }
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .card {
+    &:hover {
+      transform: none;
+    }
+  }
+
+  .favoriteBtn {
+    width: 40px;
+    height: 40px;
+  }
 }

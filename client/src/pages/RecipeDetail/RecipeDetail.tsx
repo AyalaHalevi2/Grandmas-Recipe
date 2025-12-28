@@ -1,9 +1,32 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchRecipeById, rateRecipe, toggleFavorite } from '../../store/recipeSlice';
 import { updateFavorites } from '../../store/authSlice';
 import styles from './RecipeDetail.module.scss';
+
+// Hebrew category translations
+const categoryTranslations: Record<string, string> = {
+  'Appetizers': 'מנות ראשונות',
+  'Main Dishes': 'מנות עיקריות',
+  'Main Courses': 'מנות עיקריות',
+  'Desserts': 'קינוחים',
+  'Soups': 'מרקים',
+  'Salads': 'סלטים',
+  'Beverages': 'משקאות',
+  'Breakfast': 'ארוחות בוקר',
+  'Snacks': 'חטיפים',
+  'Side Dishes': 'תוספות',
+  'Baked goods': 'מאפים',
+  'Healthy & Tasty': 'בריא וטעים',
+};
+
+// Hebrew kosher type translations
+const kosherTranslations: Record<string, string> = {
+  'Parve': 'פרווה',
+  'Dairy': 'חלבי',
+  'Meat': 'בשרי',
+};
 
 const RecipeDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -11,8 +34,14 @@ const RecipeDetail = () => {
   const dispatch = useAppDispatch();
   const { currentRecipe, isLoading } = useAppSelector((state) => state.recipes);
   const { user } = useAppSelector((state) => state.auth);
+
   const [userRating, setUserRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
+
+  // Cooking Mode state
+  const [isCookingMode, setIsCookingMode] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     if (id) {
@@ -20,9 +49,29 @@ const RecipeDetail = () => {
     }
   }, [dispatch, id]);
 
-  const getDifficultyText = (difficulty: number) => {
-    const levels = ['', 'Very Easy', 'Easy', 'Medium', 'Challenging', 'Hard'];
+  // Prevent body scroll when in cooking mode
+  useEffect(() => {
+    if (isCookingMode) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isCookingMode]);
+
+  const getDifficultyText = (difficulty: number): string => {
+    const levels = ['', 'קל מאוד', 'קל', 'בינוני', 'מאתגר', 'קשה'];
     return levels[difficulty] || '';
+  };
+
+  const getCategoryName = (category: string): string => {
+    return categoryTranslations[category] || category;
+  };
+
+  const getKosherName = (kosherType: string): string => {
+    return kosherTranslations[kosherType] || kosherType;
   };
 
   const handleRate = async (rating: number) => {
@@ -49,96 +98,284 @@ const RecipeDetail = () => {
     }
   };
 
+  const toggleIngredientCheck = (index: number) => {
+    const newChecked = new Set(checkedIngredients);
+    if (newChecked.has(index)) {
+      newChecked.delete(index);
+    } else {
+      newChecked.add(index);
+    }
+    setCheckedIngredients(newChecked);
+  };
+
   const isFavorite = user?.favorites?.includes(id || '') || false;
 
+  // Loading state
   if (isLoading) {
-    return <div className="loading"></div>;
+    return (
+      <div className={styles.recipeDetail}>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingSpinner} />
+          <p className={styles.loadingText}>מכינים את המתכון...</p>
+        </div>
+      </div>
+    );
   }
 
+  // Not found state
   if (!currentRecipe) {
-    return <p className={styles.notFound}>Recipe not found</p>;
+    return (
+      <div className={styles.recipeDetail}>
+        <div className={styles.notFound}>
+          <span className={styles.notFoundIcon}>🍽️</span>
+          <p>המתכון לא נמצא</p>
+          <button className={styles.backButton} onClick={() => navigate('/recipes')}>
+            חזרה למתכונים
+          </button>
+        </div>
+      </div>
+    );
   }
+
+  const totalSteps = currentRecipe.instructions.length;
 
   return (
-    <div className={styles.recipeDetail}>
-      <div className={styles.header}>
-        <div className={styles.imageSection}>
-          {currentRecipe.imageUrl ? (
-            <img src={currentRecipe.imageUrl} alt={currentRecipe.title} />
-          ) : (
-            <div className={styles.placeholder}>
-              <span>🍽️</span>
-            </div>
-          )}
-        </div>
+    <>
+      <div className={styles.recipeDetail}>
+        {/* Breadcrumb */}
+        <nav className={styles.breadcrumb}>
+          <Link to="/">בית</Link>
+          <span className={styles.separator}>›</span>
+          <Link to="/recipes">מתכונים</Link>
+          <span className={styles.separator}>›</span>
+          <span className={styles.current}>{currentRecipe.title}</span>
+        </nav>
 
-        <div className={styles.info}>
-          <span className={styles.category}>{currentRecipe.category}</span>
-          <h1>{currentRecipe.title}</h1>
+        {/* Header Section */}
+        <div className={styles.header}>
+          <div className={styles.imageSection}>
+            {currentRecipe.imageUrl ? (
+              <img src={currentRecipe.imageUrl} alt={currentRecipe.title} />
+            ) : (
+              <div className={styles.placeholder}>
+                <span className={styles.placeholderIcon}>🍽️</span>
+                <span className={styles.placeholderText}>תמונה בקרוב</span>
+              </div>
+            )}
 
-          <div className={styles.meta}>
-            <div className={styles.metaItem}>
-              <span className={styles.icon}>⏱️</span>
-              <span>{currentRecipe.prepTime} minutes</span>
-            </div>
-            <div className={styles.metaItem}>
-              <span className={styles.icon}>📊</span>
-              <span>{getDifficultyText(currentRecipe.difficulty)}</span>
-            </div>
-            <div className={styles.metaItem}>
-              <span className={styles.icon}>⭐</span>
-              <span>{currentRecipe.averageRating.toFixed(1)} ({currentRecipe.ratings.length} ratings)</span>
-            </div>
-          </div>
-
-          <div className={styles.actions}>
-            <button
-              onClick={handleToggleFavorite}
-              className={`btn btn-danger ${isFavorite ? 'active' : ''}`}
-            >
-              {isFavorite ? '❤️ In Favorites' : '🤍 Add to Favorites'}
-            </button>
-          </div>
-
-          <div className={styles.ratingSection}>
-            <span>Rate this recipe:</span>
-            <div className={styles.stars}>
-              {[1, 2, 3, 4, 5].map((star) => (
-                <span
-                  key={star}
-                  className={`${styles.star} ${(hoverRating || userRating) >= star ? styles.filled : ''}`}
-                  onClick={() => handleRate(star)}
-                  onMouseEnter={() => setHoverRating(star)}
-                  onMouseLeave={() => setHoverRating(0)}
-                >
-                  ★
+            {/* Badges on image */}
+            <div className={styles.imageBadges}>
+              {currentRecipe.isYemeni && (
+                <span className={`${styles.badge} ${styles.yemeniBadge}`}>
+                  🇮🇱 תימני מסורתי
                 </span>
-              ))}
+              )}
+              {currentRecipe.kosherType && (
+                <span className={`${styles.badge} ${styles.kosherBadge} ${styles[currentRecipe.kosherType.toLowerCase()]}`}>
+                  {getKosherName(currentRecipe.kosherType)}
+                </span>
+              )}
             </div>
+          </div>
+
+          <div className={styles.info}>
+            <span className={styles.category}>
+              {getCategoryName(currentRecipe.category)}
+            </span>
+
+            <h1 className={styles.title}>{currentRecipe.title}</h1>
+
+            {/* Meta Information */}
+            <div className={styles.meta}>
+              <div className={styles.metaItem}>
+                <span className={styles.icon}>⏱️</span>
+                <div>
+                  <span className={styles.label}>זמן הכנה</span>
+                  <span className={styles.value}>{currentRecipe.prepTime} דקות</span>
+                </div>
+              </div>
+              <div className={styles.metaItem}>
+                <span className={styles.icon}>📊</span>
+                <div>
+                  <span className={styles.label}>רמת קושי</span>
+                  <span className={styles.value}>{getDifficultyText(currentRecipe.difficulty)}</span>
+                </div>
+              </div>
+              <div className={styles.metaItem}>
+                <span className={styles.icon}>⭐</span>
+                <div>
+                  <span className={styles.label}>דירוג</span>
+                  <span className={styles.value}>
+                    {currentRecipe.averageRating.toFixed(1)} ({currentRecipe.ratings.length})
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className={styles.actions}>
+              <button
+                onClick={handleToggleFavorite}
+                className={`${styles.favoriteButton} ${isFavorite ? styles.active : ''}`}
+              >
+                <span className={styles.heartIcon}>{isFavorite ? '❤️' : '🤍'}</span>
+                {isFavorite ? 'במועדפים' : 'הוספה למועדפים'}
+              </button>
+
+              <button
+                onClick={() => setIsCookingMode(true)}
+                className={styles.cookingModeButton}
+              >
+                <span className={styles.cookIcon}>👨‍🍳</span>
+                מצב בישול
+              </button>
+            </div>
+
+            {/* Rating Section */}
+            <div className={styles.ratingSection}>
+              <span className={styles.ratingLabel}>דרגו את המתכון:</span>
+              <div className={styles.stars}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span
+                    key={star}
+                    className={`${styles.star} ${(hoverRating || userRating) >= star ? styles.filled : ''}`}
+                    onClick={() => handleRate(star)}
+                    onMouseEnter={() => setHoverRating(star)}
+                    onMouseLeave={() => setHoverRating(0)}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+              {userRating > 0 && (
+                <span className={styles.ratingCount}>תודה על הדירוג!</span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Content Section */}
+        <div className={styles.content}>
+          {/* Ingredients */}
+          <div className={styles.ingredients}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionIcon}>🥕</span>
+              <h2>מרכיבים</h2>
+            </div>
+            <ul className={styles.ingredientsList}>
+              {currentRecipe.ingredients.map((ingredient, index) => (
+                <li key={index}>
+                  <span className={styles.ingredientBullet} />
+                  {ingredient}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Instructions */}
+          <div className={styles.instructions}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionIcon}>📝</span>
+              <h2>הוראות הכנה</h2>
+            </div>
+            <ol className={styles.instructionsList}>
+              {currentRecipe.instructions.map((step, index) => (
+                <li key={index}>
+                  <span className={styles.stepNumber}>{index + 1}</span>
+                  <span className={styles.stepContent}>{step}</span>
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       </div>
 
-      <div className={styles.content}>
-        <div className={styles.ingredients}>
-          <h2>Ingredients</h2>
-          <ul>
-            {currentRecipe.ingredients.map((ingredient, index) => (
-              <li key={index}>{ingredient}</li>
-            ))}
-          </ul>
-        </div>
+      {/* Cooking Mode Overlay */}
+      {isCookingMode && (
+        <div className={styles.cookingModeOverlay}>
+          <header className={styles.cookingModeHeader}>
+            <h2 className={styles.cookingModeTitle}>
+              <span className={styles.cookingIcon}>👨‍🍳</span>
+              {currentRecipe.title}
+            </h2>
+            <button
+              onClick={() => setIsCookingMode(false)}
+              className={styles.exitCookingMode}
+            >
+              ✕ יציאה
+            </button>
+          </header>
 
-        <div className={styles.instructions}>
-          <h2>Instructions</h2>
-          <ol>
-            {currentRecipe.instructions.map((step, index) => (
-              <li key={index}>{step}</li>
-            ))}
-          </ol>
+          <div className={styles.cookingModeContent}>
+            {/* Sidebar with ingredients */}
+            <aside className={styles.cookingModeSidebar}>
+              <h3 className={styles.sidebarTitle}>
+                🥕 מרכיבים
+              </h3>
+              {currentRecipe.ingredients.map((ingredient, index) => (
+                <label
+                  key={index}
+                  className={`${styles.ingredientCheck} ${checkedIngredients.has(index) ? styles.checked : ''}`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={checkedIngredients.has(index)}
+                    onChange={() => toggleIngredientCheck(index)}
+                  />
+                  {ingredient}
+                </label>
+              ))}
+            </aside>
+
+            {/* Main step display */}
+            <div className={styles.cookingModeSteps}>
+              <p className={styles.stepIndicator}>
+                שלב {currentStep + 1} מתוך {totalSteps}
+              </p>
+
+              <div className={styles.currentStep}>
+                <div className={styles.currentStepNumber}>{currentStep + 1}</div>
+                <p className={styles.currentStepText}>
+                  {currentRecipe.instructions[currentStep]}
+                </p>
+              </div>
+
+              {/* Navigation buttons */}
+              <div className={styles.stepNavigation}>
+                <button
+                  onClick={() => setCurrentStep((prev) => prev - 1)}
+                  disabled={currentStep === 0}
+                  className={styles.stepNavButton}
+                >
+                  → הקודם
+                </button>
+                <button
+                  onClick={() => setCurrentStep((prev) => prev + 1)}
+                  disabled={currentStep === totalSteps - 1}
+                  className={styles.stepNavButton}
+                >
+                  הבא ←
+                </button>
+              </div>
+
+              {/* Step dots */}
+              <div className={styles.stepDots}>
+                {currentRecipe.instructions.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`${styles.stepDot} ${
+                      index === currentStep ? styles.active : ''
+                    } ${index < currentStep ? styles.completed : ''}`}
+                    onClick={() => setCurrentStep(index)}
+                    aria-label={`עבור לשלב ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

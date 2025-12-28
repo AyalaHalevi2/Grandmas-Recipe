@@ -1,38 +1,161 @@
 @use '../../styles/variables' as *;
 
+// ===========================
+// RecipeDetail Page - Warm Family Design
+// RTL Hebrew Layout with Cooking Mode
+// ===========================
+
 .recipeDetail {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: $spacing-xl $spacing-md;
+  animation: fadeInUp 0.5s ease-out;
 }
 
-.notFound {
-  text-align: center;
-  padding: $spacing-xl * 2;
-  color: $text-light;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ===========================
+// Loading State
+// ===========================
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: $spacing-lg;
+}
+
+.loadingSpinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid $parchment;
+  border-top-color: $warm-accent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loadingText {
+  color: $text-secondary;
+  font-family: $font-family-display-hebrew;
   font-size: $font-lg;
 }
 
+// ===========================
+// Not Found State
+// ===========================
+
+.notFound {
+  text-align: center;
+  padding: $spacing-xl * 3;
+  color: $text-light;
+  font-size: $font-xl;
+  font-family: $font-family-display-hebrew;
+}
+
+.notFoundIcon {
+  font-size: 4rem;
+  margin-bottom: $spacing-lg;
+  display: block;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-top: $spacing-xl;
+  padding: $spacing-md $spacing-xl;
+  background: $warm-accent;
+  color: white;
+  border: none;
+  border-radius: $radius-lg;
+  font-family: $font-family-hebrew;
+  font-size: $font-md;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: $terracotta;
+    transform: translateY(-2px);
+  }
+}
+
+// ===========================
+// Breadcrumb Navigation
+// ===========================
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+  font-size: $font-sm;
+  color: $text-light;
+
+  a {
+    color: $warm-accent;
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $terracotta;
+    }
+  }
+
+  .separator {
+    color: $text-light;
+  }
+
+  .current {
+    color: $text-secondary;
+  }
+}
+
+// ===========================
+// Header Section
+// ===========================
+
 .header {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.2fr 1fr;
   gap: $spacing-xl;
   margin-bottom: $spacing-xl;
 
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-tablet) {
     grid-template-columns: 1fr;
   }
 }
 
 .imageSection {
-  border-radius: $radius-lg;
+  border-radius: $radius-xl;
   overflow: hidden;
-  height: 350px;
+  height: 400px;
+  position: relative;
+  box-shadow: 0 8px 32px rgba($terracotta, 0.15);
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.03);
   }
 }
 
@@ -40,42 +163,108 @@
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, $cream 0%, $cream-dark 100%);
+  gap: $spacing-md;
+  background: linear-gradient(135deg, $parchment 0%, $cream-dark 100%);
 
-  span {
-    font-size: 6rem;
+  .placeholderIcon {
+    font-size: 5rem;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .placeholderText {
+    color: $text-light;
+    font-family: $font-family-display-hebrew;
+    font-size: $font-lg;
   }
 }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+// Badges on image
+.imageBadges {
+  position: absolute;
+  top: $spacing-md;
+  right: $spacing-md;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-round;
+  font-size: $font-sm;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+}
+
+.yemeniBadge {
+  background: rgba($terracotta, 0.9);
+  color: white;
+}
+
+.kosherBadge {
+  background: rgba(white, 0.95);
+  color: $primary-color;
+
+  &.meat { color: $terracotta; }
+  &.dairy { color: $secondary-color; }
+}
+
+// ===========================
+// Info Section
+// ===========================
 
 .info {
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 .category {
-  display: inline-block;
-  background-color: $primary-color;
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
   color: white;
-  padding: $spacing-xs $spacing-md;
-  border-radius: $radius-md;
+  padding: $spacing-xs $spacing-lg;
+  border-radius: $radius-round;
   font-size: $font-sm;
+  font-weight: 500;
   margin-bottom: $spacing-md;
   width: fit-content;
 }
 
-.info h1 {
-  font-size: $font-2xl;
+.title {
+  font-size: $font-3xl;
+  font-family: $font-family-display-hebrew;
   color: $text-primary;
   margin-bottom: $spacing-lg;
+  line-height: 1.3;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: $font-2xl;
+  }
 }
 
+// Meta information (time, difficulty, rating)
 .meta {
   display: flex;
   flex-wrap: wrap;
   gap: $spacing-lg;
   margin-bottom: $spacing-lg;
+  padding: $spacing-md;
+  background: $parchment;
+  border-radius: $radius-lg;
 }
 
 .metaItem {
@@ -83,114 +272,514 @@
   align-items: center;
   gap: $spacing-sm;
   color: $text-secondary;
+  font-size: $font-md;
 
   .icon {
-    font-size: $font-lg;
+    font-size: $font-xl;
+  }
+
+  .label {
+    font-size: $font-sm;
+    color: $text-light;
+    display: block;
+  }
+
+  .value {
+    font-weight: 600;
+    color: $text-primary;
   }
 }
 
+// ===========================
+// Action Buttons
+// ===========================
+
 .actions {
+  display: flex;
+  gap: $spacing-md;
   margin-bottom: $spacing-lg;
+  flex-wrap: wrap;
 }
 
+.favoriteButton {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-xl;
+  border: 2px solid $warm-accent;
+  border-radius: $radius-lg;
+  font-family: $font-family-hebrew;
+  font-size: $font-md;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+  color: $warm-accent;
+
+  .heartIcon {
+    font-size: $font-xl;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    background: rgba($warm-accent, 0.1);
+
+    .heartIcon {
+      transform: scale(1.2);
+    }
+  }
+
+  &.active {
+    background: $warm-accent;
+    color: white;
+
+    .heartIcon {
+      animation: heartBeat 0.6s ease;
+    }
+  }
+}
+
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.3); }
+  50% { transform: scale(1); }
+  75% { transform: scale(1.2); }
+}
+
+.cookingModeButton {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-xl;
+  background: linear-gradient(135deg, $terracotta 0%, darken($terracotta, 10%) 100%);
+  color: white;
+  border: none;
+  border-radius: $radius-lg;
+  font-family: $font-family-hebrew;
+  font-size: $font-md;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba($terracotta, 0.3);
+
+  .cookIcon {
+    font-size: $font-xl;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba($terracotta, 0.4);
+  }
+}
+
+// ===========================
+// Rating Section
+// ===========================
 
 .ratingSection {
   display: flex;
   align-items: center;
   gap: $spacing-md;
+  padding: $spacing-md;
+  background: white;
+  border-radius: $radius-lg;
+  box-shadow: 0 2px 8px rgba($terracotta, 0.08);
+}
+
+.ratingLabel {
   color: $text-secondary;
+  font-size: $font-md;
 }
 
 .stars {
   display: flex;
   gap: 4px;
+  direction: ltr; // Stars read left to right
 }
 
 .star {
-  font-size: $font-xl;
+  font-size: $font-2xl;
   color: $cream-dark;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
 
   &:hover, &.filled {
-    color: $warning;
+    color: $golden-honey;
+    transform: scale(1.1);
   }
 }
+
+.ratingCount {
+  font-size: $font-sm;
+  color: $text-light;
+  margin-right: $spacing-sm;
+}
+
+// ===========================
+// Content Section (Ingredients & Instructions)
+// ===========================
 
 .content {
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: $spacing-xl;
 
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-tablet) {
     grid-template-columns: 1fr;
   }
 }
 
+// Shared card styles
 .ingredients, .instructions {
   background: white;
-  padding: $spacing-lg;
-  border-radius: $radius-lg;
-  box-shadow: 0 2px 8px $shadow;
+  padding: $spacing-xl;
+  border-radius: $radius-xl;
+  box-shadow: 0 4px 20px rgba($terracotta, 0.08);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+  padding-bottom: $spacing-md;
+  border-bottom: 2px solid $parchment;
+
+  .sectionIcon {
+    font-size: $font-2xl;
+  }
 
   h2 {
-    color: $primary-color;
-    margin-bottom: $spacing-lg;
-    padding-bottom: $spacing-sm;
-    border-bottom: 2px solid $cream-dark;
+    font-family: $font-family-display-hebrew;
+    color: $text-primary;
+    font-size: $font-xl;
   }
 }
 
-.ingredients ul {
+// Ingredients list
+.ingredientsList {
   list-style: none;
 
   li {
-    padding: $spacing-sm 0;
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: $spacing-md 0;
     border-bottom: 1px dashed $border-color;
     color: $text-secondary;
+    font-size: $font-md;
+    transition: all 0.2s ease;
 
     &:last-child {
       border-bottom: none;
     }
 
-    &::before {
-      content: '•';
-      color: $primary-color;
-      margin-left: $spacing-sm;
+    &:hover {
+      padding-right: $spacing-sm;
+      color: $text-primary;
     }
+  }
+
+  .ingredientBullet {
+    width: 8px;
+    height: 8px;
+    background: $warm-accent;
+    border-radius: 50%;
+    flex-shrink: 0;
   }
 }
 
-.instructions ol {
+// Instructions list
+.instructionsList {
   list-style: none;
   counter-reset: step;
 
   li {
-    padding: $spacing-md 0;
+    display: flex;
+    gap: $spacing-lg;
+    padding: $spacing-lg 0;
     border-bottom: 1px solid $border-color;
     color: $text-secondary;
-    counter-increment: step;
-    padding-right: $spacing-xl;
-    position: relative;
+    font-size: $font-md;
+    line-height: 1.7;
+    transition: all 0.3s ease;
 
     &:last-child {
       border-bottom: none;
     }
 
-    &::before {
-      content: counter(step);
-      position: absolute;
-      right: 0;
-      width: 28px;
-      height: 28px;
-      background-color: $primary-color;
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      font-size: $font-sm;
+    &:hover {
+      background: rgba($parchment, 0.5);
+      margin: 0 (-$spacing-md);
+      padding-right: $spacing-lg;
+      padding-left: $spacing-md;
+      border-radius: $radius-md;
     }
+  }
+
+  .stepNumber {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: $font-md;
+    flex-shrink: 0;
+  }
+
+  .stepContent {
+    flex: 1;
+    padding-top: $spacing-xs;
+  }
+}
+
+// ===========================
+// Cooking Mode Overlay
+// ===========================
+
+.cookingModeOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.3s ease;
+  overflow: hidden;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.cookingModeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-lg $spacing-xl;
+  background: rgba(white, 0.05);
+  border-bottom: 1px solid rgba(white, 0.1);
+}
+
+.cookingModeTitle {
+  color: white;
+  font-family: $font-family-display-hebrew;
+  font-size: $font-xl;
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+
+  .cookingIcon {
+    font-size: $font-2xl;
+  }
+}
+
+.exitCookingMode {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-lg;
+  background: rgba(white, 0.1);
+  color: white;
+  border: 1px solid rgba(white, 0.2);
+  border-radius: $radius-lg;
+  font-family: $font-family-hebrew;
+  font-size: $font-md;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(white, 0.2);
+  }
+}
+
+// Cooking mode content
+.cookingModeContent {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.cookingModeSidebar {
+  width: 300px;
+  background: rgba(white, 0.03);
+  border-left: 1px solid rgba(white, 0.1);
+  overflow-y: auto;
+  padding: $spacing-lg;
+
+  @media (max-width: $breakpoint-tablet) {
+    display: none;
+  }
+}
+
+.sidebarTitle {
+  color: rgba(white, 0.6);
+  font-size: $font-sm;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: $spacing-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.ingredientCheck {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-sm 0;
+  color: rgba(white, 0.8);
+  font-size: $font-md;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: $warm-accent;
+  }
+
+  &.checked {
+    color: rgba(white, 0.4);
+    text-decoration: line-through;
+  }
+}
+
+// Steps area
+.cookingModeSteps {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-xl;
+  overflow-y: auto;
+}
+
+.stepIndicator {
+  color: rgba(white, 0.5);
+  font-size: $font-md;
+  margin-bottom: $spacing-lg;
+}
+
+.currentStep {
+  max-width: 700px;
+  text-align: center;
+}
+
+.currentStepNumber {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, $terracotta 0%, darken($terracotta, 15%) 100%);
+  color: white;
+  border-radius: 50%;
+  font-size: $font-3xl;
+  font-weight: bold;
+  margin-bottom: $spacing-xl;
+  box-shadow: 0 8px 30px rgba($terracotta, 0.4);
+}
+
+.currentStepText {
+  color: white;
+  font-family: $font-family-display-hebrew;
+  font-size: $font-2xl;
+  line-height: 1.8;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: $font-xl;
+  }
+}
+
+// Step navigation
+.stepNavigation {
+  display: flex;
+  gap: $spacing-xl;
+  margin-top: $spacing-xl * 2;
+}
+
+.stepNavButton {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-xl;
+  background: rgba(white, 0.1);
+  color: white;
+  border: 1px solid rgba(white, 0.2);
+  border-radius: $radius-lg;
+  font-family: $font-family-hebrew;
+  font-size: $font-lg;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    background: rgba(white, 0.2);
+    transform: translateY(-2px);
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}
+
+// Step progress dots
+.stepDots {
+  display: flex;
+  gap: $spacing-sm;
+  margin-top: $spacing-xl;
+}
+
+.stepDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(white, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &.active {
+    background: $terracotta;
+    transform: scale(1.3);
+  }
+
+  &.completed {
+    background: $primary-color;
+  }
+
+  &:hover {
+    background: rgba(white, 0.4);
+  }
+}
+
+// ===========================
+// Print Styles
+// ===========================
+
+@media print {
+  .recipeDetail {
+    padding: 0;
+  }
+
+  .actions, .ratingSection, .cookingModeButton {
+    display: none !important;
+  }
+
+  .header {
+    grid-template-columns: 1fr;
+  }
+
+  .imageSection {
+    height: 200px;
+  }
+
+  .content {
+    grid-template-columns: 1fr;
   }
 }

@@ -1,43 +1,278 @@
 @use '../../styles/variables' as *;
 
+// ===========================================
+// FAVORITES PAGE - Emotional, Warm Design
+// ===========================================
+
 .favoritesPage {
   max-width: 1200px;
   margin: 0 auto;
-  padding: $spacing-xl $spacing-md;
-
-  h1 {
-    color: $text-primary;
-    margin-bottom: $spacing-lg;
-  }
+  padding: $spacing-xl * 2 $spacing-lg;
+  min-height: calc(100vh - 200px);
 }
+
+.header {
+  text-align: center;
+  margin-bottom: $spacing-xl * 2;
+}
+
+.title {
+  font-family: $font-family-display-hebrew;
+  color: $text-primary;
+  font-size: $font-2xl;
+  margin-bottom: $spacing-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+}
+
+.heartIcon {
+  animation: heartPulse 2s ease-in-out infinite;
+}
+
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.subtitle {
+  font-family: $font-family-hebrew;
+  color: $text-secondary;
+  font-size: $font-lg;
+  margin: 0;
+}
+
+// ===========================================
+// LOADING STATE
+// ===========================================
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-xl * 3;
+  gap: $spacing-lg;
+}
+
+.loadingSpinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid $cream-dark;
+  border-top-color: $error;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.loadingText {
+  font-family: $font-family-hebrew;
+  color: $text-secondary;
+  font-size: $font-md;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+// ===========================================
+// COUNT BADGE
+// ===========================================
 
 .count {
-  color: $text-light;
-  margin-bottom: $spacing-lg;
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  color: $text-secondary;
+  font-family: $font-family-hebrew;
+  margin-bottom: $spacing-xl;
+  padding: $spacing-sm $spacing-lg;
+  background: $parchment;
+  border-radius: 20px;
+  border: 1px dashed $border-decorative;
 }
+
+.countNumber {
+  font-weight: 700;
+  color: $error;
+  font-size: $font-lg;
+}
+
+// ===========================================
+// RECIPE GRID
+// ===========================================
 
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: $spacing-lg;
+  gap: $spacing-xl;
 }
+
+.cardWrapper {
+  animation: cardFadeIn 0.4s ease-out both;
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ===========================================
+// EMPTY STATE - Emotional Design
+// ===========================================
 
 .empty {
   text-align: center;
   padding: $spacing-xl * 3;
   background: white;
   border-radius: $radius-lg;
-  box-shadow: 0 2px 8px $shadow;
+  box-shadow: 0 4px 20px $shadow-warm;
+  max-width: 500px;
+  margin: 0 auto;
+  border: 2px dashed $border-decorative;
+  animation: fadeInUp 0.5s ease-out;
+}
 
-  .icon {
-    font-size: 4rem;
-    display: block;
-    margin-bottom: $spacing-lg;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.emptyIllustration {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto $spacing-xl;
+  background: linear-gradient(
+    135deg,
+    rgba($error, 0.1) 0%,
+    rgba($warm-accent, 0.1) 100%
+  );
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: gentleFloat 3s ease-in-out infinite;
+}
+
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.emptyIcon {
+  font-size: 4rem;
+}
+
+.emptyTitle {
+  font-family: $font-family-display-hebrew;
+  font-size: $font-xl;
+  color: $text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.emptyText {
+  font-family: $font-family-hebrew;
+  color: $text-secondary;
+  font-size: $font-lg;
+  line-height: $line-height-hebrew;
+  margin-bottom: $spacing-lg;
+}
+
+.emptyHint {
+  font-family: $font-family-hebrew;
+  color: $text-light;
+  font-size: $font-md;
+  margin-bottom: $spacing-xl;
+  padding: $spacing-md;
+  background: $parchment;
+  border-radius: $radius-md;
+  display: inline-block;
+}
+
+.heartExample {
+  display: inline-block;
+  animation: heartBeat 1s ease-in-out infinite;
+}
+
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.2); }
+  50% { transform: scale(1); }
+  75% { transform: scale(1.1); }
+}
+
+.emptyCta {
+  display: inline-block;
+  padding: $spacing-md $spacing-xl * 2;
+  background: $primary-color;
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-family: $font-family-hebrew;
+  font-size: $font-lg;
+  font-weight: 600;
+  transition: all $transition-normal;
+  box-shadow: 0 4px 12px $shadow-warm;
+
+  &:hover {
+    background: $primary-dark;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px $shadow-warm;
+    color: white;
+  }
+}
+
+// ===========================================
+// RESPONSIVE
+// ===========================================
+
+@media (max-width: $breakpoint-tablet) {
+  .favoritesPage {
+    padding: $spacing-xl $spacing-md;
   }
 
-  p {
-    color: $text-light;
-    font-size: $font-lg;
-    margin-bottom: $spacing-xl;
+  .title {
+    font-size: $font-xl;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: $spacing-lg;
+  }
+
+  .empty {
+    padding: $spacing-xl * 2;
+  }
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .emptyIllustration {
+    width: 120px;
+    height: 120px;
+  }
+
+  .emptyIcon {
+    font-size: 3rem;
   }
 }

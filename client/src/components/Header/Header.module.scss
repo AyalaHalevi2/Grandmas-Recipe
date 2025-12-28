@@ -1,14 +1,35 @@
 @use '../../styles/variables' as *;
 
+// ===========================================
+// HEADER - RTL-First, Warm Design
+// ===========================================
+
 .header {
   background-color: $cream;
   padding: $spacing-md 0;
-  box-shadow: 0 2px 8px $shadow;
+  box-shadow: 0 2px 12px $shadow-warm;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 100;
+
+  // Decorative bottom border
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 5%;
+    right: 5%;
+    height: 1px;
+    background: linear-gradient(
+      to left,
+      transparent,
+      $border-decorative 20%,
+      $border-decorative 80%,
+      transparent
+    );
+  }
 }
 
 .container {
@@ -21,49 +42,85 @@
   gap: $spacing-lg;
 }
 
+// ===========================================
+// LOGO
+// ===========================================
+
 .logo {
   flex-shrink: 0;
-display: flex;
-justify-content: center;
-align-items: center;
-  img {
-    height: 3rem;
-    width: 5rem;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  text-decoration: none;
+  transition: transform $transition-normal;
 
+  &:hover {
+    transform: scale(1.02);
   }
-  .logoName{
-    display: block;
-    color: $text-primary;
-    font-weight: 750;
-    font-size: 1.7rem;
-    line-height: 1;
+
+  img {
+    height: 3.5rem;
+    width: auto;
+    filter: drop-shadow(0 2px 4px $shadow-warm);
   }
 }
 
+.logoText {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.logoTitle {
+  color: $text-primary;
+  font-family: $font-family-display-hebrew;
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.logoSubtitle {
+  color: $warm-accent;
+  font-family: $font-family-hebrew;
+  font-size: $font-sm;
+  font-weight: 400;
+}
+
+// ===========================================
+// SEARCH BAR
+// ===========================================
+
 .searchBar {
   flex: 1;
-  max-width: 500px;
+  max-width: 450px;
   display: flex;
   align-items: center;
   background-color: white;
-  border: 1px solid $border-color;
-  border-radius: $radius-lg;
+  border: 2px solid transparent;
+  border-radius: 25px;
   overflow: hidden;
-  transition: box-shadow 0.3s ease;
+  transition: all $transition-normal;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 
   &:focus-within {
-    box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
     border-color: $primary-color;
+    box-shadow: 0 4px 12px $shadow-warm;
+  }
+
+  &:hover:not(:focus-within) {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 }
 
 .searchInput {
   flex: 1;
-  padding: $spacing-sm $spacing-md;
+  padding: $spacing-sm $spacing-lg;
   border: none;
   outline: none;
   font-size: $font-md;
+  font-family: $font-family-hebrew;
   color: $text-primary;
+  background: transparent;
 
   &::placeholder {
     color: $text-light;
@@ -78,92 +135,223 @@ align-items: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease;
+  transition: all $transition-normal;
+  border-radius: 0 25px 25px 0;
 
   img {
     width: 20px;
     height: 20px;
-    opacity: 0.6;
+    opacity: 0.5;
+    transition: opacity $transition-normal;
   }
 
   &:hover {
-    background-color: $background-dark;
+    background-color: $primary-light;
 
     img {
       opacity: 1;
+      filter: brightness(0) invert(1);
     }
   }
 }
 
+// ===========================================
+// ACTION BUTTONS
+// ===========================================
+
 .actions {
   display: flex;
   align-items: center;
-  gap: $spacing-sm;
+  gap: $spacing-xs;
 }
 
 .actionButton {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
+  width: $touch-target-comfortable;
+  height: $touch-target-comfortable;
+  border-radius: $radius-round;
   border: none;
   background-color: transparent;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease;
+  transition: all $transition-normal;
   text-decoration: none;
+  position: relative;
 
   img {
     width: 24px;
     height: 24px;
-    filter: brightness(0) saturate(100%) invert(26%) sepia(14%) saturate(1168%) hue-rotate(166deg) brightness(95%) contrast(89%);
+    transition: all $transition-normal;
+    filter: brightness(0) saturate(100%) invert(35%) sepia(10%) saturate(500%) hue-rotate(170deg) brightness(95%);
   }
 
   &:hover {
-    background-color: $background-dark;
+    background-color: rgba($primary-color, 0.1);
+
+    img {
+      filter: brightness(0) saturate(100%) invert(45%) sepia(20%) saturate(800%) hue-rotate(100deg);
+      transform: scale(1.1);
+    }
+  }
+
+  &:focus-visible {
+    outline: 3px solid $primary-color;
+    outline-offset: 2px;
   }
 }
+
+.groupIcon {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ===========================================
+// USER MENU
+// ===========================================
 
 .userMenuWrapper {
   position: relative;
 }
 
+.menuBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+}
+
 .userMenu {
   position: absolute;
   top: calc(100% + $spacing-sm);
-  right: 0;
-  min-width: 150px;
+  left: 0;
+  min-width: 180px;
   background-color: white;
-  border-radius: $radius-md;
-  box-shadow: 0 4px 12px $shadow;
+  border-radius: $radius-lg;
+  box-shadow: 0 8px 24px $shadow-warm;
   overflow: hidden;
   z-index: 101;
+  animation: menuSlideIn 0.2s ease-out;
+
+  // Decorative top border
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(to left, $primary-color, $warm-accent);
+  }
+}
+
+@keyframes menuSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .userInfo {
-  padding: $spacing-md;
-  background-color: $background-dark;
-  color: $text-primary;
-  font-weight: 500;
+  padding: $spacing-lg $spacing-md;
+  background: linear-gradient(135deg, $parchment, $cream);
+  border-bottom: 1px solid $border-decorative;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.greeting {
   font-size: $font-sm;
-  border-bottom: 1px solid $border-color;
+  color: $text-secondary;
+}
+
+.userName {
+  font-size: $font-md;
+  font-weight: 600;
+  color: $text-primary;
 }
 
 .menuItem {
   display: block;
   width: 100%;
-  padding: $spacing-sm $spacing-md;
-  text-align: left;
+  padding: $spacing-md;
+  text-align: right;
   background-color: transparent;
   border: none;
   color: $text-primary;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all $transition-normal;
   font-size: $font-md;
+  font-family: $font-family-hebrew;
 
   &:hover {
-    background-color: $background-dark;
+    background-color: $parchment;
+    color: $primary-color;
+    padding-right: $spacing-lg;
+  }
+
+  &:last-child {
+    border-top: 1px solid $border-color;
+  }
+}
+
+// ===========================================
+// RESPONSIVE
+// ===========================================
+
+@media (max-width: $breakpoint-tablet) {
+  .container {
+    padding: 0 $spacing-md;
+    gap: $spacing-sm;
+  }
+
+  .logo {
+    img {
+      height: 2.5rem;
+    }
+  }
+
+  .logoText {
+    display: none;
+  }
+
+  .searchBar {
+    max-width: none;
+    flex: 1;
+  }
+
+  .searchInput {
+    padding: $spacing-sm $spacing-md;
+    font-size: $font-sm;
+  }
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .searchBar {
+    display: none;
+  }
+
+  .actions {
+    gap: 0;
+  }
+
+  .actionButton {
+    width: 40px;
+    height: 40px;
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
   }
 }

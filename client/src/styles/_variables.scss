@@ -1,44 +1,124 @@
-// New color palette for Rina's Recipes
-$primary-color: #5E8A75;      // Sage green - main accent
+// ============================================
+// Savta Rina's Recipes - Design System Variables
+// A warm, nostalgic experience for families
+// ============================================
+
+// ===========================================
+// COLOR PALETTE - Warm & Nostalgic
+// ===========================================
+
+// Primary - Sage Green (fresh herbs from Savta's garden)
+$primary-color: #5E8A75;
 $primary-light: #7aa08d;
 $primary-dark: #4a7060;
 
-$secondary-color: #254258;    // Dark blue - secondary accent
+// Secondary - Dark Blue (trust & tradition)
+$secondary-color: #254258;
 $secondary-light: #3a5a73;
 
-$cream: #F7F7F7;              // Off-white - cards/sections
-$cream-dark: #E3E6E1;         // Light gray - backgrounds
+// Warm Accent Colors (grandmother's copper pots)
+$warm-accent: #C4956A;
+$warm-accent-light: #DDB892;
+$terracotta: #B85C38;
+$golden-honey: #D4A84B;
 
-$background: #F7F7F7;         // Off-white
-$background-dark: #E3E6E1;    // Light gray
+// Backgrounds - Warmer tones
+$cream: #FBF9F5;
+$cream-dark: #F0EBE3;
+$parchment: #F5EFDF;
 
-$text-primary: #254258;       // Dark blue - main text
-$text-secondary: #3a5a73;     // Lighter blue - secondary text
-$text-light: #6b7c8a;         // Muted text
+$background: #FBF9F5;
+$background-dark: #F0EBE3;
 
-$success: #5E8A75;            // Sage green
-$error: #c41e3a;
-$warning: #daa520;
+// Text Colors - Softer, warmer
+$text-primary: #2C3E50;
+$text-secondary: #5D6D7E;
+$text-light: #8B9BAB;
 
+// Semantic Colors
+$success: #5E8A75;
+$error: #C0392B;
+$warning: #D4A84B;
+
+// Decorative Elements
 $border-color: #d1d5db;
+$border-decorative: #DDB892;
 $shadow: rgba(37, 66, 88, 0.15);
+$shadow-warm: rgba(196, 149, 106, 0.15);
 
-// Spacing
-$spacing-xs: 0.25rem;
-$spacing-sm: 0.5rem;
-$spacing-md: 1rem;
-$spacing-lg: 1.5rem;
-$spacing-xl: 2rem;
+// ===========================================
+// TYPOGRAPHY - Hebrew-First
+// ===========================================
 
-// Border radius
+// Hebrew font stack (primary)
+$font-family-hebrew: 'Heebo', 'Assistant', 'Rubik', sans-serif;
+$font-family-display-hebrew: 'Frank Ruhl Libre', 'David Libre', Georgia, serif;
+$font-family-handwritten: 'Amatic SC', 'Secular One', cursive;
+
+// English fallbacks
+$font-family-english: 'Montserrat', sans-serif;
+$font-family-display-english: 'Playfair Display', Georgia, serif;
+
+// Line heights (Hebrew needs more breathing room)
+$line-height-hebrew: 1.8;
+$line-height-body: 1.7;
+$line-height-heading: 1.4;
+
+// Letter spacing for Hebrew
+$letter-spacing-hebrew: 0.02em;
+$letter-spacing-heading: 0.01em;
+
+// Font sizes (slightly larger for Hebrew readability)
+$font-xs: 0.8125rem;   // 13px
+$font-sm: 0.9375rem;   // 15px
+$font-md: 1.0625rem;   // 17px
+$font-lg: 1.3125rem;   // 21px
+$font-xl: 1.625rem;    // 26px
+$font-2xl: 2.25rem;    // 36px
+$font-3xl: 3rem;       // 48px
+
+// ===========================================
+// SPACING
+// ===========================================
+
+$spacing-xs: 0.25rem;  // 4px
+$spacing-sm: 0.5rem;   // 8px
+$spacing-md: 1rem;     // 16px
+$spacing-lg: 1.5rem;   // 24px
+$spacing-xl: 2rem;     // 32px
+$spacing-2xl: 3rem;    // 48px
+
+// ===========================================
+// BORDER RADIUS
+// ===========================================
+
 $radius-sm: 4px;
 $radius-md: 8px;
 $radius-lg: 12px;
+$radius-xl: 20px;
+$radius-round: 50%;
 
-// Font sizes
-$font-xs: 0.75rem;
-$font-sm: 0.875rem;
-$font-md: 1rem;
-$font-lg: 1.25rem;
-$font-xl: 1.5rem;
-$font-2xl: 2rem;
+// ===========================================
+// BREAKPOINTS
+// ===========================================
+
+$breakpoint-mobile: 480px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
+$breakpoint-wide: 1200px;
+
+// ===========================================
+// TOUCH TARGETS (Accessibility)
+// ===========================================
+
+$touch-target-min: 44px;        // WCAG minimum
+$touch-target-comfortable: 48px;
+
+// ===========================================
+// TRANSITIONS
+// ===========================================
+
+$transition-fast: 0.2s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.4s ease;
+$transition-bounce: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);

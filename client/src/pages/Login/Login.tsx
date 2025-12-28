@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { login, clearError } from '../../store/authSlice';
 import { validate, LoginSchema } from '@grandmas-recipes/shared-schemas';
 import styles from './Login.module.scss';
+import logoSVG from '../../assets/pot_no_bg (4).svg';
 
 const Login = () => {
   const dispatch = useAppDispatch();
@@ -45,25 +46,32 @@ const Login = () => {
   return (
     <div className={styles.loginPage}>
       <div className={styles.card}>
-        <h1 className={styles.title}>Login</h1>
-        <p className={styles.subtitle}>Welcome to Grandma Rina's Recipes</p>
+        {/* Logo */}
+        <div className={styles.logoSection}>
+          <img src={logoSVG} alt="המתכונים של סבתא" className={styles.logo} />
+        </div>
+
+        <h1 className={styles.title}>התחברות</h1>
+        <p className={styles.subtitle}>ברוכים הבאים למטבח של סבתא</p>
 
         <form onSubmit={handleSubmit} className={styles.form}>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
+          <div className={styles.formGroup}>
+            <label htmlFor="email">אימייל</label>
             <input
               type="email"
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Enter email"
+              placeholder="הזינו את כתובת האימייל"
               required
+              dir="ltr"
             />
+            {errors.email && <p className={styles.errorMessage}>{errors.email}</p>}
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
+          <div className={styles.formGroup}>
+            <label htmlFor="password">סיסמה</label>
             <div className={styles.passwordWrapper}>
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -71,14 +79,15 @@ const Login = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Enter password"
+                placeholder="הזינו סיסמה"
                 required
+                dir="ltr"
               />
               <button
                 type="button"
-                className={`btn-icon ${styles.eyeButton}`}
+                className={styles.eyeButton}
                 onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-label={showPassword ? 'הסתר סיסמה' : 'הצג סיסמה'}
               >
                 {showPassword ? (
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -92,19 +101,29 @@ const Login = () => {
                 )}
               </button>
             </div>
+            {errors.password && <p className={styles.errorMessage}>{errors.password}</p>}
           </div>
 
-          {error && <p className="error-message">{error}</p>}
-          {errors.email && <p className="error-message">{errors.email}</p>}
-          {errors.password && <p className="error-message">{errors.password}</p>}
+          {error && <p className={styles.errorMessage}>{error}</p>}
 
-          <button type="submit" className="btn btn-primary" disabled={isLoading}>
-            {isLoading ? 'Logging in...' : 'Login'}
+          <button type="submit" className={styles.submitBtn} disabled={isLoading}>
+            {isLoading ? (
+              <span className={styles.loadingState}>
+                <span className={styles.spinner} />
+                מתחבר...
+              </span>
+            ) : (
+              'התחברות'
+            )}
           </button>
         </form>
 
+        <div className={styles.divider}>
+          <span>או</span>
+        </div>
+
         <p className={styles.registerLink}>
-          Don't have an account? <Link to="/register">Register now</Link>
+          אין לכם חשבון? <Link to="/register">הירשמו עכשיו</Link>
         </p>
       </div>
     </div>
