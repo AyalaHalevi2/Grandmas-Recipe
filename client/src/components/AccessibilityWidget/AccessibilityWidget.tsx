@@ -3,195 +3,17 @@ import { createPortal } from 'react-dom';
 import { useAccessibility } from '../../context/AccessibilityContext';
 import styles from './AccessibilityWidget.module.scss';
 
-// ============================================
-// Icon Components (Inline SVGs for a11y)
-// ============================================
-
-const AccessibilityIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    width="24"
-    height="24"
-    aria-hidden="true"
-  >
-    <circle cx="12" cy="3" r="2.5" />
-    <path d="M12 8v4" />
-    <path d="M12 12l-4 8" />
-    <path d="M12 12l4 8" />
-    <path d="M6 9.5h12" />
-  </svg>
-);
-
-const CloseIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    width="20"
-    height="20"
-    aria-hidden="true"
-  >
-    <line x1="18" y1="6" x2="6" y2="18" />
-    <line x1="6" y1="6" x2="18" y2="18" />
-  </svg>
-);
-
-const ContrastIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    width="20"
-    height="20"
-    aria-hidden="true"
-  >
-    <circle cx="12" cy="12" r="10" />
-    <path d="M12 2v20" />
-    <path d="M12 2a10 10 0 0 1 0 20" fill="currentColor" />
-  </svg>
-);
-
-const FontSizeIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    width="20"
-    height="20"
-    aria-hidden="true"
-  >
-    <text x="3" y="18" fontSize="14" fill="currentColor" stroke="none">A</text>
-    <text x="14" y="18" fontSize="10" fill="currentColor" stroke="none">A</text>
-  </svg>
-);
-
-const LinkIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    width="20"
-    height="20"
-    aria-hidden="true"
-  >
-    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-  </svg>
-);
-
-const MotionIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    width="20"
-    height="20"
-    aria-hidden="true"
-  >
-    <circle cx="12" cy="12" r="3" />
-    <path d="M12 16.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 1 1 12 7.5a4.5 4.5 0 1 1 4.5 4.5 4.5 4.5 0 1 1-4.5 4.5" />
-    <path d="M12 7.5V4" />
-    <path d="M16.5 12H20" />
-    <path d="M12 16.5V20" />
-    <path d="M7.5 12H4" />
-  </svg>
-);
-
-const DyslexiaIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    width="20"
-    height="20"
-    aria-hidden="true"
-  >
-    <path d="M4 7V4h16v3" />
-    <path d="M9 20h6" />
-    <path d="M12 4v16" />
-  </svg>
-);
-
-const ResetIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    width="20"
-    height="20"
-    aria-hidden="true"
-  >
-    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-    <path d="M3 3v5h5" />
-  </svg>
-);
-
-const MinusIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    width="16"
-    height="16"
-    aria-hidden="true"
-  >
-    <line x1="5" y1="12" x2="19" y2="12" />
-  </svg>
-);
-
-const PlusIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    width="16"
-    height="16"
-    aria-hidden="true"
-  >
-    <line x1="12" y1="5" x2="12" y2="19" />
-    <line x1="5" y1="12" x2="19" y2="12" />
-  </svg>
-);
+// Import SVG icons from assets
+import accessibilityIcon from '../../assets/accessibility.svg';
+import closeIcon from '../../assets/close.svg';
+import contrastIcon from '../../assets/contrast.svg';
+import fontSizeIcon from '../../assets/font-size.svg';
+import linkIcon from '../../assets/link.svg';
+import motionIcon from '../../assets/motion.svg';
+import dyslexiaIcon from '../../assets/dyslexia.svg';
+import resetIcon from '../../assets/reset.svg';
+import minusIcon from '../../assets/minus.svg';
+import plusIcon from '../../assets/plus.svg';
 
 // ============================================
 // AccessibilityWidget Component
@@ -299,7 +121,7 @@ export default function AccessibilityWidget() {
         aria-label={isOpen ? 'סגור אפשרויות נגישות' : 'פתח אפשרויות נגישות'}
         title="אפשרויות נגישות"
       >
-        <AccessibilityIcon />
+        <img src={accessibilityIcon} alt="" aria-hidden="true" />
         <span className={styles.triggerLabel}>נגישות</span>
       </button>
 
@@ -323,7 +145,7 @@ export default function AccessibilityWidget() {
               onClick={() => setIsOpen(false)}
               aria-label="סגור תפריט נגישות"
             >
-              <CloseIcon />
+              <img src={closeIcon} alt="" aria-hidden="true" />
             </button>
           </div>
 
@@ -335,7 +157,9 @@ export default function AccessibilityWidget() {
               onClick={toggleHighContrast}
               aria-pressed={settings.highContrast}
             >
-              <span className={styles.optionIcon}><ContrastIcon /></span>
+              <span className={styles.optionIcon}>
+                <img src={contrastIcon} alt="" aria-hidden="true" />
+              </span>
               <span className={styles.optionContent}>
                 <span className={styles.optionLabel}>ניגודיות גבוהה</span>
                 <span className={styles.optionDesc}>הגברת ניגודיות הצבעים</span>
@@ -348,7 +172,9 @@ export default function AccessibilityWidget() {
             {/* Font Size */}
             <div className={styles.fontSizeControl}>
               <div className={styles.fontSizeHeader}>
-                <span className={styles.optionIcon}><FontSizeIcon /></span>
+                <span className={styles.optionIcon}>
+                  <img src={fontSizeIcon} alt="" aria-hidden="true" />
+                </span>
                 <span className={styles.optionContent}>
                   <span className={styles.optionLabel}>גודל טקסט</span>
                   <span className={styles.optionDesc}>{fontPercentage}%</span>
@@ -361,7 +187,7 @@ export default function AccessibilityWidget() {
                   disabled={settings.fontSize <= 0.8}
                   aria-label="הקטן טקסט"
                 >
-                  <MinusIcon />
+                  <img src={minusIcon} alt="" aria-hidden="true" />
                 </button>
                 <button
                   className={styles.fontSizeBtn}
@@ -377,7 +203,7 @@ export default function AccessibilityWidget() {
                   disabled={settings.fontSize >= 1.5}
                   aria-label="הגדל טקסט"
                 >
-                  <PlusIcon />
+                  <img src={plusIcon} alt="" aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -388,7 +214,9 @@ export default function AccessibilityWidget() {
               onClick={toggleHighlightLinks}
               aria-pressed={settings.highlightLinks}
             >
-              <span className={styles.optionIcon}><LinkIcon /></span>
+              <span className={styles.optionIcon}>
+                <img src={linkIcon} alt="" aria-hidden="true" />
+              </span>
               <span className={styles.optionContent}>
                 <span className={styles.optionLabel}>הדגש קישורים</span>
                 <span className={styles.optionDesc}>הבלטת קישורים ואלמנטים לחיצים</span>
@@ -404,7 +232,9 @@ export default function AccessibilityWidget() {
               onClick={toggleReducedMotion}
               aria-pressed={settings.reducedMotion}
             >
-              <span className={styles.optionIcon}><MotionIcon /></span>
+              <span className={styles.optionIcon}>
+                <img src={motionIcon} alt="" aria-hidden="true" />
+              </span>
               <span className={styles.optionContent}>
                 <span className={styles.optionLabel}>הפחת תנועה</span>
                 <span className={styles.optionDesc}>עצור אנימציות ותנועות</span>
@@ -420,7 +250,9 @@ export default function AccessibilityWidget() {
               onClick={toggleDyslexicFont}
               aria-pressed={settings.dyslexicFont}
             >
-              <span className={styles.optionIcon}><DyslexiaIcon /></span>
+              <span className={styles.optionIcon}>
+                <img src={dyslexiaIcon} alt="" aria-hidden="true" />
+              </span>
               <span className={styles.optionContent}>
                 <span className={styles.optionLabel}>גופן קריא לדיסלקציה</span>
                 <span className={styles.optionDesc}>גופן מותאם לקריאה קלה</span>
@@ -438,7 +270,7 @@ export default function AccessibilityWidget() {
               onClick={resetAllSettings}
               aria-label="אפס את כל הגדרות הנגישות"
             >
-              <ResetIcon />
+              <img src={resetIcon} alt="" aria-hidden="true" />
               <span>אפס הכל</span>
             </button>
           </div>

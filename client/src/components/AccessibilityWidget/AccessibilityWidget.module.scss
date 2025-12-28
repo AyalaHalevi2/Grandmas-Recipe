@@ -73,10 +73,18 @@ $hc-link: #00ffff;
     background: $secondary-color;
   }
 
-  svg {
+  svg,
+  img {
     width: 28px;
     height: 28px;
+    filter: brightness(0) invert(1); // Make SVG white
   }
+}
+
+.iconImg {
+  width: 28px;
+  height: 28px;
+  filter: brightness(0) invert(1);
 }
 
 .triggerLabel {
@@ -165,9 +173,19 @@ $hc-link: #00ffff;
   color: $text-secondary;
   transition: all $transition-fast;
 
+  img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+  }
+
   &:hover {
     background: $background-dark;
     color: $text-primary;
+
+    img {
+      opacity: 1;
+    }
   }
 
   &:focus-visible {
@@ -233,9 +251,20 @@ $hc-link: #00ffff;
   color: $text-secondary;
   transition: all $transition-fast;
 
+  img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+  }
+
   .active & {
     background: $primary-color;
     color: white;
+
+    img {
+      filter: brightness(0) invert(1);
+      opacity: 1;
+    }
   }
 }
 
@@ -325,8 +354,11 @@ $hc-link: #00ffff;
     cursor: not-allowed;
   }
 
-  svg {
-    color: $text-secondary;
+  svg,
+  img {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
   }
 }
 
@@ -356,13 +388,21 @@ $hc-link: #00ffff;
   gap: $spacing-sm;
   transition: all $transition-fast;
 
+  svg,
+  img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+  }
+
   &:hover {
     background: $cream;
     border-color: $error;
     color: $error;
 
-    svg {
-      color: $error;
+    svg,
+    img {
+      opacity: 1;
     }
   }
 
