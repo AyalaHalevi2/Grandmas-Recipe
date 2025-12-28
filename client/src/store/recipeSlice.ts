@@ -8,7 +8,9 @@ const initialState: RecipeState = {
   categories: [],
   searchQuery: '',
   isLoading: false,
-  error: null
+  error: null,
+  categoryRecipes: {},
+  categoryRecipesLoading: false
 };
 
 export const fetchRecipes = createAsyncThunk(
@@ -53,6 +55,47 @@ export const fetchCategories = createAsyncThunk(
       return response.data as string[];
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Error loading categories');
+    }
+  }
+);
+
+// Fetch recipes for multiple categories at once (for home page)
+export const fetchHomeCategoryRecipes = createAsyncThunk(
+  'recipes/fetchHomeCategoryRecipes',
+  async (categories: string[], { rejectWithValue }) => {
+    try {
+      // Fetch recipes for each category in parallel (limit to 6 per category)
+      const categoryPromises = categories.map(async (category) => {
+        const response = await api.get(`/recipes?category=${encodeURIComponent(category)}&limit=6`);
+        return { category, recipes: response.data as Recipe[] };
+      });
+
+      const results = await Promise.all(categoryPromises);
+
+      // Convert to record format
+      const categoryRecipes: Record<string, Recipe[]> = {};
+      results.forEach(({ category, recipes }) => {
+        categoryRecipes[category] = recipes;
+      });
+
+      return categoryRecipes;
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Error loading category recipes';
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+// Fetch Yemeni recipes specifically (for home page)
+export const fetchYemeniRecipes = createAsyncThunk(
+  'recipes/fetchYemeniRecipes',
+  async (limit: number = 6, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/recipes?isYemeni=true&limit=${limit}`);
+      return response.data as Recipe[];
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Error loading Yemeni recipes';
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -190,6 +233,21 @@ const recipeSlice = createSlice({
         if (state.currentRecipe?._id === action.payload.id) {
           state.currentRecipe.averageRating = action.payload.averageRating;
         }
+      })
+      // Fetch home category recipes
+      .addCase(fetchHomeCategoryRecipes.pending, (state) => {
+        state.categoryRecipesLoading = true;
+      })
+      .addCase(fetchHomeCategoryRecipes.fulfilled, (state, action) => {
+        state.categoryRecipesLoading = false;
+        state.categoryRecipes = action.payload;
+      })
+      .addCase(fetchHomeCategoryRecipes.rejected, (state) => {
+        state.categoryRecipesLoading = false;
+      })
+      // Fetch Yemeni recipes
+      .addCase(fetchYemeniRecipes.fulfilled, (state, action) => {
+        state.categoryRecipes['Yemeni'] = action.payload;
       });
   }
 });

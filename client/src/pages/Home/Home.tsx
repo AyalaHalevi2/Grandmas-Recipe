@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { fetchCategories } from '../../store/recipeSlice';
+import { fetchCategories, fetchHomeCategoryRecipes, fetchYemeniRecipes } from '../../store/recipeSlice';
+import CategoryRow from '../../components/CategoryRow';
 import styles from './Home.module.scss';
 
 // Hebrew category names mapping
@@ -18,24 +19,25 @@ const categoryTranslations: Record<string, string> = {
   'Side Dishes': 'תוספות',
   'Baked goods': 'מאפים',
   'Healthy & Tasty': 'בריא וטעים',
+  'Yemeni': 'אוכל תימני',
 };
 
-const categoryImages: Record<string, string> = {
-  'Appetizers': 'https://images.unsplash.com/photo-1541014741259-de529411b96a?w=400&h=300&fit=crop',
-  'Main Dishes': 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop',
-  'Main Courses': 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop',
-  'Desserts': 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400&h=300&fit=crop',
-  'Soups': 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400&h=300&fit=crop',
-  'Salads': 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop',
-  'Beverages': 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&h=300&fit=crop',
-  'Breakfast': 'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=400&h=300&fit=crop',
-  'Snacks': 'https://images.unsplash.com/photo-1599490659213-e2b9527bd087?w=400&h=300&fit=crop',
-  'Side Dishes': 'https://images.unsplash.com/photo-1534938665420-4193effeacc4?w=400&h=300&fit=crop',
-  'Baked goods': 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=300&fit=crop',
-  'Healthy & Tasty': 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=300&fit=crop',
+// Category descriptions for home page
+const categoryDescriptions: Record<string, string> = {
+  'Appetizers': 'התחילו את הארוחה עם מנות פתיחה קלות וטעימות שיפתחו את התיאבון',
+  'Main Dishes': 'מנות עיקריות משביעות ומלאות טעם, בדיוק כמו שסבתא עשתה',
+  'Main Courses': 'מנות עיקריות משביעות ומלאות טעם, בדיוק כמו שסבתא עשתה',
+  'Desserts': 'קינוחים מתוקים ומפנקים לסיום מושלם של כל ארוחה',
+  'Soups': 'מרקים חמים ומזינים שמחממים את הנשמה בכל עונה',
+  'Salads': 'סלטים טריים וצבעוניים שמוסיפים חיות לכל שולחן',
+  'Beverages': 'משקאות מרעננים וייחודיים לכל אירוע',
+  'Breakfast': 'ארוחות בוקר מזינות שיתנו לכם אנרגיה ליום שלם',
+  'Snacks': 'חטיפים קלים וטעימים לכל רגע ביום',
+  'Side Dishes': 'תוספות מושלמות שמשלימות כל מנה עיקרית',
+  'Baked goods': 'מאפים טריים מהתנור עם ריחות שמזכירים את הבית',
+  'Healthy & Tasty': 'מתכונים בריאים שמוכיחים שאפשר גם ליהנות וגם לשמור על בריאות',
+  'Yemeni': 'מתכונים תימניים מסורתיים שעוברים מדור לדור',
 };
-
-const defaultImage = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=400&h=300&fit=crop';
 
 // Get time-based greeting
 const getGreeting = (): { text: string; icon: string } => {
@@ -52,23 +54,59 @@ const getGreeting = (): { text: string; icon: string } => {
   }
 };
 
+// Categories to display on home page (in order)
+const FEATURED_CATEGORIES = ['Main Dishes', 'Desserts', 'Soups', 'Salads', 'Baked goods'];
+
 const Home = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { categories, isLoading } = useAppSelector((state) => state.recipes);
+  const { categories, categoryRecipes, categoryRecipesLoading, isLoading } = useAppSelector((state) => state.recipes);
+  const { user } = useAppSelector((state) => state.auth);
   const greeting = getGreeting();
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  const handleCategoryClick = (category: string) => {
-    navigate(`/recipes?category=${encodeURIComponent(category)}`);
+  useEffect(() => {
+    // Fetch recipes for featured categories once categories are loaded
+    if (categories.length > 0) {
+      const categoriesToFetch = FEATURED_CATEGORIES.filter(cat => categories.includes(cat));
+      if (categoriesToFetch.length > 0) {
+        dispatch(fetchHomeCategoryRecipes(categoriesToFetch));
+      }
+    }
+    // Also fetch Yemeni recipes
+    dispatch(fetchYemeniRecipes(6));
+  }, [dispatch, categories]);
+
+  const handleCreateGroup = () => {
+    if (user) {
+      // Navigate to create group page when implemented
+      navigate('/recipes');
+    } else {
+      navigate('/register');
+    }
+  };
+
+  const handleAddRecipe = () => {
+    if (user) {
+      // Navigate to add recipe page when implemented
+      navigate('/recipes');
+    } else {
+      navigate('/login');
+    }
   };
 
   const getCategoryName = (category: string): string => {
     return categoryTranslations[category] || category;
   };
+
+  const getCategoryDescription = (category: string): string => {
+    return categoryDescriptions[category] || 'מתכונים מיוחדים מהמטבח המשפחתי שלנו';
+  };
+
+  const loading = isLoading || categoryRecipesLoading;
 
   return (
     <div className={styles.homePage}>
@@ -108,7 +146,45 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Savta's Story Section */}
+      {/* Community CTA Section */}
+      {/* <section className={styles.communitySection}>
+        <div className={styles.communityContent}>
+          <div className={styles.communityCard}>
+            <div className={styles.communityIcon}>👨‍👩‍👧‍👦</div>
+            <h3 className={styles.communityTitle}>צרו קבוצה משפחתית</h3>
+            <p className={styles.communityText}>
+              הצטרפו לקהילה שלנו וצרו קבוצה משפחתית משלכם לשיתוף מתכונים עם בני המשפחה
+            </p>
+            <button className={styles.communityBtn} onClick={handleCreateGroup}>
+              צרו קבוצה חדשה
+            </button>
+          </div>
+
+          <div className={styles.communityCard}>
+            <div className={styles.communityIcon}>📝</div>
+            <h3 className={styles.communityTitle}>שתפו מתכון</h3>
+            <p className={styles.communityText}>
+              יש לכם מתכון משפחתי מיוחד? שתפו אותו עם הקהילה והפכו אותו לחלק מהמורשת
+            </p>
+            <button className={styles.communityBtn} onClick={handleAddRecipe}>
+              הוסיפו מתכון
+            </button>
+          </div>
+
+          <div className={styles.communityCard}>
+            <div className={styles.communityIcon}>🌍</div>
+            <h3 className={styles.communityTitle}>גלו טעמים חדשים</h3>
+            <p className={styles.communityText}>
+              חקרו מתכונים ממשפחות שונות וגלו מסורות קולינריות מכל העולם
+            </p>
+            <Link to="/recipes" className={styles.communityBtn}>
+              לכל המתכונים
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Savta's Story Section *
       <section id="savta-story" className={styles.storySection}>
         <div className={styles.storyContent}>
           <h2 className={styles.storyTitle}>הסיפור שלנו</h2>
@@ -127,40 +203,48 @@ const Home = () => {
           <div className={styles.decorativeSpoon}>🥄</div>
           <div className={styles.decorativePot}>🍲</div>
         </div>
-      </section>
+      </section> */}
 
-      {/* Categories Section */}
-      <section className={styles.categories}>
+      {/* Category Sections */}
+      <section className={styles.categoriesSection}>
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>גלו את הקטגוריות</h2>
           <p className={styles.sectionSubtitle}>מצאו את המנה המושלמת לכל אירוע</p>
         </div>
 
-        {isLoading ? (
+        {loading ? (
           <div className={styles.loadingContainer}>
             <div className={styles.loadingSpinner} />
             <p className={styles.loadingText}>מכינים משהו טעים...</p>
           </div>
         ) : (
-          <div className={styles.categoryGrid}>
-            {categories.map((category, index) => (
-              <button
-                key={category}
-                className={styles.categoryCard}
-                onClick={() => handleCategoryClick(category)}
-                style={{ animationDelay: `${index * 0.08}s` }}
-              >
-                <div className={styles.categoryImage}>
-                  <img
-                    src={categoryImages[category] || defaultImage}
-                    alt={getCategoryName(category)}
-                    loading="lazy"
-                  />
-                </div>
-                <div className={styles.categoryOverlay} />
-                <h3 className={styles.categoryName}>{getCategoryName(category)}</h3>
-              </button>
-            ))}
+          <div className={styles.categoryRows}>
+            {/* Yemeni Food Row - Featured */}
+            {categoryRecipes['Yemeni'] && categoryRecipes['Yemeni'].length > 0 && (
+              <CategoryRow
+                categoryName="Yemeni"
+                hebrewName={getCategoryName('Yemeni')}
+                description={getCategoryDescription('Yemeni')}
+                recipes={categoryRecipes['Yemeni']}
+                isYemeni={true}
+              />
+            )}
+
+            {/* Regular Category Rows */}
+            {FEATURED_CATEGORIES.map((category) => {
+              const recipes = categoryRecipes[category] || [];
+              if (recipes.length === 0) return null;
+
+              return (
+                <CategoryRow
+                  key={category}
+                  categoryName={category}
+                  hebrewName={getCategoryName(category)}
+                  description={getCategoryDescription(category)}
+                  recipes={recipes}
+                />
+              );
+            })}
           </div>
         )}
 

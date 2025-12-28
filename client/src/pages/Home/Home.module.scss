@@ -173,6 +173,83 @@
 }
 
 // ===========================================
+// COMMUNITY CTA SECTION
+// ===========================================
+
+.communitySection {
+  padding: $spacing-2xl * 2 $spacing-lg;
+  background: linear-gradient(
+    135deg,
+    rgba($primary-color, 0.03) 0%,
+    rgba($secondary-color, 0.05) 100%
+  );
+}
+
+.communityContent {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: $spacing-xl;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.communityCard {
+  background: white;
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+  text-align: center;
+  box-shadow: 0 4px 20px $shadow-warm;
+  transition: all $transition-bounce;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px $shadow-warm;
+  }
+}
+
+.communityIcon {
+  font-size: 3.5rem;
+  margin-bottom: $spacing-md;
+}
+
+.communityTitle {
+  font-family: $font-family-display-hebrew;
+  font-size: $font-xl;
+  color: $text-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.communityText {
+  font-family: $font-family-hebrew;
+  font-size: $font-md;
+  color: $text-secondary;
+  line-height: $line-height-hebrew;
+  margin-bottom: $spacing-lg;
+  min-height: 60px;
+}
+
+.communityBtn {
+  display: inline-block;
+  padding: $spacing-sm $spacing-xl;
+  background-color: $primary-color;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-family: $font-family-hebrew;
+  font-size: $font-md;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $transition-normal;
+  text-decoration: none;
+
+  &:hover {
+    background-color: $primary-dark;
+    color: white;
+    transform: translateY(-2px);
+  }
+}
+
+// ===========================================
 // STORY SECTION
 // ===========================================
 
@@ -250,6 +327,11 @@
 // CATEGORIES SECTION
 // ===========================================
 
+.categoriesSection {
+  padding: $spacing-2xl 0;
+  background-color: $background;
+}
+
 .categories {
   padding: $spacing-2xl * 2 $spacing-lg;
   background-color: $background;
@@ -257,9 +339,14 @@
   margin: 0 auto;
 }
 
+.categoryRows {
+  width: 100%;
+}
+
 .sectionHeader {
   text-align: center;
   margin-bottom: $spacing-xl * 2;
+  padding: 0 $spacing-lg;
 }
 
 .sectionTitle {
@@ -409,6 +496,8 @@
 
 .viewAllWrapper {
   text-align: center;
+  margin-top: $spacing-2xl;
+  padding: $spacing-xl $spacing-lg;
 }
 
 .viewAllButton {
@@ -527,8 +616,29 @@
     text-align: center;
   }
 
+  .communitySection {
+    padding: $spacing-xl * 2 $spacing-md;
+  }
+
+  .communityContent {
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+  }
+
+  .communityCard {
+    padding: $spacing-lg;
+  }
+
+  .communityText {
+    min-height: auto;
+  }
+
   .storySection {
     padding: $spacing-xl * 2 $spacing-md;
+  }
+
+  .categoriesSection {
+    padding: $spacing-xl 0;
   }
 
   .categories {
@@ -552,6 +662,14 @@
 
   .heroSubtitle {
     font-size: $font-md;
+  }
+
+  .communityIcon {
+    font-size: 2.5rem;
+  }
+
+  .communityTitle {
+    font-size: $font-lg;
   }
 
   .categoryGrid {

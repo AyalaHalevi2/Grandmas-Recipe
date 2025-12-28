@@ -5,9 +5,10 @@ import { validate, CreateRecipeSchema, UpdateRecipeSchema, RateRecipeSchema, Rec
 
 export const getAllRecipes = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { category, search, sortBy, minTime, maxTime, difficulty, isYemeni, kosherType } = req.query;
+    const { category, search, sortBy, minTime, maxTime, difficulty, isYemeni, kosherType, limit } = req.query;
 
-    let query: any = {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const query: Record<string, any> = {};
 
     if (category) {
       query.category = category;
@@ -50,7 +51,8 @@ export const getAllRecipes = async (req: Request, res: Response): Promise<void> 
       }
     }
 
-    let sortOption: any = { createdAt: -1 };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let sortOption: Record<string, any> = { createdAt: -1 };
     if (sortBy === 'title') {
       sortOption = { title: 1 };
     } else if (sortBy === 'rating') {
@@ -59,7 +61,14 @@ export const getAllRecipes = async (req: Request, res: Response): Promise<void> 
       sortOption = { prepTime: 1 };
     }
 
-    const recipes = await Recipe.find(query).sort(sortOption);
+    let recipesQuery = Recipe.find(query).sort(sortOption);
+
+    // Apply limit if provided
+    if (limit && !isNaN(Number(limit))) {
+      recipesQuery = recipesQuery.limit(Number(limit));
+    }
+
+    const recipes = await recipesQuery;
     res.json(recipes);
   } catch (error) {
     console.error('Get all recipes error:', error);

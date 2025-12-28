@@ -1,0 +1,225 @@
+@use '../../styles/variables' as *;
+
+// ===========================================
+// CATEGORY ROW - Full Width Section
+// ===========================================
+
+.categoryRow {
+  padding: $spacing-2xl 0;
+  width: 100%;
+
+  &:nth-child(even) {
+    background-color: $parchment;
+  }
+
+  &:nth-child(odd) {
+    background-color: $background;
+  }
+}
+
+.yemeniRow {
+  background: linear-gradient(
+    135deg,
+    rgba($warm-accent, 0.08) 0%,
+    rgba($terracotta, 0.05) 100%
+  ) !important;
+  border-top: 3px solid $warm-accent;
+  border-bottom: 3px solid $warm-accent;
+}
+
+// ===========================================
+// HEADER SECTION
+// ===========================================
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 $spacing-xl;
+  margin-bottom: $spacing-xl;
+  gap: $spacing-lg;
+
+  @media (max-width: $breakpoint-tablet) {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 $spacing-md;
+  }
+}
+
+.titleSection {
+  flex: 1;
+}
+
+.title {
+  font-family: $font-family-display-hebrew;
+  font-size: $font-2xl;
+  color: $text-primary;
+  margin-bottom: $spacing-sm;
+  position: relative;
+  display: inline-block;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    right: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(to left, $primary-color, $warm-accent);
+    border-radius: 2px;
+  }
+}
+
+.description {
+  font-family: $font-family-hebrew;
+  font-size: $font-md;
+  color: $text-secondary;
+  line-height: $line-height-hebrew;
+  max-width: 600px;
+  margin-top: $spacing-md;
+}
+
+.viewAllBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-lg;
+  background-color: transparent;
+  color: $primary-color;
+  border: 2px solid $primary-color;
+  border-radius: 25px;
+  font-family: $font-family-hebrew;
+  font-size: $font-md;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $transition-normal;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &:hover {
+    background-color: $primary-color;
+    color: white;
+    transform: translateX(-4px);
+  }
+
+  &:focus-visible {
+    outline: 3px solid $primary-color;
+    outline-offset: 2px;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    align-self: flex-start;
+  }
+}
+
+.arrow {
+  font-size: 1.2em;
+  transition: transform $transition-normal;
+
+  .viewAllBtn:hover & {
+    transform: translateX(-4px);
+  }
+}
+
+// ===========================================
+// RECIPES CONTAINER
+// ===========================================
+
+.recipesContainer {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.recipesScroll {
+  display: flex;
+  gap: $spacing-lg;
+  padding: $spacing-md $spacing-xl;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $cream-dark;
+    border-radius: 4px;
+    margin: 0 $spacing-xl;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $primary-color;
+    border-radius: 4px;
+
+    &:hover {
+      background: $primary-dark;
+    }
+  }
+
+  // Firefox scrollbar
+  scrollbar-width: thin;
+  scrollbar-color: $primary-color $cream-dark;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: $spacing-md;
+    gap: $spacing-md;
+  }
+}
+
+.recipeWrapper {
+  flex: 0 0 auto;
+  width: 300px;
+  scroll-snap-align: start;
+
+  @media (max-width: $breakpoint-tablet) {
+    width: 280px;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 260px;
+  }
+}
+
+// ===========================================
+// LOADING STATE
+// ===========================================
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: $spacing-2xl;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid $cream-dark;
+  border-top-color: $primary-color;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ===========================================
+// EMPTY STATE
+// ===========================================
+
+.empty {
+  text-align: center;
+  padding: $spacing-2xl;
+  color: $text-secondary;
+  font-family: $font-family-hebrew;
+  font-size: $font-lg;
+}

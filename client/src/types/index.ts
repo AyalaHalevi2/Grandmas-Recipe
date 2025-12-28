@@ -43,6 +43,17 @@ export interface RecipeState {
   searchQuery: string;
   isLoading: boolean;
   error: string | null;
+  // Home page category recipes - keyed by category name
+  categoryRecipes: Record<string, Recipe[]>;
+  categoryRecipesLoading: boolean;
+}
+
+// Category description for home page display
+export interface CategoryInfo {
+  name: string;
+  hebrewName: string;
+  description: string;
+  imageUrl: string;
 }
 
 export interface RecipeFilters {
