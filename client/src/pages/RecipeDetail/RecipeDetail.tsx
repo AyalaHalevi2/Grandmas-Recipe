@@ -42,6 +42,7 @@ const RecipeDetail = () => {
   const [isCookingMode, setIsCookingMode] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
+  const [showCompletion, setShowCompletion] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -60,6 +61,19 @@ const RecipeDetail = () => {
       document.body.style.overflow = '';
     };
   }, [isCookingMode]);
+
+  // Auto-close cooking mode after completion message
+  useEffect(() => {
+    if (showCompletion) {
+      const timer = setTimeout(() => {
+        setShowCompletion(false);
+        setIsCookingMode(false);
+        setCurrentStep(0);
+        setCheckedIngredients(new Set());
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showCompletion]);
 
   const getDifficultyText = (difficulty: number): string => {
     const levels = ['', 'קל מאוד', 'קל', 'בינוני', 'מאתגר', 'קשה'];
@@ -108,6 +122,10 @@ const RecipeDetail = () => {
     setCheckedIngredients(newChecked);
   };
 
+  const handleFinishCooking = () => {
+    setShowCompletion(true);
+  };
+
   const isFavorite = user?.favorites?.includes(id || '') || false;
 
   // Loading state
@@ -147,6 +165,10 @@ const RecipeDetail = () => {
           <Link to="/">בית</Link>
           <span className={styles.separator}>›</span>
           <Link to="/recipes">מתכונים</Link>
+          <span className={styles.separator}>›</span>
+          <Link to={`/recipes?category=${encodeURIComponent(currentRecipe.category)}`}>
+            {getCategoryName(currentRecipe.category)}
+          </Link>
           <span className={styles.separator}>›</span>
           <span className={styles.current}>{currentRecipe.title}</span>
         </nav>
@@ -293,86 +315,107 @@ const RecipeDetail = () => {
       {/* Cooking Mode Overlay */}
       {isCookingMode && (
         <div className={styles.cookingModeOverlay}>
-          <header className={styles.cookingModeHeader}>
-            <h2 className={styles.cookingModeTitle}>
-              <span className={styles.cookingIcon}>👨‍🍳</span>
-              {currentRecipe.title}
-            </h2>
-            <button
-              onClick={() => setIsCookingMode(false)}
-              className={styles.exitCookingMode}
-            >
-              ✕ יציאה
-            </button>
-          </header>
-
-          <div className={styles.cookingModeContent}>
-            {/* Sidebar with ingredients */}
-            <aside className={styles.cookingModeSidebar}>
-              <h3 className={styles.sidebarTitle}>
-                🥕 מרכיבים
-              </h3>
-              {currentRecipe.ingredients.map((ingredient, index) => (
-                <label
-                  key={index}
-                  className={`${styles.ingredientCheck} ${checkedIngredients.has(index) ? styles.checked : ''}`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={checkedIngredients.has(index)}
-                    onChange={() => toggleIngredientCheck(index)}
-                  />
-                  {ingredient}
-                </label>
-              ))}
-            </aside>
-
-            {/* Main step display */}
-            <div className={styles.cookingModeSteps}>
-              <p className={styles.stepIndicator}>
-                שלב {currentStep + 1} מתוך {totalSteps}
-              </p>
-
-              <div className={styles.currentStep}>
-                <div className={styles.currentStepNumber}>{currentStep + 1}</div>
-                <p className={styles.currentStepText}>
-                  {currentRecipe.instructions[currentStep]}
-                </p>
-              </div>
-
-              {/* Navigation buttons */}
-              <div className={styles.stepNavigation}>
-                <button
-                  onClick={() => setCurrentStep((prev) => prev - 1)}
-                  disabled={currentStep === 0}
-                  className={styles.stepNavButton}
-                >
-                  → הקודם
-                </button>
-                <button
-                  onClick={() => setCurrentStep((prev) => prev + 1)}
-                  disabled={currentStep === totalSteps - 1}
-                  className={styles.stepNavButton}
-                >
-                  הבא ←
-                </button>
-              </div>
-
-              {/* Step dots */}
-              <div className={styles.stepDots}>
-                {currentRecipe.instructions.map((_, index) => (
-                  <button
-                    key={index}
-                    className={`${styles.stepDot} ${
-                      index === currentStep ? styles.active : ''
-                    } ${index < currentStep ? styles.completed : ''}`}
-                    onClick={() => setCurrentStep(index)}
-                    aria-label={`עבור לשלב ${index + 1}`}
-                  />
-                ))}
+          {showCompletion ? (
+            <div className={styles.completionScreen}>
+              <div className={styles.completionContent}>
+                <span className={styles.completionIcon}>🍽️</span>
+                <h2 className={styles.completionTitle}>בתיאבון!</h2>
+                <p className={styles.completionText}>המתכון הושלם בהצלחה</p>
+                <p className={styles.completionSubtext}>נסגר אוטומטית בעוד 5 שניות...</p>
               </div>
             </div>
-          </div>
+          ) : (
+            <>
+              <header className={styles.cookingModeHeader}>
+                <h2 className={styles.cookingModeTitle}>
+                  <span className={styles.cookingIcon}>👨‍🍳</span>
+                  {currentRecipe.title}
+                </h2>
+                <button
+                  onClick={() => setIsCookingMode(false)}
+                  className={styles.exitCookingMode}
+                >
+                  ✕ יציאה
+                </button>
+              </header>
+
+              <div className={styles.cookingModeContent}>
+                {/* Sidebar with ingredients */}
+                <aside className={styles.cookingModeSidebar}>
+                  <h3 className={styles.sidebarTitle}>
+                    🥕 מרכיבים
+                  </h3>
+                  {currentRecipe.ingredients.map((ingredient, index) => (
+                    <label
+                      key={index}
+                      className={`${styles.ingredientCheck} ${checkedIngredients.has(index) ? styles.checked : ''}`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checkedIngredients.has(index)}
+                        onChange={() => toggleIngredientCheck(index)}
+                      />
+                      {ingredient}
+                    </label>
+                  ))}
+                </aside>
+
+                {/* Main step display */}
+                <div className={styles.cookingModeSteps}>
+                  <p className={styles.stepIndicator}>
+                    שלב {currentStep + 1} מתוך {totalSteps}
+                  </p>
+
+                  <div className={styles.currentStep}>
+                    <div className={styles.currentStepNumber}>{currentStep + 1}</div>
+                    <p className={styles.currentStepText}>
+                      {currentRecipe.instructions[currentStep]}
+                    </p>
+                  </div>
+
+                  {/* Navigation buttons */}
+                  <div className={styles.stepNavigation}>
+                    <button
+                      onClick={() => setCurrentStep((prev) => prev - 1)}
+                      disabled={currentStep === 0}
+                      className={styles.stepNavButton}
+                    >
+                      → הקודם
+                    </button>
+                    {currentStep === totalSteps - 1 ? (
+                      <button
+                        onClick={handleFinishCooking}
+                        className={`${styles.stepNavButton} ${styles.finishButton}`}
+                      >
+                        סיום 🍽️
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setCurrentStep((prev) => prev + 1)}
+                        className={styles.stepNavButton}
+                      >
+                        הבא ←
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Step dots */}
+                  <div className={styles.stepDots}>
+                    {currentRecipe.instructions.map((_, index) => (
+                      <button
+                        key={index}
+                        className={`${styles.stepDot} ${
+                          index === currentStep ? styles.active : ''
+                        } ${index < currentStep ? styles.completed : ''}`}
+                        onClick={() => setCurrentStep(index)}
+                        aria-label={`עבור לשלב ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       )}
     </>

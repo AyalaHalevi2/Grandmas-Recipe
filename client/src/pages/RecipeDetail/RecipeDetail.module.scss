@@ -201,10 +201,12 @@
   align-items: center;
   gap: $spacing-xs;
   padding: $spacing-xs $spacing-md;
-  border-radius: $radius-round;
+  border-radius: $radius-xl;
   font-size: $font-sm;
   font-weight: 600;
   backdrop-filter: blur(8px);
+  text-align: center;
+  justify-content: center;
 }
 
 .yemeniBadge {
@@ -237,7 +239,7 @@
   background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
   color: white;
   padding: $spacing-xs $spacing-lg;
-  border-radius: $radius-round;
+  border-radius: $radius-xl;
   font-size: $font-sm;
   font-weight: 500;
   margin-bottom: $spacing-md;
@@ -755,6 +757,79 @@
 
   &:hover {
     background: rgba(white, 0.4);
+  }
+}
+
+// Finish button special styling
+.finishButton {
+  background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%) !important;
+  border-color: $primary-color !important;
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, $primary-dark 0%, darken($primary-dark, 10%) 100%) !important;
+  }
+}
+
+// Completion screen
+.completionScreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: linear-gradient(135deg, $secondary-color 0%, darken($secondary-color, 15%) 100%);
+}
+
+.completionContent {
+  text-align: center;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.completionIcon {
+  display: block;
+  font-size: 6rem;
+  margin-bottom: $spacing-xl;
+  animation: bounce 1s ease infinite;
+}
+
+.completionTitle {
+  font-family: $font-family-display-hebrew;
+  font-size: 4rem;
+  color: white;
+  margin: 0 0 $spacing-lg 0;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.completionText {
+  font-family: $font-family-hebrew;
+  font-size: $font-xl;
+  color: rgba(white, 0.9);
+  margin: 0 0 $spacing-md 0;
+}
+
+.completionSubtext {
+  font-family: $font-family-hebrew;
+  font-size: $font-md;
+  color: rgba(white, 0.6);
+  margin: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
   }
 }
 

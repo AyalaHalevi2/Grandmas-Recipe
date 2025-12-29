@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useMemo } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchRecipes, fetchCategories, setSearchQuery } from '../../store/recipeSlice';
@@ -21,22 +21,22 @@ const KOSHER_TYPES: { value: KosherType; label: string }[] = [
   { value: 'Meat', label: 'בשרי' }
 ];
 
-// Dynamic background colors by category
-const CATEGORY_BACKGROUNDS: Record<string, string> = {
-  'Main Courses': '#F8BEF5',
-  'Main Course': '#F8BEF5',
-  'Side Dishes': '#FCFFCD',
-  'Appetizers': '#D0FAFD',
-  'Healthy & Tasty': '#AAF968',
-  'Healthy Food': '#AAF968',
-  'Desserts': '#E3CEB2',
-  'Baked goods': '#FFCF90',
-  'Salads': '#7DF98E',
-  'Soups': '#FFAAAA',
+// Hebrew category names mapping
+const categoryTranslations: Record<string, string> = {
+  'Appetizers': 'מנות ראשונות',
+  'Main Dishes': 'מנות עיקריות',
+  'Main Courses': 'מנות עיקריות',
+  'Desserts': 'קינוחים',
+  'Soups': 'מרקים',
+  'Salads': 'סלטים',
+  'Beverages': 'משקאות',
+  'Breakfast': 'ארוחות בוקר',
+  'Snacks': 'חטיפים',
+  'Side Dishes': 'תוספות',
+  'Baked goods': 'מאפים',
+  'Healthy & Tasty': 'בריא וטעים',
+  'Yemeni': 'אוכל תימני',
 };
-
-// Special background for Yemeni food filter
-const YEMENI_BACKGROUND = '#D4C7E0';
 
 const Recipes = () => {
   const dispatch = useAppDispatch();
@@ -138,22 +138,13 @@ const Recipes = () => {
     dispatch(fetchRecipes({}));
   };
 
-  // Calculate dynamic background color based on category or Yemeni filter
-  const dynamicBackground = useMemo(() => {
-    if (filters.isYemeni) {
-      return YEMENI_BACKGROUND;
-    }
-    if (filters.category && CATEGORY_BACKGROUNDS[filters.category]) {
-      return CATEGORY_BACKGROUNDS[filters.category];
-    }
-    return undefined;
-  }, [filters.category, filters.isYemeni]);
+  // Helper to get Hebrew category name
+  const getCategoryLabel = (category: string): string => {
+    return categoryTranslations[category] || category;
+  };
 
   return (
-    <div
-      className={styles.recipesPage}
-      style={dynamicBackground ? { backgroundColor: dynamicBackground, transition: 'background-color 0.3s ease' } : undefined}
-    >
+    <div className={styles.recipesPage}>
       <h1>כל המתכונים</h1>
 
       <div className={styles.pageLayout}>
@@ -170,7 +161,7 @@ const Recipes = () => {
               placeholder="הכל"
               options={[
                 { value: '', label: 'הכל' },
-                ...categories.map((cat) => ({ value: cat, label: cat }))
+                ...categories.map((cat) => ({ value: cat, label: getCategoryLabel(cat) }))
               ]}
             />
           </div>

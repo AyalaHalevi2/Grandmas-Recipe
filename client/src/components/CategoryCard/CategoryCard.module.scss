@@ -1,0 +1,208 @@
+@import '../../styles/variables';
+
+.categoryCard {
+  display: block;
+  width: 100%;
+  position: relative;
+  height: 320px;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  text-decoration: none;
+  transition: transform $transition-bounce, box-shadow $transition-normal;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba($secondary-color, 0.2);
+
+    .image {
+      transform: scale(1.05);
+    }
+
+    .exploreButton {
+      background-color: $primary-dark;
+
+      .arrow {
+        transform: translateX(-4px);
+      }
+    }
+  }
+
+  &:focus-visible {
+    outline: 3px solid $primary-color;
+    outline-offset: 4px;
+  }
+
+  &:active {
+    transform: translateY(-2px) scale(0.995);
+  }
+}
+
+.imageContainer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to left,
+    rgba($secondary-color, 0.85) 0%,
+    rgba($secondary-color, 0.6) 40%,
+    rgba($secondary-color, 0.2) 70%,
+    transparent 100%
+  );
+}
+
+.content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: $spacing-2xl;
+  width: 50%;
+  text-align: right;
+}
+
+.name {
+  font-family: $font-family-display-hebrew;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  line-height: $line-height-heading;
+  margin: 0 0 $spacing-sm 0;
+}
+
+.description {
+  font-family: $font-family-hebrew;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: rgba(255, 255, 255, 0.95);
+  line-height: $line-height-hebrew;
+  margin: 0 0 $spacing-lg 0;
+  max-width: 500px;
+}
+
+.exploreButton {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-family: $font-family-hebrew;
+  font-size: $font-md;
+  font-weight: 500;
+  color: white;
+  background-color: $primary-color;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-md;
+  width: fit-content;
+  transition: background-color $transition-normal;
+
+  .arrow {
+    transition: transform $transition-normal;
+  }
+}
+
+// Yemeni special styling
+.yemeni {
+  border-top: 4px solid $warm-accent;
+  border-bottom: 4px solid $warm-accent;
+
+  .overlay {
+    background: linear-gradient(
+      to left,
+      rgba($terracotta, 0.85) 0%,
+      rgba($warm-accent, 0.6) 40%,
+      transparent 100%
+    );
+  }
+
+  .exploreButton {
+    background-color: $terracotta;
+
+    &:hover {
+      background-color: darken($terracotta, 10%);
+    }
+  }
+}
+
+// Responsive
+@media (max-width: $breakpoint-tablet) {
+  .categoryCard {
+    height: auto;
+    min-height: 280px;
+  }
+
+  .imageContainer {
+    position: relative;
+    height: 200px;
+  }
+
+  .overlay {
+    background: linear-gradient(
+      to top,
+      rgba($secondary-color, 0.95) 0%,
+      rgba($secondary-color, 0.5) 60%,
+      transparent 100%
+    );
+  }
+
+  .content {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    top: auto;
+    padding: $spacing-lg;
+    text-align: center;
+    justify-content: flex-end;
+  }
+
+  .name {
+    font-size: 1.5rem;
+  }
+
+  .description {
+    font-size: 1rem;
+    max-width: 100%;
+  }
+
+  .exploreButton {
+    margin: 0 auto;
+  }
+
+  .yemeni {
+    .overlay {
+      background: linear-gradient(
+        to top,
+        rgba($terracotta, 0.95) 0%,
+        rgba($warm-accent, 0.5) 60%,
+        transparent 100%
+      );
+    }
+  }
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .categoryCard,
+  .image,
+  .exploreButton,
+  .arrow {
+    transition: none;
+  }
+
+  .categoryCard:hover .image {
+    transform: none;
+  }
+}

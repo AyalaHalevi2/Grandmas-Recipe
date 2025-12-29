@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { fetchCategories, fetchHomeCategoryRecipes, fetchYemeniRecipes } from '../../store/recipeSlice';
-import CategoryRow from '../../components/CategoryRow';
+import { fetchCategories } from '../../store/recipeSlice';
+import CategoryCard from '../../components/CategoryCard';
 import styles from './Home.module.scss';
 
 // Hebrew category names mapping
@@ -39,6 +39,23 @@ const categoryDescriptions: Record<string, string> = {
   'Yemeni': 'מתכונים תימניים מסורתיים שעוברים מדור לדור',
 };
 
+// Category images - using Unsplash placeholder images (replace with actual images)
+const categoryImages: Record<string, string> = {
+  'Appetizers': 'https://images.unsplash.com/photo-1541529086526-db283c563270?w=1200&h=400&fit=crop',
+  'Main Dishes': 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=400&fit=crop',
+  'Main Courses': 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=400&fit=crop',
+  'Desserts': 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=1200&h=400&fit=crop',
+  'Soups': 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=1200&h=400&fit=crop',
+  'Salads': 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&h=400&fit=crop',
+  'Beverages': 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=1200&h=400&fit=crop',
+  'Breakfast': 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=1200&h=400&fit=crop',
+  'Snacks': 'https://images.unsplash.com/photo-1599490659213-e2b9527bd087?w=1200&h=400&fit=crop',
+  'Side Dishes': 'https://images.unsplash.com/photo-1534938665420-4193effeacc4?w=1200&h=400&fit=crop',
+  'Baked goods': 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1200&h=400&fit=crop',
+  'Healthy & Tasty': 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1200&h=400&fit=crop',
+  'Yemeni': 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200&h=400&fit=crop',
+};
+
 // Get time-based greeting
 const getGreeting = (): { text: string; icon: string } => {
   const hour = new Date().getHours();
@@ -59,44 +76,12 @@ const FEATURED_CATEGORIES = ['Main Dishes', 'Desserts', 'Soups', 'Salads', 'Bake
 
 const Home = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const { categories, categoryRecipes, categoryRecipesLoading, isLoading } = useAppSelector((state) => state.recipes);
-  const { user } = useAppSelector((state) => state.auth);
+  const { categories, isLoading } = useAppSelector((state) => state.recipes);
   const greeting = getGreeting();
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
-
-  useEffect(() => {
-    // Fetch recipes for featured categories once categories are loaded
-    if (categories.length > 0) {
-      const categoriesToFetch = FEATURED_CATEGORIES.filter(cat => categories.includes(cat));
-      if (categoriesToFetch.length > 0) {
-        dispatch(fetchHomeCategoryRecipes(categoriesToFetch));
-      }
-    }
-    // Also fetch Yemeni recipes
-    dispatch(fetchYemeniRecipes(6));
-  }, [dispatch, categories]);
-
-  const handleCreateGroup = () => {
-    if (user) {
-      // Navigate to create group page when implemented
-      navigate('/recipes');
-    } else {
-      navigate('/register');
-    }
-  };
-
-  const handleAddRecipe = () => {
-    if (user) {
-      // Navigate to add recipe page when implemented
-      navigate('/recipes');
-    } else {
-      navigate('/login');
-    }
-  };
 
   const getCategoryName = (category: string): string => {
     return categoryTranslations[category] || category;
@@ -106,7 +91,12 @@ const Home = () => {
     return categoryDescriptions[category] || 'מתכונים מיוחדים מהמטבח המשפחתי שלנו';
   };
 
-  const loading = isLoading || categoryRecipesLoading;
+  const getCategoryImage = (category: string): string => {
+    return categoryImages[category] || 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=1200&h=400&fit=crop';
+  };
+
+  // Filter to only show categories that exist
+  const displayCategories = FEATURED_CATEGORIES.filter(cat => categories.includes(cat));
 
   return (
     <div className={styles.homePage}>
@@ -212,39 +202,32 @@ const Home = () => {
           <p className={styles.sectionSubtitle}>מצאו את המנה המושלמת לכל אירוע</p>
         </div>
 
-        {loading ? (
+        {isLoading ? (
           <div className={styles.loadingContainer}>
             <div className={styles.loadingSpinner} />
             <p className={styles.loadingText}>מכינים משהו טעים...</p>
           </div>
         ) : (
-          <div className={styles.categoryRows}>
-            {/* Yemeni Food Row - Featured */}
-            {categoryRecipes['Yemeni'] && categoryRecipes['Yemeni'].length > 0 && (
-              <CategoryRow
-                categoryName="Yemeni"
-                hebrewName={getCategoryName('Yemeni')}
-                description={getCategoryDescription('Yemeni')}
-                recipes={categoryRecipes['Yemeni']}
-                isYemeni={true}
+          <div className={styles.categoryCards}>
+            {/* Yemeni Food - Featured */}
+            <CategoryCard
+              categoryName="Yemeni"
+              hebrewName={getCategoryName('Yemeni')}
+              description={getCategoryDescription('Yemeni')}
+              imageUrl={getCategoryImage('Yemeni')}
+              isYemeni={true}
+            />
+
+            {/* Regular Categories */}
+            {displayCategories.map((category) => (
+              <CategoryCard
+                key={category}
+                categoryName={category}
+                hebrewName={getCategoryName(category)}
+                description={getCategoryDescription(category)}
+                imageUrl={getCategoryImage(category)}
               />
-            )}
-
-            {/* Regular Category Rows */}
-            {FEATURED_CATEGORIES.map((category) => {
-              const recipes = categoryRecipes[category] || [];
-              if (recipes.length === 0) return null;
-
-              return (
-                <CategoryRow
-                  key={category}
-                  categoryName={category}
-                  hebrewName={getCategoryName(category)}
-                  description={getCategoryDescription(category)}
-                  recipes={recipes}
-                />
-              );
-            })}
+            ))}
           </div>
         )}
 
