@@ -1,0 +1,310 @@
+@use '../../styles/variables' as *;
+
+// ===========================================
+// ABOUT PAGE - Grandma's Story
+// ===========================================
+
+.aboutPage {
+  min-height: 100vh;
+  background-color: $cream;
+}
+
+// ===========================================
+// HERO SECTION
+// ===========================================
+
+.hero {
+  position: relative;
+  height: 45vh;
+  min-height: 320px;
+  max-height: 450px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, $primary-color 0%, $primary-dark 50%, $secondary-color 100%);
+  overflow: hidden;
+
+  // Decorative pattern overlay
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.5;
+  }
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: $spacing-xl;
+}
+
+.heroTitle {
+  color: white;
+  font-family: $font-family-display-hebrew;
+  font-size: clamp(2.5rem, 6vw, $font-3xl);
+  font-weight: 700;
+  margin: 0 0 $spacing-md;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  letter-spacing: $letter-spacing-heading;
+}
+
+.heroSubtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-family: $font-family-hebrew;
+  font-size: clamp($font-md, 3vw, $font-xl);
+  margin: 0;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
+}
+
+// ===========================================
+// STORY SECTION
+// ===========================================
+
+.storySection {
+  padding: $spacing-2xl 0;
+  background: linear-gradient(180deg, $cream 0%, $parchment 100%);
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 $spacing-lg;
+}
+
+// ===========================================
+// OPENING QUOTE
+// ===========================================
+
+.openingQuote {
+  text-align: center;
+  margin: 0 0 $spacing-2xl;
+  padding: $spacing-xl;
+  position: relative;
+
+  // Decorative quote marks
+  &::before {
+    content: '"';
+    position: absolute;
+    top: -20px;
+    right: 50%;
+    transform: translateX(50%);
+    font-family: $font-family-display-hebrew;
+    font-size: 6rem;
+    color: $warm-accent;
+    opacity: 0.3;
+    line-height: 1;
+  }
+
+  p {
+    font-family: $font-family-display-hebrew;
+    font-size: clamp($font-lg, 3vw, $font-xl);
+    color: $text-primary;
+    font-weight: 500;
+    font-style: italic;
+    margin: 0 0 $spacing-md;
+    line-height: $line-height-hebrew;
+  }
+
+  cite {
+    font-family: $font-family-hebrew;
+    font-size: $font-md;
+    color: $warm-accent;
+    font-style: normal;
+    font-weight: 600;
+  }
+}
+
+// ===========================================
+// STORY CARDS
+// ===========================================
+
+.storyContent {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+}
+
+.storyCard {
+  background: white;
+  border-radius: $radius-xl;
+  padding: $spacing-xl $spacing-lg;
+  box-shadow: 0 4px 20px $shadow-warm;
+  position: relative;
+  transition: transform $transition-normal, box-shadow $transition-normal;
+
+  // Decorative side border
+  &::before {
+    content: '';
+    position: absolute;
+    top: $spacing-lg;
+    bottom: $spacing-lg;
+    right: 0;
+    width: 4px;
+    background: linear-gradient(180deg, $primary-color, $warm-accent);
+    border-radius: 0 $radius-sm $radius-sm 0;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px $shadow-warm;
+  }
+}
+
+.cardIcon {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, $primary-light, $primary-color);
+  border-radius: $radius-round;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $spacing-md;
+  box-shadow: 0 4px 12px $shadow-warm;
+
+  svg {
+    width: 28px;
+    height: 28px;
+    color: white;
+  }
+}
+
+.cardTitle {
+  font-family: $font-family-display-hebrew;
+  font-size: $font-xl;
+  color: $text-primary;
+  margin: 0 0 $spacing-md;
+  font-weight: 700;
+}
+
+.cardText {
+  font-family: $font-family-hebrew;
+  font-size: $font-md;
+  color: $text-secondary;
+  line-height: $line-height-hebrew;
+  margin: 0;
+  letter-spacing: $letter-spacing-hebrew;
+}
+
+// ===========================================
+// CLOSING SECTION
+// ===========================================
+
+.closingSection {
+  margin-top: $spacing-2xl;
+  text-align: center;
+  padding: $spacing-xl;
+}
+
+.decorativeDivider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $spacing-xl;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    max-width: 120px;
+    height: 2px;
+    background: linear-gradient(to left, transparent, $border-decorative);
+  }
+
+  &::after {
+    background: linear-gradient(to right, transparent, $border-decorative);
+  }
+}
+
+.dividerIcon {
+  padding: 0 $spacing-lg;
+  color: $terracotta;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.closingText {
+  font-family: $font-family-hebrew;
+  font-size: $font-lg;
+  color: $text-primary;
+  line-height: $line-height-hebrew;
+  margin: 0 0 $spacing-xl;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.signatureText {
+  font-family: $font-family-display-hebrew;
+  font-size: $font-lg;
+  color: $warm-accent;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.6;
+}
+
+// ===========================================
+// RESPONSIVE
+// ===========================================
+
+@media (max-width: $breakpoint-tablet) {
+  .hero {
+    height: 35vh;
+    min-height: 280px;
+  }
+
+  .heroContent {
+    padding: $spacing-lg;
+  }
+
+  .container {
+    padding: 0 $spacing-md;
+  }
+
+  .storyCard {
+    padding: $spacing-lg $spacing-md;
+  }
+
+  .openingQuote {
+    padding: $spacing-lg;
+
+    &::before {
+      font-size: 4rem;
+      top: -10px;
+    }
+  }
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .storySection {
+    padding: $spacing-xl 0;
+  }
+
+  .cardIcon {
+    width: 48px;
+    height: 48px;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .closingText {
+    font-size: $font-md;
+  }
+}

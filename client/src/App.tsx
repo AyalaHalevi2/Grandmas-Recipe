@@ -15,6 +15,7 @@ import Recipes from './pages/Recipes/Recipes';
 import RecipeDetail from './pages/RecipeDetail/RecipeDetail';
 import Favorites from './pages/Favorites/Favorites';
 import Admin from './pages/Admin/Admin';
+import About from './pages/About/About';
 import './styles/global.scss';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -63,6 +64,7 @@ const AppContent = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/recipes" element={<Recipes />} />
             <Route path="/recipe/:id" element={<RecipeDetail />} />
+            <Route path="/about" element={<About />} />
             <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
           </Routes>

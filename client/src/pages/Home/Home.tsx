@@ -122,9 +122,9 @@ const Home = () => {
             <Link to="/recipes" className={styles.primaryCta}>
               לכל המתכונים
             </Link>
-            <a href="#savta-story" className={styles.secondaryCta}>
+            <Link to="/about" className={styles.secondaryCta}>
               הסיפור של סבתא
-            </a>
+            </Link>
           </div>
         </div>
 

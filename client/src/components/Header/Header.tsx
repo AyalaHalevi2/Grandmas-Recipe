@@ -9,6 +9,7 @@ import userIcon from '../../assets/user.svg';
 import heartIcon from '../../assets/heart.svg';
 import plusIcon from '../../assets/plus.svg';
 import groupsIcon from '../../assets/groups.svg';
+import bookHeartIcon from '../../assets/book-heart.svg';
 import logoSVG from './../../assets/pot_no_bg (4).svg';
 
 const Header = () => {
@@ -227,6 +228,16 @@ const Header = () => {
               <img src={groupsIcon} alt="" aria-hidden="true" />
             </Link>
           )}
+
+          {/* About - Grandma's Story (far left in RTL) */}
+          <Link
+            to="/about"
+            className={styles.actionButton}
+            aria-label="הסיפור של סבתא"
+            title="הסיפור של סבתא"
+          >
+            <img src={bookHeartIcon} alt="" aria-hidden="true" />
+          </Link>
         </nav>
       </div>
     </header>
