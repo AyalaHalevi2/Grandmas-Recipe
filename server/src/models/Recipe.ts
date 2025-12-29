@@ -9,7 +9,7 @@ export type KosherType = 'Parve' | 'Dairy' | 'Meat';
 
 export interface IRecipe extends Document {
   title: string;
-  category: string;
+  category: mongoose.Types.ObjectId;
   ingredients: string[];
   instructions: string[];
   prepTime: number;
@@ -30,9 +30,9 @@ const recipeSchema = new Schema<IRecipe>({
     trim: true
   },
   category: {
-    type: String,
-    required: true,
-    trim: true
+    type: Schema.Types.ObjectId,
+    ref: 'Category',
+    required: true
   },
   ingredients: [{
     type: String,

@@ -1,20 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { fetchRecipes, createRecipe, updateRecipe, deleteRecipe } from '../../store/recipeSlice';
+import { fetchRecipes, fetchCategories, createRecipe, updateRecipe, deleteRecipe } from '../../store/recipeSlice';
 import type { Recipe, KosherType } from '../../types';
 import { validate, CreateRecipeSchema } from '@grandmas-recipes/shared-schemas';
 import styles from './RecipeManagement.module.scss';
-
-const CATEGORIES = [
-  'Appetizers', 'Main Courses', 'Desserts', 'Soups', 'Salads',
-  'Side Dishes', 'Baked goods', 'Healthy & Tasty', 'Beverages', 'Breakfast', 'Snacks'
-];
 
 const KOSHER_TYPES: KosherType[] = ['Parve', 'Dairy', 'Meat'];
 
 const RecipeManagement = () => {
   const dispatch = useAppDispatch();
-  const { recipes, isLoading } = useAppSelector((state) => state.recipes);
+  const { recipes, categories, isLoading } = useAppSelector((state) => state.recipes);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState<Recipe | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -32,6 +27,7 @@ const RecipeManagement = () => {
 
   useEffect(() => {
     dispatch(fetchRecipes({}));
+    dispatch(fetchCategories());
   }, [dispatch]);
 
   const resetForm = () => {
@@ -55,7 +51,7 @@ const RecipeManagement = () => {
     setEditingRecipe(recipe);
     setFormData({
       title: recipe.title,
-      category: recipe.category,
+      category: recipe.category?._id || '',
       ingredients: recipe.ingredients.join('\n'),
       instructions: recipe.instructions.join('\n'),
       prepTime: recipe.prepTime.toString(),
@@ -134,14 +130,14 @@ const RecipeManagement = () => {
             <div className="form-group">
               <label>Category</label>
               <div className={styles.chipGroup}>
-                {CATEGORIES.map((cat) => (
+                {categories.map((cat) => (
                   <button
-                    key={cat}
+                    key={cat._id}
                     type="button"
-                    className={`${styles.chip} ${formData.category === cat ? styles.active : ''}`}
-                    onClick={() => setFormData({ ...formData, category: cat })}
+                    className={`${styles.chip} ${formData.category === cat._id ? styles.active : ''}`}
+                    onClick={() => setFormData({ ...formData, category: cat._id })}
                   >
-                    {cat}
+                    {cat.name}
                   </button>
                 ))}
               </div>
@@ -279,7 +275,7 @@ const RecipeManagement = () => {
             {recipes.map((recipe) => (
               <tr key={recipe._id}>
                 <td>{recipe.title}</td>
-                <td>{recipe.category}</td>
+                <td>{recipe.category?.name}</td>
                 <td>{recipe.prepTime} min</td>
                 <td>{recipe.difficulty}/5</td>
                 <td>⭐ {recipe.averageRating.toFixed(1)}</td>

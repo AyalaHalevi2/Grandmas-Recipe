@@ -21,23 +21,6 @@ const KOSHER_TYPES: { value: KosherType; label: string }[] = [
   { value: 'Meat', label: 'בשרי' }
 ];
 
-// Hebrew category names mapping
-const categoryTranslations: Record<string, string> = {
-  'Appetizers': 'מנות ראשונות',
-  'Main Dishes': 'מנות עיקריות',
-  'Main Courses': 'מנות עיקריות',
-  'Desserts': 'קינוחים',
-  'Soups': 'מרקים',
-  'Salads': 'סלטים',
-  'Beverages': 'משקאות',
-  'Breakfast': 'ארוחות בוקר',
-  'Snacks': 'חטיפים',
-  'Side Dishes': 'תוספות',
-  'Baked goods': 'מאפים',
-  'Healthy & Tasty': 'בריא וטעים',
-  'Yemeni': 'אוכל תימני',
-};
-
 const Recipes = () => {
   const dispatch = useAppDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -138,11 +121,6 @@ const Recipes = () => {
     dispatch(fetchRecipes({}));
   };
 
-  // Helper to get Hebrew category name
-  const getCategoryLabel = (category: string): string => {
-    return categoryTranslations[category] || category;
-  };
-
   return (
     <div className={styles.recipesPage}>
       <h1>כל המתכונים</h1>
@@ -161,7 +139,7 @@ const Recipes = () => {
               placeholder="הכל"
               options={[
                 { value: '', label: 'הכל' },
-                ...categories.map((cat) => ({ value: cat, label: getCategoryLabel(cat) }))
+                ...categories.map((cat) => ({ value: cat._id, label: cat.name }))
               ]}
             />
           </div>

@@ -5,21 +5,6 @@ import { fetchRecipeById, rateRecipe, toggleFavorite } from '../../store/recipeS
 import { updateFavorites } from '../../store/authSlice';
 import styles from './RecipeDetail.module.scss';
 
-// Hebrew category translations
-const categoryTranslations: Record<string, string> = {
-  'Appetizers': 'מנות ראשונות',
-  'Main Dishes': 'מנות עיקריות',
-  'Main Courses': 'מנות עיקריות',
-  'Desserts': 'קינוחים',
-  'Soups': 'מרקים',
-  'Salads': 'סלטים',
-  'Beverages': 'משקאות',
-  'Breakfast': 'ארוחות בוקר',
-  'Snacks': 'חטיפים',
-  'Side Dishes': 'תוספות',
-  'Baked goods': 'מאפים',
-  'Healthy & Tasty': 'בריא וטעים',
-};
 
 // Hebrew kosher type translations
 const kosherTranslations: Record<string, string> = {
@@ -78,10 +63,6 @@ const RecipeDetail = () => {
   const getDifficultyText = (difficulty: number): string => {
     const levels = ['', 'קל מאוד', 'קל', 'בינוני', 'מאתגר', 'קשה'];
     return levels[difficulty] || '';
-  };
-
-  const getCategoryName = (category: string): string => {
-    return categoryTranslations[category] || category;
   };
 
   const getKosherName = (kosherType: string): string => {
@@ -166,8 +147,8 @@ const RecipeDetail = () => {
           <span className={styles.separator}>›</span>
           <Link to="/recipes">מתכונים</Link>
           <span className={styles.separator}>›</span>
-          <Link to={`/recipes?category=${encodeURIComponent(currentRecipe.category)}`}>
-            {getCategoryName(currentRecipe.category)}
+          <Link to={`/recipes?category=${encodeURIComponent(currentRecipe.category?._id || '')}`}>
+            {currentRecipe.category?.name}
           </Link>
           <span className={styles.separator}>›</span>
           <span className={styles.current}>{currentRecipe.title}</span>
@@ -202,7 +183,7 @@ const RecipeDetail = () => {
 
           <div className={styles.info}>
             <span className={styles.category}>
-              {getCategoryName(currentRecipe.category)}
+              {currentRecipe.category?.name}
             </span>
 
             <h1 className={styles.title}>{currentRecipe.title}</h1>

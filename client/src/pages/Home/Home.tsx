@@ -5,23 +5,6 @@ import { fetchCategories } from '../../store/recipeSlice';
 import CategoryCard from '../../components/CategoryCard';
 import styles from './Home.module.scss';
 
-// Hebrew category names mapping
-const categoryTranslations: Record<string, string> = {
-  'Appetizers': 'מנות ראשונות',
-  'Main Dishes': 'מנות עיקריות',
-  'Main Courses': 'מנות עיקריות',
-  'Desserts': 'קינוחים',
-  'Soups': 'מרקים',
-  'Salads': 'סלטים',
-  'Beverages': 'משקאות',
-  'Breakfast': 'ארוחות בוקר',
-  'Snacks': 'חטיפים',
-  'Side Dishes': 'תוספות',
-  'Baked goods': 'מאפים',
-  'Healthy & Tasty': 'בריא וטעים',
-  'Yemeni': 'אוכל תימני',
-};
-
 // Category descriptions for home page
 const categoryDescriptions: Record<string, string> = {
   'Appetizers': 'התחילו את הארוחה עם מנות פתיחה קלות וטעימות שיפתחו את התיאבון',
@@ -71,8 +54,8 @@ const getGreeting = (): { text: string; icon: string } => {
   }
 };
 
-// Categories to display on home page (in order)
-const FEATURED_CATEGORIES = ['Main Dishes', 'Desserts', 'Soups', 'Salads', 'Baked goods'];
+// Categories slugs to display on home page (in order)
+const FEATURED_CATEGORY_SLUGS = ['main-dishes', 'desserts', 'soups', 'salads', 'baked-goods'];
 
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -83,20 +66,40 @@ const Home = () => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  const getCategoryName = (category: string): string => {
-    return categoryTranslations[category] || category;
+  const getCategoryDescription = (slug: string): string => {
+    // Map slugs to descriptions
+    const slugToKey: Record<string, string> = {
+      'appetizers': 'Appetizers',
+      'main-dishes': 'Main Dishes',
+      'desserts': 'Desserts',
+      'soups': 'Soups',
+      'salads': 'Salads',
+      'side-dishes': 'Side Dishes',
+      'baked-goods': 'Baked goods',
+      'healthy': 'Healthy & Tasty',
+      'breakfast': 'Breakfast',
+    };
+    return categoryDescriptions[slugToKey[slug] || slug] || 'מתכונים מיוחדים מהמטבח המשפחתי שלנו';
   };
 
-  const getCategoryDescription = (category: string): string => {
-    return categoryDescriptions[category] || 'מתכונים מיוחדים מהמטבח המשפחתי שלנו';
+  const getCategoryImage = (slug: string): string => {
+    // Map slugs to image keys
+    const slugToKey: Record<string, string> = {
+      'appetizers': 'Appetizers',
+      'main-dishes': 'Main Dishes',
+      'desserts': 'Desserts',
+      'soups': 'Soups',
+      'salads': 'Salads',
+      'side-dishes': 'Side Dishes',
+      'baked-goods': 'Baked goods',
+      'healthy': 'Healthy & Tasty',
+      'breakfast': 'Breakfast',
+    };
+    return categoryImages[slugToKey[slug] || slug] || 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=1200&h=400&fit=crop';
   };
 
-  const getCategoryImage = (category: string): string => {
-    return categoryImages[category] || 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=1200&h=400&fit=crop';
-  };
-
-  // Filter to only show categories that exist
-  const displayCategories = FEATURED_CATEGORIES.filter(cat => categories.includes(cat));
+  // Filter to only show categories that exist in the DB
+  const displayCategories = categories.filter(cat => FEATURED_CATEGORY_SLUGS.includes(cat.slug));
 
   return (
     <div className={styles.homePage}>
@@ -212,20 +215,21 @@ const Home = () => {
             {/* Yemeni Food - Featured */}
             <CategoryCard
               categoryName="Yemeni"
-              hebrewName={getCategoryName('Yemeni')}
-              description={getCategoryDescription('Yemeni')}
-              imageUrl={getCategoryImage('Yemeni')}
+              hebrewName="אוכל תימני"
+              description="מתכונים תימניים מסורתיים שעוברים מדור לדור"
+              imageUrl="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200&h=400&fit=crop"
               isYemeni={true}
             />
 
             {/* Regular Categories */}
             {displayCategories.map((category) => (
               <CategoryCard
-                key={category}
-                categoryName={category}
-                hebrewName={getCategoryName(category)}
-                description={getCategoryDescription(category)}
-                imageUrl={getCategoryImage(category)}
+                key={category._id}
+                categoryId={category._id}
+                categoryName={category.slug}
+                hebrewName={category.name}
+                description={getCategoryDescription(category.slug)}
+                imageUrl={getCategoryImage(category.slug)}
               />
             ))}
           </div>

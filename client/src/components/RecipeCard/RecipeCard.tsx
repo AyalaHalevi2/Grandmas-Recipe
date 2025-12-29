@@ -78,7 +78,7 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
         <div className={styles.imageOverlay} />
 
         {/* Category badge */}
-        <span className={styles.category}>{recipe.category}</span>
+        <span className={styles.category}>{recipe.category?.name}</span>
 
         {/* Favorite button */}
         <button

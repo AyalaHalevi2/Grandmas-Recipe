@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import styles from './CategoryCard.module.scss';
 
 interface CategoryCardProps {
+  categoryId?: string;
   categoryName: string;
   hebrewName: string;
   description: string;
@@ -10,6 +11,7 @@ interface CategoryCardProps {
 }
 
 const CategoryCard = ({
+  categoryId,
   categoryName,
   hebrewName,
   description,
@@ -18,7 +20,7 @@ const CategoryCard = ({
 }: CategoryCardProps) => {
   const linkPath = isYemeni
     ? '/recipes?isYemeni=true'
-    : `/recipes?category=${encodeURIComponent(categoryName)}`;
+    : `/recipes?category=${encodeURIComponent(categoryId || categoryName)}`;
 
   return (
     <Link

@@ -22,7 +22,8 @@
       "Bash(tasklist:*)",
       "Bash(npm run seed -- --force)",
       "Bash(git checkout:*)",
-      "Bash(dir \"C:\\\\Users\\\\The user\\\\Documents\\\\github\\\\Grandmas-Recipe\\\\client\\\\src\\\\components\")"
+      "Bash(dir \"C:\\\\Users\\\\The user\\\\Documents\\\\github\\\\Grandmas-Recipe\\\\client\\\\src\\\\components\")",
+      "Bash(git commit:*)"
     ]
   }
 }

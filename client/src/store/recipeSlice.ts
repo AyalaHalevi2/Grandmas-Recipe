@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../services/api';
-import type { RecipeState, Recipe, RecipeFilters } from '../types';
+import type { RecipeState, Recipe, RecipeFilters, Category, RecipeInput } from '../types';
 
 const initialState: RecipeState = {
   recipes: [],
@@ -52,7 +52,7 @@ export const fetchCategories = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get('/recipes/categories');
-      return response.data as string[];
+      return response.data as Category[];
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Error loading categories');
     }
@@ -102,7 +102,7 @@ export const fetchYemeniRecipes = createAsyncThunk(
 
 export const createRecipe = createAsyncThunk(
   'recipes/create',
-  async (data: Partial<Recipe>, { rejectWithValue }) => {
+  async (data: Partial<RecipeInput>, { rejectWithValue }) => {
     try {
       const response = await api.post('/recipes', data);
       return response.data.recipe as Recipe;
@@ -114,7 +114,7 @@ export const createRecipe = createAsyncThunk(
 
 export const updateRecipe = createAsyncThunk(
   'recipes/update',
-  async ({ id, data }: { id: string; data: Partial<Recipe> }, { rejectWithValue }) => {
+  async ({ id, data }: { id: string; data: Partial<RecipeInput> }, { rejectWithValue }) => {
     try {
       const response = await api.put(`/recipes/${id}`, data);
       return response.data.recipe as Recipe;

@@ -14,11 +14,10 @@ export const RecipeTitleSchema = v.pipe(
   v.maxLength(200, 'שם המתכון ארוך מדי')
 );
 
+// MongoDB ObjectId format for category reference
 export const RecipeCategorySchema = v.pipe(
   v.string(),
-  v.trim(),
-  v.minLength(2, 'קטגוריה חייבת להכיל לפחות 2 תווים'),
-  v.maxLength(100, 'קטגוריה ארוכה מדי')
+  v.regex(/^[0-9a-fA-F]{24}$/, 'מזהה קטגוריה לא תקין')
 );
 
 export const IngredientSchema = v.pipe(

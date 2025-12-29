@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Recipe } from '../models/Recipe';
 import { User } from '../models/User';
+import { Category } from '../models/Category';
 import { validate, CreateRecipeSchema, UpdateRecipeSchema, RateRecipeSchema, RecipeIdSchema } from '@grandmas-recipes/shared-schemas';
 
 export const getAllRecipes = async (req: Request, res: Response): Promise<void> => {
@@ -61,7 +62,7 @@ export const getAllRecipes = async (req: Request, res: Response): Promise<void> 
       sortOption = { prepTime: 1 };
     }
 
-    let recipesQuery = Recipe.find(query).sort(sortOption);
+    let recipesQuery = Recipe.find(query).sort(sortOption).populate('category');
 
     // Apply limit if provided
     if (limit && !isNaN(Number(limit))) {
@@ -78,7 +79,7 @@ export const getAllRecipes = async (req: Request, res: Response): Promise<void> 
 
 export const getRecipeById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const recipe = await Recipe.findById(req.params.id);
+    const recipe = await Recipe.findById(req.params.id).populate('category');
     if (!recipe) {
       res.status(404).json({ message: 'Recipe not found' });
       return;
@@ -246,7 +247,7 @@ export const toggleFavorite = async (req: Request, res: Response): Promise<void>
 
 export const getCategories = async (req: Request, res: Response): Promise<void> => {
   try {
-    const categories = await Recipe.distinct('category');
+    const categories = await Category.find().sort({ name: 1 });
     res.json(categories);
   } catch (error) {
     console.error('Get categories error:', error);

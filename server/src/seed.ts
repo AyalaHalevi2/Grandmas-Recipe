@@ -2,8 +2,22 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { User } from './models/User';
 import { Recipe } from './models/Recipe';
+import { Category } from './models/Category';
 
 dotenv.config();
+
+// Category data with Hebrew names and English slugs
+const categoriesData = [
+  { name: 'קינוחים', slug: 'desserts' },
+  { name: 'מרקים', slug: 'soups' },
+  { name: 'מנות ראשונות', slug: 'appetizers' },
+  { name: 'מנות עיקריות', slug: 'main-dishes' },
+  { name: 'סלטים', slug: 'salads' },
+  { name: 'תוספות', slug: 'side-dishes' },
+  { name: 'מאפים', slug: 'baked-goods' },
+  { name: 'בריא וטעים', slug: 'healthy' },
+  { name: 'ארוחות בוקר', slug: 'breakfast' }
+];
 
 const seedDatabase = async () => {
   try {
@@ -18,7 +32,29 @@ const seedDatabase = async () => {
       console.log('Force flag detected - clearing existing data...');
       await Recipe.deleteMany({});
       await User.deleteMany({});
+      await Category.deleteMany({});
       console.log('Existing data cleared');
+    }
+
+    // Create categories
+    const existingCategories = await Category.countDocuments();
+    let categoryMap: Record<string, mongoose.Types.ObjectId> = {};
+
+    if (existingCategories === 0) {
+      const insertedCategories = await Category.insertMany(categoriesData);
+      console.log('קטגוריות נוצרו');
+
+      // Create mapping from slug to ObjectId
+      insertedCategories.forEach(cat => {
+        categoryMap[cat.slug] = cat._id as mongoose.Types.ObjectId;
+      });
+    } else {
+      console.log('קטגוריות כבר קיימות');
+      // Load existing categories into map
+      const categories = await Category.find();
+      categories.forEach(cat => {
+        categoryMap[cat.slug] = cat._id as mongoose.Types.ObjectId;
+      });
     }
 
     // Create admin user
@@ -43,7 +79,7 @@ const seedDatabase = async () => {
         // קינוחים - Desserts
         {
           title: 'עוגת שוקולד של סבתא',
-          category: 'Desserts',
+          category: categoryMap['desserts'],
           ingredients: [
             '2 כוסות קמח',
             '1 כוס סוכר',
@@ -69,7 +105,7 @@ const seedDatabase = async () => {
         },
         {
           title: 'עוגת גבינה אפויה',
-          category: 'Desserts',
+          category: categoryMap['desserts'],
           ingredients: [
             '500 גרם גבינת שמנת',
             '1 כוס סוכר',
@@ -95,7 +131,7 @@ const seedDatabase = async () => {
         // מרקים - Soups
         {
           title: 'מרק עוף עם קניידלאך',
-          category: 'Soups',
+          category: categoryMap['soups'],
           ingredients: [
             '1 עוף שלם',
             '3 גזרים',
@@ -121,7 +157,7 @@ const seedDatabase = async () => {
         },
         {
           title: 'מרק עדשים כתומות',
-          category: 'Soups',
+          category: categoryMap['soups'],
           ingredients: [
             '2 כוסות עדשים כתומות',
             '1 בצל גדול',
@@ -148,7 +184,7 @@ const seedDatabase = async () => {
         // מנות ראשונות - Appetizers
         {
           title: 'חומוס ביתי',
-          category: 'Appetizers',
+          category: categoryMap['appetizers'],
           ingredients: [
             '2 כוסות חומוס יבש',
             '1/2 כוס טחינה גולמית',
@@ -173,7 +209,7 @@ const seedDatabase = async () => {
         },
         {
           title: 'סלט חצילים קלויים',
-          category: 'Appetizers',
+          category: categoryMap['appetizers'],
           ingredients: [
             '3 חצילים גדולים',
             '3 שיני שום',
@@ -198,7 +234,7 @@ const seedDatabase = async () => {
         // מנות עיקריות - Main Dishes
         {
           title: 'שניצל פריך',
-          category: 'Main Dishes',
+          category: categoryMap['main-dishes'],
           ingredients: [
             '4 חזות עוף',
             '2 כוסות פירורי לחם',
@@ -223,7 +259,7 @@ const seedDatabase = async () => {
         },
         {
           title: 'קציצות בשר ברוטב עגבניות',
-          category: 'Main Dishes',
+          category: categoryMap['main-dishes'],
           ingredients: [
             '500 גרם בשר טחון',
             '1 בצל מגורד',
@@ -249,7 +285,7 @@ const seedDatabase = async () => {
         // סלטים - Salads
         {
           title: 'סלט ירקות ישראלי',
-          category: 'Salads',
+          category: categoryMap['salads'],
           ingredients: [
             '4 עגבניות',
             '4 מלפפונים',
@@ -274,7 +310,7 @@ const seedDatabase = async () => {
         },
         {
           title: 'סלט כרוב סגול',
-          category: 'Salads',
+          category: categoryMap['salads'],
           ingredients: [
             '1/2 כרוב סגול',
             '2 גזרים',
@@ -298,7 +334,7 @@ const seedDatabase = async () => {
         // תוספות - Side Dishes
         {
           title: 'תפוחי אדמה אפויים',
-          category: 'Side Dishes',
+          category: categoryMap['side-dishes'],
           ingredients: [
             '1 ק"ג תפוחי אדמה',
             '4 כפות שמן זית',
@@ -321,7 +357,7 @@ const seedDatabase = async () => {
         },
         {
           title: 'אורז עם שעועית וגזר',
-          category: 'Side Dishes',
+          category: categoryMap['side-dishes'],
           ingredients: [
             '2 כוסות אורז',
             '1 פחית שעועית אדומה',
@@ -346,7 +382,7 @@ const seedDatabase = async () => {
         // מאפים - Baked goods
         {
           title: 'חלה ביתית',
-          category: 'Baked goods',
+          category: categoryMap['baked-goods'],
           ingredients: [
             '1 ק"ג קמח',
             '1/4 כוס סוכר',
@@ -371,7 +407,7 @@ const seedDatabase = async () => {
         },
         {
           title: 'בורקס גבינה',
-          category: 'Baked goods',
+          category: categoryMap['baked-goods'],
           ingredients: [
             '500 גרם בצק עלים',
             '300 גרם גבינה בולגרית',
@@ -398,7 +434,7 @@ const seedDatabase = async () => {
         // בריא וטעים - Healthy & Tasty
         {
           title: 'קערת קינואה עם ירקות',
-          category: 'Healthy & Tasty',
+          category: categoryMap['healthy'],
           ingredients: [
             '1 כוס קינואה',
             '1 פחית חומוס',
@@ -423,7 +459,7 @@ const seedDatabase = async () => {
         },
         {
           title: 'סלמון בתנור עם ירקות',
-          category: 'Healthy & Tasty',
+          category: categoryMap['healthy'],
           ingredients: [
             '4 פילה סלמון',
             '2 קישואים',
@@ -449,7 +485,7 @@ const seedDatabase = async () => {
         // מתכונים תימניים - Yemeni Recipes
         {
           title: "ג'חנון תימני מסורתי",
-          category: 'Baked goods',
+          category: categoryMap['baked-goods'],
           ingredients: [
             '4 כוסות קמח',
             '1 כף סוכר',
@@ -473,7 +509,7 @@ const seedDatabase = async () => {
         },
         {
           title: 'מרק תימני (מרק פטמות)',
-          category: 'Soups',
+          category: categoryMap['soups'],
           ingredients: [
             '500 גרם בשר כבש או עוף',
             '4 תפוחי אדמה',
@@ -499,7 +535,7 @@ const seedDatabase = async () => {
         },
         {
           title: "סחוג (זחוג) ירוק",
-          category: 'Side Dishes',
+          category: categoryMap['side-dishes'],
           ingredients: [
             'אגודה גדולה כוסברה',
             '5-10 פלפלים חריפים ירוקים',
@@ -524,7 +560,7 @@ const seedDatabase = async () => {
         },
         {
           title: 'לחוח תימני',
-          category: 'Baked goods',
+          category: categoryMap['baked-goods'],
           ingredients: [
             '2 כוסות קמח',
             '1 כוס סולת',
@@ -548,7 +584,7 @@ const seedDatabase = async () => {
         },
         {
           title: 'מלווח תימני',
-          category: 'Baked goods',
+          category: categoryMap['baked-goods'],
           ingredients: [
             '3 כוסות קמח',
             '1 כפית מלח',
@@ -572,7 +608,7 @@ const seedDatabase = async () => {
         // ארוחות בוקר - Breakfast
         {
           title: 'שקשוקה',
-          category: 'Breakfast',
+          category: categoryMap['breakfast'],
           ingredients: [
             '6 ביצים',
             '1 פחית עגבניות מרוסקות',
@@ -599,7 +635,7 @@ const seedDatabase = async () => {
         },
         {
           title: 'לביבות גבינה',
-          category: 'Breakfast',
+          category: categoryMap['breakfast'],
           ingredients: [
             '500 גרם גבינת קוטג\'',
             '2 ביצים',
