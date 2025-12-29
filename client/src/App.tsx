@@ -18,6 +18,17 @@ import Admin from './pages/Admin/Admin';
 import About from './pages/About/About';
 import './styles/global.scss';
 
+// Scroll to top on route change
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
+
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, isLoading } = useAppSelector((state) => state.auth);
   const location = useLocation();
@@ -47,6 +58,7 @@ const AppContent = () => {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <div className="app-wrapper">
         {/* Skip to Content Link - First focusable element */}
         <a href="#main-content" className="skip-link">
