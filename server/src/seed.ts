@@ -9,7 +9,7 @@ const seedDatabase = async () => {
   try {
     const forceReseed = process.argv.includes('--force');
 
-    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/savta-rina';
+    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/grandma-recipes';
     await mongoose.connect(mongoURI);
     console.log('Connected to MongoDB');
 
