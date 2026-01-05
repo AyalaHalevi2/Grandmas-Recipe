@@ -1,50 +1,39 @@
-# Task: Implementation Plan for "Groups" Feature and Hebrew Localization
+# Task: Refactor User Roles, Group Management, and Ethnicity Categorization
 
-## Objective
-Act as a Senior Full-Stack Developer and Architect. Create a detailed implementation plan to add a **Groups** ecosystem to the recipe platform and perform a full **Hebrew (RTL) localization**.
-### Project Context & Core Task
-**Current State:** A single-admin recipe website designed for personal/private use.
-**Goal:** Transform the platform into a multi-user, community-driven application.
-**Key Shift:** The core logic must change from a "Global/Admin-only" view to a "Group-based" access model. Users should see and interact with recipes based on the specific groups they belong to, moving away from a single-user controlled environment.
+Please implement the following architectural and feature changes to the application.
 
 ---
 
-## 1. Feature Requirements: Groups System
-* **Navigation:** Add a "Groups" navigation icon/link leading to a "My Groups" dashboard.
-* **Creation & Privacy:** * Ability to create a group.
-    * Toggle between **Public** (searchable/joinable) and **Private** (invite-only).
-* **Permissions & Logic:**
-    * **Default Behavior:** Only the Group Creator (Admin) can add recipes.
-    * **Permission Management:** Admin can toggle "Contributor" status for other members.
-* **Invitations:**
-    * Search and add users by Username/Email.
-    * Generate a unique invite link for the group.
-* **Recipe Visibility:** Update the recipe creation flow to include visibility options: **Private**, **Specific Group**, or **Public**.
-
-## 2. Localization & UI/UX (Hebrew/RTL)
-* **RTL Transformation:** Full layout flip to Right-to-Left (RTL). Adjust text alignment, flex-direction, and icons.
-* **i18n Implementation:** Convert all hardcoded strings to a translation system (e.g., i18next) for Hebrew support.
-* **Theme Support:** Ensure all new and existing components support **Dark/Light Mode**.
-* **Accessibility:** Maintain WCAG 2.1 compliance (ARIA labels, focus states, and keyboard navigation).
+## 1. Administrative Hierarchy Update
+Replace the existing "Website Admin" with a **SysAdmin** role.
+* **Global Access:** The SysAdmin should have permission to access all areas of the site.
+* **User/Group Control:** Enable the SysAdmin to view all users and groups, and provide the ability to edit or delete any user account.
 
 ---
 
-## 3. Requested Output (The Plan)
-Please provide a structured technical plan including:
+## 2. Group Management Logic
+Implement a dynamic management system for groups:
+* **Automatic Ownership:** The user who creates a group is automatically assigned as the **Group Manager**.
+* **Configurable Settings:** Managers must be able to define the following upon creation and edit them later via a **Settings Icon**:
+    * **Privacy:** Toggle between `Private` or `Public`.
+    * **Contribution Rules:** Toggle whether "Everyone" or "Only Managers" can add recipes.
+    * **Metadata:** Group Name, Description, and Group Image.
+* **User Management:** Managers can add/delete members and promote other members to the "Manager" role.
+* **Content Moderation:** Managers have the authority to edit or delete any recipe in their group (while the original author maintains their own edit/delete rights).
 
-### A. Database Schema
-Define updates for `Groups`, `Memberships`, `Permissions`, and modifications to the `Recipes` table/collection to handle group associations.
+---
 
-### B. API Design
-Outline the REST/GraphQL endpoints needed for:
-* Group CRUD operations.
-* Member management and permission toggles.
-* Invite link generation and validation.
+## 3. Recipe Property Refactor: Ethnicity
+Replace the boolean `isYemeni` property with a flexible `ethnicity` field.
+* **Data Model:** Change `isYemeni` (boolean) to `ethnicity` (string, optional).
+* **Input Interface:** In the recipe form, provide a selection tool that allows users to:
+    * Choose from a list of **existing ethnicities** already stored in the database.
+    * Type in and **add a new ethnicity** if their choice isn't listed.
+* **Navigation:** Remove the "Yemeni Food" section from the homepage. Replace it with a link to a new page: **"Browse by Ethnicity"**, which organizes recipes by these tags.
 
-### C. Frontend Architecture
-* **RTL Strategy:** Suggest a method (e.g., Tailwind RTL, CSS Logical Properties) for the flip.
-* **Component Breakdown:** List new components needed (e.g., `GroupCard`, `InviteModal`, `MemberList`).
-* **State Management:** How to handle group data and localization state.
+---
 
-### D. Step-by-Step Roadmap
-Break the execution into logical phases (e.g., Database -> Backend -> i18n -> UI Components -> RTL Styling).
+## 4. Technical Requirements
+* **Migration:** Ensure any existing recipes marked `isYemeni: true` are migrated to `ethnicity: "Yemeni"`.
+* **Permissions:** Update the backend middleware/policies to enforce the new SysAdmin and Group Manager permission levels.
+* **UI/UX:** Add the Group Settings icon and the new Ethnicity navigation link.
