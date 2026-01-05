@@ -71,4 +71,11 @@ groupSchema.index({ 'members.userId': 1 }); // For member lookups
 // inviteCode index created automatically by unique: true
 groupSchema.index({ privacy: 1 }); // For public group listings
 
+// Generate unique invite code before saving if not set
+groupSchema.pre('save', function() {
+  if (!this.inviteCode) {
+    this.inviteCode = crypto.randomBytes(16).toString('hex');
+  }
+});
+
 export const Group = mongoose.model<IGroup>('Group', groupSchema);

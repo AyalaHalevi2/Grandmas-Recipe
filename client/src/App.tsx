@@ -16,6 +16,9 @@ import RecipeDetail from './pages/RecipeDetail/RecipeDetail';
 import Favorites from './pages/Favorites/Favorites';
 import Admin from './pages/Admin/Admin';
 import About from './pages/About/About';
+import Groups from './pages/Groups/Groups';
+import GroupDetail from './pages/GroupDetail/GroupDetail';
+import JoinGroup from './pages/JoinGroup/JoinGroup';
 import './styles/global.scss';
 
 // Scroll to top on route change
@@ -79,6 +82,9 @@ const AppContent = () => {
             <Route path="/about" element={<About />} />
             <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+            <Route path="/groups" element={<ProtectedRoute><Groups /></ProtectedRoute>} />
+            <Route path="/groups/join/:inviteCode" element={<ProtectedRoute><JoinGroup /></ProtectedRoute>} />
+            <Route path="/groups/:id" element={<ProtectedRoute><GroupDetail /></ProtectedRoute>} />
           </Routes>
         </main>
 

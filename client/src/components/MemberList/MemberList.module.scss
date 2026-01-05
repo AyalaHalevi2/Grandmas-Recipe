@@ -1,0 +1,110 @@
+@use '../../styles/variables' as *;
+
+.memberList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.memberItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md;
+  background: white;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: $background-dark;
+  }
+}
+
+.memberInfo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  flex: 1;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $primary-color, $secondary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-weight: 500;
+  color: $text-primary;
+}
+
+.email {
+  font-size: 0.875rem;
+  color: $text-secondary;
+}
+
+.memberActions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.roleBadge {
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-md;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: white;
+}
+
+.adminBadge {
+  background-color: $primary-color;
+}
+
+.contributorBadge {
+  background-color: $secondary-color;
+}
+
+.memberBadge {
+  background-color: lighten($text-secondary, 20%);
+}
+
+.actionButtons {
+  display: flex;
+  gap: $spacing-xs;
+}
+
+.iconButton {
+  background: none;
+  border: 1px solid $border-color;
+  padding: $spacing-xs;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: $background-dark;
+    border-color: $text-secondary;
+  }
+}
+
+.removeButton {
+  &:hover {
+    background-color: lighten($error, 40%);
+    border-color: $error;
+  }
+}

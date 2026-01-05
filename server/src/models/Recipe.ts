@@ -6,6 +6,7 @@ export interface IRating {
 }
 
 export type KosherType = 'Parve' | 'Dairy' | 'Meat';
+export type RecipeVisibility = 'private' | 'group' | 'public';
 
 export interface IRecipe extends Document {
   title: string;
@@ -19,6 +20,9 @@ export interface IRecipe extends Document {
   imageUrl?: string;
   isYemeni: boolean;
   kosherType: KosherType;
+  creator: mongoose.Types.ObjectId | null;
+  visibility: RecipeVisibility;
+  groupIds: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -82,7 +86,21 @@ const recipeSchema = new Schema<IRecipe>({
     type: String,
     enum: ['Parve', 'Dairy', 'Meat'],
     default: 'Parve'
-  }
+  },
+  creator: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    default: null
+  },
+  visibility: {
+    type: String,
+    enum: ['private', 'group', 'public'],
+    default: 'public'
+  },
+  groupIds: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Group'
+  }]
 }, {
   timestamps: true
 });
@@ -96,5 +114,11 @@ recipeSchema.pre('save', function() {
     this.averageRating = 0;
   }
 });
+
+// Indexes for performance
+recipeSchema.index({ creator: 1 }); // For "My Recipes" filtering
+recipeSchema.index({ visibility: 1 }); // For access control
+recipeSchema.index({ groupIds: 1 }); // For group recipe filtering
+recipeSchema.index({ visibility: 1, groupIds: 1 }); // Compound index for performance
 
 export const Recipe = mongoose.model<IRecipe>('Recipe', recipeSchema);
