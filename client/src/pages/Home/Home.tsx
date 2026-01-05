@@ -212,14 +212,14 @@ const Home = () => {
           </div>
         ) : (
           <div className={styles.categoryCards}>
-            {/* Yemeni Food - Featured */}
-            <CategoryCard
-              categoryName="Yemeni"
-              hebrewName="אוכל תימני"
-              description="מתכונים תימניים מסורתיים שעוברים מדור לדור"
-              imageUrl="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200&h=400&fit=crop"
-              isYemeni={true}
-            />
+            {/* Browse by Ethnicity - Featured */}
+            <Link to="/ethnicities" className={styles.ethnicityCard}>
+              <div className={styles.ethnicityCardContent}>
+                <span className={styles.ethnicityIcon}>🌍</span>
+                <h3 className={styles.ethnicityTitle}>עיון לפי מוצא</h3>
+                <p className={styles.ethnicityDescription}>גלו מתכונים מסורתיים ממטבחים שונים - תימני, מרוקאי, פולני ועוד</p>
+              </div>
+            </Link>
 
             {/* Regular Categories */}
             {displayCategories.map((category) => (
@@ -252,10 +252,10 @@ const Home = () => {
           </p>
         </div>
         <div className={styles.featureCard}>
-          <div className={styles.featureIcon}>🇮🇱</div>
-          <h3 className={styles.featureTitle}>טעמים תימניים</h3>
+          <div className={styles.featureIcon}>🌍</div>
+          <h3 className={styles.featureTitle}>מטבחים מהעולם</h3>
           <p className={styles.featureText}>
-            מבחר מתכונים תימניים אותנטיים מהמסורת
+            מבחר מתכונים אותנטיים ממסורות קולינריות שונות
           </p>
         </div>
         <div className={styles.featureCard}>

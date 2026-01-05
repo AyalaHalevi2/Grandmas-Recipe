@@ -7,7 +7,6 @@ interface CategoryCardProps {
   hebrewName: string;
   description: string;
   imageUrl: string;
-  isYemeni?: boolean;
 }
 
 const CategoryCard = ({
@@ -16,16 +15,13 @@ const CategoryCard = ({
   hebrewName,
   description,
   imageUrl,
-  isYemeni = false,
 }: CategoryCardProps) => {
-  const linkPath = isYemeni
-    ? '/recipes?isYemeni=true'
-    : `/recipes?category=${encodeURIComponent(categoryId || categoryName)}`;
+  const linkPath = `/recipes?category=${encodeURIComponent(categoryId || categoryName)}`;
 
   return (
     <Link
       to={linkPath}
-      className={`${styles.categoryCard} ${isYemeni ? styles.yemeni : ''}`}
+      className={styles.categoryCard}
       aria-label={`${hebrewName}: ${description}`}
     >
       <div className={styles.imageContainer}>

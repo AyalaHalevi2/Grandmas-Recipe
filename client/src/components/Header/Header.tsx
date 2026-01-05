@@ -123,8 +123,8 @@ const Header = () => {
 
         {/* Navigation Actions - Left side in RTL */}
         <nav className={styles.actions} aria-label="ניווט מהיר">
-          {/* Admin - Plus (only for admin) */}
-          {user?.role === 'admin' && (
+          {/* Admin - Plus (only for sysadmin) */}
+          {user?.role === 'sysadmin' && (
             <Link
               to="/admin"
               className={styles.actionButton}
