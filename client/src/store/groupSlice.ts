@@ -54,7 +54,13 @@ export const fetchGroupById = createAsyncThunk(
 // Create group
 export const createGroup = createAsyncThunk(
   'groups/create',
-  async (data: { name: string; description?: string; privacy?: 'public' | 'private' }, { rejectWithValue }) => {
+  async (data: {
+    name: string;
+    description?: string;
+    privacy?: 'public' | 'private';
+    contributionRules?: 'everyone' | 'managers';
+    imageUrl?: string;
+  }, { rejectWithValue }) => {
     try {
       const response = await api.post('/groups', data);
       return response.data.group as Group;

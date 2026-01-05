@@ -86,7 +86,7 @@ export const isGroupCreator = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-// Helper: Check if user is admin or contributor in group (for recipe creation)
+// Helper: Check if user can add recipes to group (respects contributionRules)
 export const isGroupContributor = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
@@ -104,9 +104,19 @@ export const isGroupContributor = async (req: Request, res: Response, next: Next
       return;
     }
 
-    if (member.role !== 'admin' && member.role !== 'contributor') {
-      res.status(403).json({ message: 'You need contributor or admin role to add recipes' });
-      return;
+    // Check contribution rules
+    if (group.contributionRules === 'managers') {
+      // Only admins can add recipes
+      if (member.role !== 'admin') {
+        res.status(403).json({ message: 'Only managers can add recipes to this group' });
+        return;
+      }
+    } else {
+      // 'everyone' - admins and contributors can add recipes
+      if (member.role !== 'admin' && member.role !== 'contributor') {
+        res.status(403).json({ message: 'You need contributor or admin role to add recipes' });
+        return;
+      }
     }
 
     (req as any).group = group;

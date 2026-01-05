@@ -11,6 +11,8 @@ export interface IGroup extends Document {
   name: string;
   description: string;
   privacy: 'public' | 'private';
+  contributionRules: 'everyone' | 'managers';
+  imageUrl: string;
   creator: mongoose.Types.ObjectId;
   members: IGroupMember[];
   inviteCode: string;
@@ -36,6 +38,16 @@ const groupSchema = new Schema<IGroup>({
     type: String,
     enum: ['public', 'private'],
     default: 'public'
+  },
+  contributionRules: {
+    type: String,
+    enum: ['everyone', 'managers'],
+    default: 'everyone'
+  },
+  imageUrl: {
+    type: String,
+    default: '',
+    trim: true
   },
   creator: {
     type: Schema.Types.ObjectId,

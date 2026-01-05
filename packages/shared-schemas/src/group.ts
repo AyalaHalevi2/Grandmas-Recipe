@@ -25,6 +25,16 @@ export const GroupRoleSchema = v.picklist(
   'תפקיד בקבוצה לא תקין'
 );
 
+export const ContributionRulesSchema = v.picklist(
+  ['everyone', 'managers'],
+  'חוקי תרומה לא תקינים'
+);
+
+export const GroupImageUrlSchema = v.pipe(
+  v.string(),
+  v.trim()
+);
+
 export const RecipeVisibilitySchema = v.picklist(
   ['private', 'group', 'public'],
   'רמת נראות לא תקינה'
@@ -40,14 +50,18 @@ export const MongoIdSchema = v.pipe(
 export const CreateGroupSchema = v.object({
   name: GroupNameSchema,
   description: v.optional(GroupDescriptionSchema, ''),
-  privacy: v.optional(GroupPrivacySchema, 'public')
+  privacy: v.optional(GroupPrivacySchema, 'public'),
+  contributionRules: v.optional(ContributionRulesSchema, 'everyone'),
+  imageUrl: v.optional(GroupImageUrlSchema, '')
 }, 'נדרשים פרטי הקבוצה');
 
 // Update Group schema (all fields optional)
 export const UpdateGroupSchema = v.object({
   name: v.optional(GroupNameSchema),
   description: v.optional(GroupDescriptionSchema),
-  privacy: v.optional(GroupPrivacySchema)
+  privacy: v.optional(GroupPrivacySchema),
+  contributionRules: v.optional(ContributionRulesSchema),
+  imageUrl: v.optional(GroupImageUrlSchema)
 }, 'נדרשים פרטים לעדכון');
 
 // Invite Member schema (by email)

@@ -3,10 +3,18 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchMyGroups, fetchPublicGroups, createGroup, joinPublicGroup } from '../../store/groupSlice';
 import GroupList from '../../components/GroupList/GroupList';
 import GroupForm from '../../components/GroupForm/GroupForm';
-import type { GroupPrivacy } from '../../types';
+import type { GroupPrivacy, ContributionRules } from '../../types';
 import styles from './Groups.module.scss';
 
 type TabType = 'my' | 'public';
+
+interface GroupFormData {
+  name: string;
+  description: string;
+  privacy: GroupPrivacy;
+  contributionRules: ContributionRules;
+  imageUrl: string;
+}
 
 const Groups = () => {
   const dispatch = useAppDispatch();
@@ -32,7 +40,7 @@ const Groups = () => {
     }
   };
 
-  const handleCreateGroup = async (data: { name: string; description: string; privacy: GroupPrivacy }) => {
+  const handleCreateGroup = async (data: GroupFormData) => {
     try {
       await dispatch(createGroup(data)).unwrap();
       setIsFormOpen(false);

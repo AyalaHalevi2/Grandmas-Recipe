@@ -15,6 +15,8 @@ const GroupCard = ({ group, showJoinButton = false, onJoin }: GroupCardProps) =>
   const memberCount = group.members?.length || 0;
   const isCreator = user?._id === group.creator;
   const isMember = group.members?.some(m => m.userId === user?._id) || false;
+  const currentMember = group.members?.find(m => m.userId === user?._id);
+  const isAdmin = currentMember?.role === 'admin' || isCreator;
 
   const handleJoinClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -24,17 +26,35 @@ const GroupCard = ({ group, showJoinButton = false, onJoin }: GroupCardProps) =>
     }
   };
 
+  const handleSettingsClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Navigation is handled by the Link
+  };
+
   return (
     <Link to={`/groups/${group._id}`} className={styles.card}>
       <div className={styles.cardHeader}>
         <h3 className={styles.groupName}>{group.name}</h3>
-        <div className={styles.badges}>
-          {group.privacy === 'private' && (
-            <span className={styles.privateBadge}>🔒 פרטי</span>
+        <div className={styles.headerActions}>
+          {isAdmin && (
+            <Link
+              to={`/groups/${group._id}?tab=settings`}
+              className={styles.settingsIcon}
+              onClick={handleSettingsClick}
+              aria-label="הגדרות קבוצה"
+            >
+              ⚙️
+            </Link>
           )}
-          {isCreator && (
-            <span className={styles.creatorBadge}>יוצר</span>
-          )}
+          <div className={styles.badges}>
+            {group.privacy === 'private' && (
+              <span className={styles.privateBadge}>🔒 פרטי</span>
+            )}
+            {isCreator && (
+              <span className={styles.creatorBadge}>יוצר</span>
+            )}
+          </div>
         </div>
       </div>
 

@@ -16,10 +16,18 @@ import MemberList from '../../components/MemberList/MemberList';
 import GroupForm from '../../components/GroupForm/GroupForm';
 import InviteModal from '../../components/InviteModal/InviteModal';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
-import type { GroupPrivacy, GroupRole } from '../../types';
+import type { GroupPrivacy, GroupRole, ContributionRules } from '../../types';
 import styles from './GroupDetail.module.scss';
 
 type TabType = 'recipes' | 'members' | 'settings';
+
+interface GroupFormData {
+  name: string;
+  description: string;
+  privacy: GroupPrivacy;
+  contributionRules: ContributionRules;
+  imageUrl: string;
+}
 
 const GroupDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -55,7 +63,7 @@ const GroupDetail = () => {
     }
   }, [activeTab, id, dispatch]);
 
-  const handleUpdateGroup = async (data: { name: string; description: string; privacy: GroupPrivacy }) => {
+  const handleUpdateGroup = async (data: GroupFormData) => {
     if (!id) return;
 
     try {

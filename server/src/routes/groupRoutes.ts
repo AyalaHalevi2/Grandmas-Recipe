@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   createGroup,
   getMyGroups,
+  getAllGroups,
   getPublicGroups,
   getGroupById,
   updateGroup,
@@ -14,7 +15,7 @@ import {
   updateMemberRole,
   removeMember
 } from '../controllers/groupController';
-import { isAuthenticated } from '../middleware/auth';
+import { isAuthenticated, isAdmin } from '../middleware/auth';
 import { isGroupMember, isGroupAdmin, isGroupCreator } from '../middleware/groupAuth';
 
 const router = Router();
@@ -25,6 +26,7 @@ router.use(isAuthenticated);
 // Group CRUD routes
 router.post('/', createGroup);                              // Create group
 router.get('/', getMyGroups);                               // Get user's groups
+router.get('/all', isAdmin, getAllGroups);                  // Get all groups (sysadmin only)
 router.get('/public', getPublicGroups);                     // Search public groups
 router.get('/:id', isGroupMember, getGroupById);            // Get group details (members only)
 router.put('/:id', isGroupAdmin, updateGroup);              // Update group (admin only)

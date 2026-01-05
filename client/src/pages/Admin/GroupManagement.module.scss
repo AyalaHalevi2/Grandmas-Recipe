@@ -1,0 +1,200 @@
+@use '../../styles/variables' as *;
+
+.groupManagement {
+  h2 {
+    color: $text-primary;
+    margin-bottom: $spacing-lg;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+}
+
+.searchBar {
+  input {
+    padding: $spacing-sm $spacing-md;
+    border: 1px solid $border-color;
+    border-radius: $radius-sm;
+    font-size: $font-md;
+    min-width: 250px;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+    }
+  }
+}
+
+.error {
+  background-color: #fee;
+  color: #c00;
+  padding: $spacing-md;
+  border-radius: $radius-sm;
+  margin-bottom: $spacing-md;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: $spacing-md;
+    text-align: right;
+    border-bottom: 1px solid $border-color;
+  }
+
+  th {
+    background-color: $background-dark;
+    color: $text-secondary;
+    font-weight: 600;
+  }
+
+  tr:hover td {
+    background-color: $cream;
+  }
+}
+
+.groupLink {
+  color: $primary-color;
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.creatorInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  small {
+    color: $text-muted;
+    font-size: $font-sm;
+  }
+}
+
+.badge {
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-sm;
+  font-size: $font-sm;
+  display: inline-block;
+
+  &.public {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  &.private {
+    background-color: #fff3e0;
+    color: #e65100;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: $spacing-sm;
+
+  a, button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: $spacing-xs;
+    border-radius: $radius-sm;
+    transition: background-color 0.2s;
+    font-size: 1rem;
+    text-decoration: none;
+
+    &:hover {
+      background-color: $cream-dark;
+    }
+  }
+}
+
+.viewBtn {
+  font-size: 1rem;
+}
+
+.deleteBtn {
+  font-size: 1rem;
+
+  &:hover {
+    background-color: #fee !important;
+  }
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: $spacing-xl;
+  border-radius: $radius-md;
+  min-width: 400px;
+  max-width: 90%;
+
+  h3 {
+    margin-bottom: $spacing-lg;
+    color: $text-primary;
+  }
+
+  p {
+    margin-bottom: $spacing-md;
+    color: $text-secondary;
+  }
+}
+
+.modalActions {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-lg;
+  justify-content: flex-end;
+
+  button {
+    padding: $spacing-sm $spacing-lg;
+    border-radius: $radius-sm;
+    font-size: $font-md;
+    cursor: pointer;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  .deleteBtn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+  }
+
+  .cancelBtn {
+    background-color: transparent;
+    color: $text-secondary;
+    border: 1px solid $border-color;
+  }
+}
+
+.empty {
+  text-align: center;
+  padding: $spacing-xl;
+  color: $text-muted;
+  font-size: $font-lg;
+}

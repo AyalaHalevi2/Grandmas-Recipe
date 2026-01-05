@@ -23,13 +23,15 @@ export const createGroup = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
-    const { name, description, privacy } = result.data;
+    const { name, description, privacy, contributionRules, imageUrl } = result.data;
 
     // Create group with creator as admin
     const group = new Group({
       name,
       description: description || '',
       privacy: privacy || 'public',
+      contributionRules: contributionRules || 'everyone',
+      imageUrl: imageUrl || '',
       creator: userId,
       members: [{
         userId,
@@ -47,6 +49,8 @@ export const createGroup = async (req: Request, res: Response): Promise<void> =>
         name: group.name,
         description: group.description,
         privacy: group.privacy,
+        contributionRules: group.contributionRules,
+        imageUrl: group.imageUrl,
         creator: group.creator,
         members: group.members,
         inviteCode: group.inviteCode,
@@ -75,6 +79,22 @@ export const getMyGroups = async (req: Request, res: Response): Promise<void> =>
     console.error('Get my groups error:', error);
     const err = error as Error;
     res.status(500).json({ message: 'Failed to retrieve groups', error: err.message });
+  }
+};
+
+// Get all groups (sysadmin only)
+export const getAllGroups = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const groups = await Group.find()
+      .populate('creator', 'email fullName')
+      .populate('members.userId', 'email fullName')
+      .sort({ createdAt: -1 });
+
+    res.json(groups);
+  } catch (error: unknown) {
+    console.error('Get all groups error:', error);
+    const err = error as Error;
+    res.status(500).json({ message: 'Failed to retrieve all groups', error: err.message });
   }
 };
 
