@@ -32,7 +32,7 @@ const Recipes = () => {
     sortBy: '' as '' | 'title' | 'rating' | 'prepTime',
     difficulty: [] as string[],
     maxTime: '',
-    isYemeni: false,
+    ethnicity: '',
     kosherType: [] as KosherType[]
   });
 
@@ -41,13 +41,15 @@ const Recipes = () => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  // Handle search from header and category from URL
+  // Handle search from header and category/ethnicity from URL
   useEffect(() => {
     const categoryFromUrl = searchParams.get('category') || '';
+    const ethnicityFromUrl = searchParams.get('ethnicity') || '';
 
     setFilters((prev) => ({
       ...prev,
-      category: categoryFromUrl
+      category: categoryFromUrl,
+      ethnicity: ethnicityFromUrl
     }));
 
     // Only fetch if searchQuery changed to a new value, or on initial load
@@ -55,13 +57,15 @@ const Recipes = () => {
       lastSearchRef.current = searchQuery;
       dispatch(fetchRecipes({
         category: categoryFromUrl || undefined,
+        ethnicity: ethnicityFromUrl || undefined,
         search: searchQuery
       }));
       dispatch(setSearchQuery(''));
     } else if (!lastSearchRef.current) {
       // Initial load without search
       dispatch(fetchRecipes({
-        category: categoryFromUrl || undefined
+        category: categoryFromUrl || undefined,
+        ethnicity: ethnicityFromUrl || undefined
       }));
       lastSearchRef.current = 'initialized';
     }
@@ -94,7 +98,7 @@ const Recipes = () => {
     // Update URL params
     const newParams = new URLSearchParams();
     if (filters.category) newParams.set('category', filters.category);
-    if (filters.isYemeni) newParams.set('yemeni', 'true');
+    if (filters.ethnicity) newParams.set('ethnicity', filters.ethnicity);
     setSearchParams(newParams);
 
     dispatch(fetchRecipes({
@@ -102,7 +106,7 @@ const Recipes = () => {
       sortBy: filters.sortBy || undefined,
       difficulty: filters.difficulty.length > 0 ? filters.difficulty.join(',') : undefined,
       maxTime: filters.maxTime ? Number(filters.maxTime) : undefined,
-      isYemeni: filters.isYemeni || undefined,
+      ethnicity: filters.ethnicity || undefined,
       kosherType: filters.kosherType.length > 0 ? filters.kosherType.join(',') : undefined
     }));
   };
@@ -113,7 +117,7 @@ const Recipes = () => {
       sortBy: '',
       difficulty: [],
       maxTime: '',
-      isYemeni: false,
+      ethnicity: '',
       kosherType: []
     });
     setSearchParams({});
@@ -203,16 +207,28 @@ const Recipes = () => {
             </div>
           </div>
 
-          <div className={styles.filterGroup}>
-            <label>מיוחד</label>
-            <button
-              type="button"
-              className={`${styles.yemeniToggle} ${filters.isYemeni ? styles.active : ''}`}
-              onClick={() => setFilters(prev => ({ ...prev, isYemeni: !prev.isYemeni }))}
-            >
-              {filters.isYemeni ? '✓' : ''} אוכל תימני
-            </button>
-          </div>
+          {/* Ethnicity filter (shown when filtering by ethnicity from URL) */}
+          {filters.ethnicity && (
+            <div className={styles.filterGroup}>
+              <label>מוצא</label>
+              <div className={styles.ethnicityFilter}>
+                <span className={styles.ethnicityTag}>{filters.ethnicity}</span>
+                <button
+                  type="button"
+                  className={styles.clearEthnicity}
+                  onClick={() => {
+                    setFilters(prev => ({ ...prev, ethnicity: '' }));
+                    const newParams = new URLSearchParams(searchParams);
+                    newParams.delete('ethnicity');
+                    setSearchParams(newParams);
+                  }}
+                  aria-label="הסר סינון מוצא"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className={styles.filterActions}>
             <button onClick={handleApplyFilters} className="btn btn-primary">

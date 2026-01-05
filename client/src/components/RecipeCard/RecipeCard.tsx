@@ -57,7 +57,7 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
     return stars;
   };
 
-  const cardClassName = `${styles.card} ${recipe.isYemeni ? styles.yemeni : ''}`;
+  const cardClassName = `${styles.card} ${recipe.ethnicity ? styles.hasEthnicity : ''}`;
 
   return (
     <Link
@@ -104,9 +104,9 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
           </span>
         )}
 
-        {/* Yemeni badge */}
-        {recipe.isYemeni && (
-          <span className={styles.yemeniBadge}>תימני</span>
+        {/* Ethnicity badge */}
+        {recipe.ethnicity && (
+          <span className={styles.ethnicityBadge}>{recipe.ethnicity}</span>
         )}
       </div>
 

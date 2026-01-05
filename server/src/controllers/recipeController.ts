@@ -7,7 +7,7 @@ import { validate, CreateRecipeSchema, UpdateRecipeSchema, RateRecipeSchema, Rec
 
 export const getAllRecipes = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { category, search, sortBy, minTime, maxTime, difficulty, isYemeni, kosherType, limit, filter } = req.query;
+    const { category, search, sortBy, minTime, maxTime, difficulty, ethnicity, kosherType, limit, filter } = req.query;
     const user = (req as any).user; // May be undefined if not authenticated
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -67,9 +67,9 @@ export const getAllRecipes = async (req: Request, res: Response): Promise<void> 
       }
     }
 
-    // Filter by Yemeni food
-    if (isYemeni === 'true') {
-      query.isYemeni = true;
+    // Filter by ethnicity
+    if (ethnicity && typeof ethnicity === 'string' && ethnicity.trim()) {
+      query.ethnicity = ethnicity.trim();
     }
 
     // Filter by kosher type (can be comma-separated for multi-select)
@@ -132,7 +132,7 @@ export const getRecipeById = async (req: Request, res: Response): Promise<void> 
     }
 
     // System admin can view everything
-    if (user.role === 'admin') {
+    if (user.role === 'sysadmin') {
       res.json(recipe);
       return;
     }
@@ -180,7 +180,7 @@ export const createRecipe = async (req: Request, res: Response): Promise<void> =
       return;
     }
 
-    const { title, category, ingredients, instructions, prepTime, difficulty, imageUrl, isYemeni, kosherType } = result.data;
+    const { title, category, ingredients, instructions, prepTime, difficulty, imageUrl, ethnicity, kosherType } = result.data;
 
     // Extract visibility and groupIds from request (not in CreateRecipeSchema, added separately)
     const visibility = req.body.visibility || 'public';
@@ -228,7 +228,7 @@ export const createRecipe = async (req: Request, res: Response): Promise<void> =
       prepTime,
       difficulty,
       imageUrl,
-      isYemeni,
+      ethnicity,
       kosherType,
       creator: userId,
       visibility,
@@ -260,10 +260,10 @@ export const updateRecipe = async (req: Request, res: Response): Promise<void> =
       return;
     }
 
-    const { title, category, ingredients, instructions, prepTime, difficulty, imageUrl, isYemeni, kosherType } = result.data;
+    const { title, category, ingredients, instructions, prepTime, difficulty, imageUrl, ethnicity, kosherType } = result.data;
 
     // Extract visibility and groupIds if provided
-    const updateData: any = { title, category, ingredients, instructions, prepTime, difficulty, imageUrl, isYemeni, kosherType };
+    const updateData: any = { title, category, ingredients, instructions, prepTime, difficulty, imageUrl, ethnicity, kosherType };
 
     if (req.body.visibility) {
       if (!['private', 'group', 'public'].includes(req.body.visibility)) {
@@ -285,7 +285,7 @@ export const updateRecipe = async (req: Request, res: Response): Promise<void> =
           }
 
           const member = group.members.find(m => m.userId.toString() === userId.toString());
-          if (!member && (req as any).user.role !== 'admin') {
+          if (!member && (req as any).user.role !== 'sysadmin') {
             res.status(403).json({ message: `You are not a member of group: ${group.name}` });
             return;
           }
@@ -408,5 +408,20 @@ export const getCategories = async (req: Request, res: Response): Promise<void> 
   } catch (error) {
     console.error('Get categories error:', error);
     res.status(500).json({ message: 'Error loading categories' });
+  }
+};
+
+// Get all unique ethnicities from recipes
+export const getEthnicities = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const ethnicities = await Recipe.distinct('ethnicity', {
+      ethnicity: { $exists: true, $ne: '' }
+    });
+    // Sort alphabetically
+    ethnicities.sort((a, b) => a.localeCompare(b, 'he'));
+    res.json(ethnicities);
+  } catch (error) {
+    console.error('Get ethnicities error:', error);
+    res.status(500).json({ message: 'Error loading ethnicities' });
   }
 };

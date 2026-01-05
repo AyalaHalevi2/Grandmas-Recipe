@@ -18,7 +18,7 @@ export interface IRecipe extends Document {
   ratings: IRating[];
   averageRating: number;
   imageUrl?: string;
-  isYemeni: boolean;
+  ethnicity?: string;
   kosherType: KosherType;
   creator: mongoose.Types.ObjectId | null;
   visibility: RecipeVisibility;
@@ -78,9 +78,10 @@ const recipeSchema = new Schema<IRecipe>({
     type: String,
     default: ''
   },
-  isYemeni: {
-    type: Boolean,
-    default: false
+  ethnicity: {
+    type: String,
+    default: '',
+    trim: true
   },
   kosherType: {
     type: String,
@@ -120,5 +121,6 @@ recipeSchema.index({ creator: 1 }); // For "My Recipes" filtering
 recipeSchema.index({ visibility: 1 }); // For access control
 recipeSchema.index({ groupIds: 1 }); // For group recipe filtering
 recipeSchema.index({ visibility: 1, groupIds: 1 }); // Compound index for performance
+recipeSchema.index({ ethnicity: 1 }); // For "Browse by Ethnicity" filtering
 
 export const Recipe = mongoose.model<IRecipe>('Recipe', recipeSchema);

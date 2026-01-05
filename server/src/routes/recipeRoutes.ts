@@ -7,7 +7,8 @@ import {
   deleteRecipe,
   rateRecipe,
   toggleFavorite,
-  getCategories
+  getCategories,
+  getEthnicities
 } from '../controllers/recipeController';
 import { isAuthenticated } from '../middleware/auth';
 import { canEditRecipe, canDeleteRecipe } from '../middleware/recipeAccess';
@@ -17,6 +18,7 @@ const router = Router();
 // Public routes (getAllRecipes checks access internally based on user)
 router.get('/', getAllRecipes);
 router.get('/categories', getCategories);
+router.get('/ethnicities', getEthnicities);
 router.get('/:id', getRecipeById);
 
 // Authenticated user routes

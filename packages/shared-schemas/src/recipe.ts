@@ -59,6 +59,16 @@ export const ImageUrlSchema = v.optional(
   ''
 );
 
+// Ethnicity field (optional string, max 50 chars)
+export const EthnicitySchema = v.optional(
+  v.pipe(
+    v.string(),
+    v.trim(),
+    v.maxLength(50, 'שם המוצא ארוך מדי')
+  ),
+  ''
+);
+
 // Create recipe schema
 export const CreateRecipeSchema = v.object({
   title: RecipeTitleSchema,
@@ -74,7 +84,7 @@ export const CreateRecipeSchema = v.object({
   prepTime: PrepTimeSchema,
   difficulty: DifficultySchema,
   imageUrl: ImageUrlSchema,
-  isYemeni: v.optional(v.boolean(), false),
+  ethnicity: EthnicitySchema,
   kosherType: v.optional(KosherTypeSchema, 'Parve')
 }, 'נדרשים פרטי מתכון');
 

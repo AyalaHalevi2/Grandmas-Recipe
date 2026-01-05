@@ -15,7 +15,7 @@ export const canEditRecipe = async (req: Request, res: Response, next: NextFunct
     }
 
     // System admin can edit everything
-    if (user.role === 'admin') {
+    if (user.role === 'sysadmin') {
       (req as any).recipe = recipe;
       next();
       return;
@@ -68,7 +68,7 @@ export const canDeleteRecipe = async (req: Request, res: Response, next: NextFun
     }
 
     // System admin can delete everything
-    if (user.role === 'admin') {
+    if (user.role === 'sysadmin') {
       (req as any).recipe = recipe;
       next();
       return;

@@ -168,9 +168,9 @@ const RecipeDetail = () => {
 
             {/* Badges on image */}
             <div className={styles.imageBadges}>
-              {currentRecipe.isYemeni && (
-                <span className={`${styles.badge} ${styles.yemeniBadge}`}>
-                  🇮🇱 תימני מסורתי
+              {currentRecipe.ethnicity && (
+                <span className={`${styles.badge} ${styles.ethnicityBadge}`}>
+                  🌍 {currentRecipe.ethnicity}
                 </span>
               )}
               {currentRecipe.kosherType && (

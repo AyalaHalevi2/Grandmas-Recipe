@@ -24,7 +24,7 @@ export const fetchRecipes = createAsyncThunk(
       if (filters.minTime) params.append('minTime', filters.minTime.toString());
       if (filters.maxTime) params.append('maxTime', filters.maxTime.toString());
       if (filters.difficulty) params.append('difficulty', filters.difficulty);
-      if (filters.isYemeni) params.append('isYemeni', 'true');
+      if (filters.ethnicity) params.append('ethnicity', filters.ethnicity);
       if (filters.kosherType) params.append('kosherType', filters.kosherType);
 
       const response = await api.get(`/recipes?${params.toString()}`);
