@@ -5,6 +5,7 @@ import { fetchMyGroups } from '../../store/groupSlice';
 import type { Recipe, KosherType, RecipeVisibility } from '../../types';
 import { validate, CreateRecipeSchema } from '@grandmas-recipes/shared-schemas';
 import VisibilitySelector from '../../components/VisibilitySelector/VisibilitySelector';
+import EthnicitySelector from '../../components/EthnicitySelector';
 import styles from './RecipeManagement.module.scss';
 
 const KOSHER_TYPES: KosherType[] = ['Parve', 'Dairy', 'Meat'];
@@ -24,7 +25,7 @@ const RecipeManagement = () => {
     prepTime: '',
     difficulty: '1',
     imageUrl: '',
-    isYemeni: false,
+    ethnicity: '',
     kosherType: 'Parve' as KosherType,
     visibility: 'public' as RecipeVisibility,
     groupIds: [] as string[]
@@ -45,7 +46,7 @@ const RecipeManagement = () => {
       prepTime: '',
       difficulty: '1',
       imageUrl: '',
-      isYemeni: false,
+      ethnicity: '',
       kosherType: 'Parve',
       visibility: 'public',
       groupIds: []
@@ -65,7 +66,7 @@ const RecipeManagement = () => {
       prepTime: recipe.prepTime.toString(),
       difficulty: recipe.difficulty.toString(),
       imageUrl: recipe.imageUrl || '',
-      isYemeni: recipe.isYemeni || false,
+      ethnicity: recipe.ethnicity || '',
       kosherType: recipe.kosherType || 'Parve',
       visibility: recipe.visibility || 'public',
       groupIds: recipe.groupIds || []
@@ -96,7 +97,7 @@ const RecipeManagement = () => {
       prepTime: Number(formData.prepTime),
       difficulty: Number(formData.difficulty),
       imageUrl: formData.imageUrl || undefined,
-      isYemeni: formData.isYemeni,
+      ethnicity: formData.ethnicity || undefined,
       kosherType: formData.kosherType,
       visibility: formData.visibility,
       groupIds: formData.groupIds
@@ -121,22 +122,22 @@ const RecipeManagement = () => {
   return (
     <div className={styles.recipeManagement}>
       <div className={styles.header}>
-        <h2>Manage Recipes ({recipes.length})</h2>
+        <h2>ניהול מתכונים ({recipes.length})</h2>
         <button
           className="btn btn-primary"
           onClick={() => setIsFormOpen(true)}
         >
-          + Add New Recipe
+          + הוסף מתכון חדש
         </button>
       </div>
 
       {isFormOpen && (
         <div className={styles.formOverlay}>
           <form className={styles.form} onSubmit={handleSubmit}>
-            <h3>{editingRecipe ? 'Edit Recipe' : 'New Recipe'}</h3>
+            <h3>{editingRecipe ? 'עריכת מתכון' : 'מתכון חדש'}</h3>
 
             <div className="form-group">
-              <label>Recipe Name</label>
+              <label>שם המתכון</label>
               <input
                 type="text"
                 value={formData.title}
@@ -146,7 +147,7 @@ const RecipeManagement = () => {
             </div>
 
             <div className="form-group">
-              <label>Category</label>
+              <label>קטגוריה</label>
               <div className={styles.chipGroup}>
                 {categories.map((cat) => (
                   <button
@@ -163,7 +164,7 @@ const RecipeManagement = () => {
 
             <div className={styles.row}>
               <div className="form-group">
-                <label>Prep Time (minutes)</label>
+                <label>זמן הכנה (דקות)</label>
                 <input
                   type="number"
                   value={formData.prepTime}
@@ -174,7 +175,7 @@ const RecipeManagement = () => {
               </div>
 
               <div className="form-group">
-                <label>Difficulty</label>
+                <label>רמת קושי</label>
                 <div className={styles.difficultyChips}>
                   {[1, 2, 3, 4, 5].map((level) => (
                     <button
@@ -182,7 +183,7 @@ const RecipeManagement = () => {
                       type="button"
                       className={`${styles.difficultyChip} ${formData.difficulty === level.toString() ? styles.active : ''}`}
                       onClick={() => setFormData({ ...formData, difficulty: level.toString() })}
-                      title={['Very Easy', 'Easy', 'Medium', 'Challenging', 'Hard'][level - 1]}
+                      title={['קל מאוד', 'קל', 'בינוני', 'מאתגר', 'קשה'][level - 1]}
                     >
                       {level}
                     </button>
@@ -192,22 +193,13 @@ const RecipeManagement = () => {
             </div>
 
             <div className={styles.attributesRow}>
-              <div className="form-group">
-                <label>Yemeni Food</label>
-                <div className={styles.toggleGroup}>
-                  <button
-                    type="button"
-                    className={`${styles.toggle} ${formData.isYemeni ? styles.active : ''}`}
-                    onClick={() => setFormData({ ...formData, isYemeni: !formData.isYemeni })}
-                  >
-                    <span className={styles.toggleIcon}>{formData.isYemeni ? '✓' : '○'}</span>
-                    <span>{formData.isYemeni ? 'Yes, Yemeni Recipe' : 'Not Yemeni'}</span>
-                  </button>
-                </div>
-              </div>
+              <EthnicitySelector
+                value={formData.ethnicity}
+                onChange={(value) => setFormData({ ...formData, ethnicity: value })}
+              />
 
               <div className="form-group">
-                <label>Kosher Type</label>
+                <label>סוג כשרות</label>
                 <div className={styles.kosherChips}>
                   {KOSHER_TYPES.map((type) => (
                     <button
@@ -216,7 +208,7 @@ const RecipeManagement = () => {
                       className={`${styles.kosherChip} ${styles[type.toLowerCase()]} ${formData.kosherType === type ? styles.active : ''}`}
                       onClick={() => setFormData({ ...formData, kosherType: type })}
                     >
-                      {type}
+                      {type === 'Parve' ? 'פרווה' : type === 'Dairy' ? 'חלבי' : 'בשרי'}
                     </button>
                   ))}
                 </div>
@@ -234,7 +226,7 @@ const RecipeManagement = () => {
             />
 
             <div className="form-group">
-              <label>Ingredients (one per line)</label>
+              <label>מרכיבים (אחד בכל שורה)</label>
               <textarea
                 value={formData.ingredients}
                 onChange={(e) => setFormData({ ...formData, ingredients: e.target.value })}
@@ -244,7 +236,7 @@ const RecipeManagement = () => {
             </div>
 
             <div className="form-group">
-              <label>Instructions (one step per line)</label>
+              <label>הוראות הכנה (שלב אחד בכל שורה)</label>
               <textarea
                 value={formData.instructions}
                 onChange={(e) => setFormData({ ...formData, instructions: e.target.value })}
@@ -254,7 +246,7 @@ const RecipeManagement = () => {
             </div>
 
             <div className="form-group">
-              <label>Image URL (optional)</label>
+              <label>קישור לתמונה (אופציונלי)</label>
               <input
                 type="url"
                 value={formData.imageUrl}
@@ -275,10 +267,10 @@ const RecipeManagement = () => {
 
             <div className={styles.formActions}>
               <button type="submit" className="btn btn-primary">
-                {editingRecipe ? 'Update' : 'Create Recipe'}
+                {editingRecipe ? 'עדכן' : 'צור מתכון'}
               </button>
               <button type="button" className="btn btn-outline" onClick={resetForm}>
-                Cancel
+                ביטול
               </button>
             </div>
           </form>
@@ -291,12 +283,12 @@ const RecipeManagement = () => {
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>Recipe Name</th>
-              <th>Category</th>
-              <th>Time</th>
-              <th>Difficulty</th>
-              <th>Rating</th>
-              <th>Actions</th>
+              <th>שם המתכון</th>
+              <th>קטגוריה</th>
+              <th>זמן</th>
+              <th>קושי</th>
+              <th>דירוג</th>
+              <th>פעולות</th>
             </tr>
           </thead>
           <tbody>
@@ -304,7 +296,7 @@ const RecipeManagement = () => {
               <tr key={recipe._id}>
                 <td>{recipe.title}</td>
                 <td>{recipe.category?.name}</td>
-                <td>{recipe.prepTime} min</td>
+                <td>{recipe.prepTime} דק'</td>
                 <td>{recipe.difficulty}/5</td>
                 <td>⭐ {recipe.averageRating.toFixed(1)}</td>
                 <td>
@@ -313,13 +305,13 @@ const RecipeManagement = () => {
                       className={styles.editBtn}
                       onClick={() => handleEdit(recipe)}
                     >
-                      Edit
+                      ערוך
                     </button>
                     <button
                       className={styles.deleteBtn}
                       onClick={() => handleDelete(recipe._id)}
                     >
-                      Delete
+                      מחק
                     </button>
                   </div>
                 </td>

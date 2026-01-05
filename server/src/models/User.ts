@@ -5,7 +5,7 @@ export interface IUser extends Document {
   email: string;
   fullName: string;
   password: string;
-  role: 'admin' | 'user';
+  role: 'sysadmin' | 'user';
   favorites: mongoose.Types.ObjectId[];
   createdAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -30,7 +30,7 @@ const userSchema = new Schema<IUser>({
   },
   role: {
     type: String,
-    enum: ['admin', 'user'],
+    enum: ['sysadmin', 'user'],
     default: 'user'
   },
   favorites: [{

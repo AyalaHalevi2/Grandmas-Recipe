@@ -7,6 +7,14 @@
   }
 }
 
+.error {
+  background-color: #fee;
+  color: #c00;
+  padding: $spacing-md;
+  border-radius: $radius-sm;
+  margin-bottom: $spacing-md;
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -33,7 +41,7 @@
   border-radius: $radius-sm;
   font-size: $font-sm;
 
-  &.admin {
+  &.sysadmin {
     background-color: $primary-light;
     color: white;
   }
@@ -41,5 +49,127 @@
   &.user {
     background-color: $cream-dark;
     color: $text-secondary;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: $spacing-sm;
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: $spacing-xs;
+    border-radius: $radius-sm;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: $cream-dark;
+    }
+  }
+}
+
+.editBtn {
+  font-size: 1rem;
+}
+
+.deleteBtn {
+  font-size: 1rem;
+
+  &:hover {
+    background-color: #fee !important;
+  }
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: $spacing-xl;
+  border-radius: $radius-md;
+  min-width: 400px;
+  max-width: 90%;
+
+  h3 {
+    margin-bottom: $spacing-lg;
+    color: $text-primary;
+  }
+
+  p {
+    margin-bottom: $spacing-md;
+    color: $text-secondary;
+  }
+}
+
+.formGroup {
+  margin-bottom: $spacing-md;
+
+  label {
+    display: block;
+    margin-bottom: $spacing-xs;
+    color: $text-secondary;
+    font-weight: 500;
+  }
+
+  input, select {
+    width: 100%;
+    padding: $spacing-sm $spacing-md;
+    border: 1px solid $border-color;
+    border-radius: $radius-sm;
+    font-size: $font-md;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+    }
+  }
+}
+
+.modalActions {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-lg;
+  justify-content: flex-end;
+
+  button {
+    padding: $spacing-sm $spacing-lg;
+    border-radius: $radius-sm;
+    font-size: $font-md;
+    cursor: pointer;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  .saveBtn {
+    background-color: $primary-color;
+    color: white;
+    border: none;
+  }
+
+  .cancelBtn {
+    background-color: transparent;
+    color: $text-secondary;
+    border: 1px solid $border-color;
+  }
+
+  .deleteBtn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
   }
 }
