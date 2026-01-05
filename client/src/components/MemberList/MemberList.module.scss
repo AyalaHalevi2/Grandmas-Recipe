@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '../../styles/variables' as *;
 
 .memberList {
@@ -79,7 +80,7 @@
 }
 
 .memberBadge {
-  background-color: lighten($text-secondary, 20%);
+  background-color: color.adjust($text-secondary, $lightness: 20%);
 }
 
 .actionButtons {
@@ -104,7 +105,7 @@
 
 .removeButton {
   &:hover {
-    background-color: lighten($error, 40%);
+    background-color: color.adjust($error, $lightness: 40%);
     border-color: $error;
   }
 }

@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '../../styles/variables' as *;
 
 .card {
@@ -43,6 +44,27 @@
   margin: 0;
   flex: 1;
   line-height: 1.4;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  flex-shrink: 0;
+}
+
+.settingsIcon {
+  font-size: 1.25rem;
+  padding: $spacing-xs;
+  border-radius: $radius-sm;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
+  line-height: 1;
+
+  &:hover {
+    background-color: $cream-dark;
+    transform: rotate(90deg);
+  }
 }
 
 .badges {
@@ -113,7 +135,7 @@
   transition: background-color 0.2s ease, transform 0.1s ease;
 
   &:hover {
-    background-color: darken($primary-color, 8%);
+    background-color: color.adjust($primary-color, $lightness: -8%);
     transform: scale(1.05);
   }
 

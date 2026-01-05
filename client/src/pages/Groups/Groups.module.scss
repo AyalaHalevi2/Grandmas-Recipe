@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '../../styles/variables' as *;
 
 .container {
@@ -30,7 +31,7 @@
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: darken($primary-color, 8%);
+    background-color: color.adjust($primary-color, $lightness: -8%);
   }
 }
 
@@ -99,13 +100,13 @@
   white-space: nowrap;
 
   &:hover {
-    background-color: darken($secondary-color, 8%);
+    background-color: color.adjust($secondary-color, $lightness: -8%);
   }
 }
 
 .error {
   padding: $spacing-md;
-  background-color: lighten($error, 40%);
+  background-color: color.adjust($error, $lightness: 40%);
   border: 1px solid $error;
   border-radius: $radius-md;
   color: $error;
