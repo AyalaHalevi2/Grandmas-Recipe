@@ -39,7 +39,7 @@ export const isAdmin = async (req: Request, res: Response, next: NextFunction): 
       return;
     }
 
-    if (user.role !== 'admin') {
+    if (user.role !== 'sysadmin') {
       res.status(403).json({ message: 'Not authorized to perform this action' });
       return;
     }

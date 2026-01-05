@@ -62,9 +62,9 @@ const seedDatabase = async () => {
     if (!existingAdmin) {
       const admin = new User({
         email: 'admin@user.com',
-        fullName: 'סבתא רינה',
+        fullName: 'System Admin',
         password: 'IAmAdmin19296157#',
-        role: 'admin'
+        role: 'sysadmin'
       });
       await admin.save();
       console.log('Admin user created: admin@user.com');
@@ -100,7 +100,7 @@ const seedDatabase = async () => {
           prepTime: 50,
           difficulty: 2,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Parve'
         },
         {
@@ -125,7 +125,7 @@ const seedDatabase = async () => {
           prepTime: 120,
           difficulty: 3,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Dairy'
         },
         // מרקים - Soups
@@ -152,7 +152,7 @@ const seedDatabase = async () => {
           prepTime: 180,
           difficulty: 3,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Meat'
         },
         {
@@ -178,7 +178,7 @@ const seedDatabase = async () => {
           prepTime: 45,
           difficulty: 1,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Parve'
         },
         // מנות ראשונות - Appetizers
@@ -204,7 +204,7 @@ const seedDatabase = async () => {
           prepTime: 30,
           difficulty: 2,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Parve'
         },
         {
@@ -228,7 +228,7 @@ const seedDatabase = async () => {
           prepTime: 25,
           difficulty: 2,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Parve'
         },
         // מנות עיקריות - Main Dishes
@@ -254,7 +254,7 @@ const seedDatabase = async () => {
           prepTime: 30,
           difficulty: 1,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Meat'
         },
         {
@@ -279,7 +279,7 @@ const seedDatabase = async () => {
           prepTime: 60,
           difficulty: 2,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Meat'
         },
         // סלטים - Salads
@@ -305,7 +305,7 @@ const seedDatabase = async () => {
           prepTime: 15,
           difficulty: 1,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Parve'
         },
         {
@@ -328,7 +328,7 @@ const seedDatabase = async () => {
           prepTime: 20,
           difficulty: 1,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Parve'
         },
         // תוספות - Side Dishes
@@ -352,7 +352,7 @@ const seedDatabase = async () => {
           prepTime: 50,
           difficulty: 1,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Parve'
         },
         {
@@ -376,7 +376,7 @@ const seedDatabase = async () => {
           prepTime: 35,
           difficulty: 1,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Parve'
         },
         // מאפים - Baked goods
@@ -402,7 +402,7 @@ const seedDatabase = async () => {
           prepTime: 180,
           difficulty: 3,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Parve'
         },
         {
@@ -428,7 +428,7 @@ const seedDatabase = async () => {
           prepTime: 45,
           difficulty: 2,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Dairy'
         },
         // בריא וטעים - Healthy & Tasty
@@ -454,7 +454,7 @@ const seedDatabase = async () => {
           prepTime: 25,
           difficulty: 1,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Parve'
         },
         {
@@ -479,7 +479,7 @@ const seedDatabase = async () => {
           prepTime: 35,
           difficulty: 2,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Parve'
         },
         // מתכונים תימניים - Yemeni Recipes
@@ -504,7 +504,7 @@ const seedDatabase = async () => {
           prepTime: 480,
           difficulty: 4,
           imageUrl: '',
-          isYemeni: true,
+          ethnicity: 'תימני',
           kosherType: 'Parve'
         },
         {
@@ -530,7 +530,7 @@ const seedDatabase = async () => {
           prepTime: 180,
           difficulty: 2,
           imageUrl: '',
-          isYemeni: true,
+          ethnicity: 'תימני',
           kosherType: 'Meat'
         },
         {
@@ -555,7 +555,7 @@ const seedDatabase = async () => {
           prepTime: 10,
           difficulty: 1,
           imageUrl: '',
-          isYemeni: true,
+          ethnicity: 'תימני',
           kosherType: 'Parve'
         },
         {
@@ -579,7 +579,7 @@ const seedDatabase = async () => {
           prepTime: 90,
           difficulty: 3,
           imageUrl: '',
-          isYemeni: true,
+          ethnicity: 'תימני',
           kosherType: 'Parve'
         },
         {
@@ -602,7 +602,7 @@ const seedDatabase = async () => {
           prepTime: 60,
           difficulty: 3,
           imageUrl: '',
-          isYemeni: true,
+          ethnicity: 'תימני',
           kosherType: 'Parve'
         },
         // ארוחות בוקר - Breakfast
@@ -630,7 +630,7 @@ const seedDatabase = async () => {
           prepTime: 25,
           difficulty: 1,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Parve'
         },
         {
@@ -654,7 +654,7 @@ const seedDatabase = async () => {
           prepTime: 20,
           difficulty: 1,
           imageUrl: '',
-          isYemeni: false,
+          ethnicity: '',
           kosherType: 'Dairy'
         }
       ];

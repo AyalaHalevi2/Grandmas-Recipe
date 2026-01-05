@@ -19,6 +19,7 @@ import About from './pages/About/About';
 import Groups from './pages/Groups/Groups';
 import GroupDetail from './pages/GroupDetail/GroupDetail';
 import JoinGroup from './pages/JoinGroup/JoinGroup';
+import Ethnicities from './pages/Ethnicities/Ethnicities';
 import './styles/global.scss';
 
 // Scroll to top on route change
@@ -79,6 +80,7 @@ const AppContent = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/recipes" element={<Recipes />} />
             <Route path="/recipe/:id" element={<RecipeDetail />} />
+            <Route path="/ethnicities" element={<Ethnicities />} />
             <Route path="/about" element={<About />} />
             <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />

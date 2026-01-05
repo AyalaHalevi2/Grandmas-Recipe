@@ -3,7 +3,7 @@ export interface User {
   id?: string; // Deprecated, use _id
   email: string;
   fullName: string;
-  role: 'admin' | 'user';
+  role: 'sysadmin' | 'user';
   favorites: string[];
 }
 
@@ -37,7 +37,7 @@ export interface Recipe {
   ratings: Rating[];
   averageRating: number;
   imageUrl?: string;
-  isYemeni: boolean;
+  ethnicity?: string;
   kosherType: KosherType;
   creator?: string; // User ID
   visibility: RecipeVisibility;
@@ -53,11 +53,15 @@ export interface GroupMember {
   user?: User; // Populated by backend
 }
 
+export type ContributionRules = 'everyone' | 'managers';
+
 export interface Group {
   _id: string;
   name: string;
   description: string;
   privacy: GroupPrivacy;
+  contributionRules: ContributionRules;
+  imageUrl: string;
   creator: string; // User ID
   members: GroupMember[];
   inviteCode: string;
@@ -99,7 +103,7 @@ export interface RecipeFilters {
   minTime?: number;
   maxTime?: number;
   difficulty?: string; // Can be comma-separated for multi-select e.g. "1,2,3"
-  isYemeni?: boolean;
+  ethnicity?: string; // Filter by ethnicity
   kosherType?: string; // Can be comma-separated for multi-select
   filter?: 'mine' | 'mygroups' | 'public'; // New: filter by ownership
 }
@@ -122,6 +126,6 @@ export interface RecipeInput {
   prepTime: number;
   difficulty: number;
   imageUrl?: string;
-  isYemeni?: boolean;
+  ethnicity?: string;
   kosherType?: KosherType;
 }
